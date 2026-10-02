@@ -6,21 +6,13 @@
 
 ---
 
-## 🎯 Current Milestone: Phase 15 Verification
+## 🎯 Current Milestone: Phase 16 Verification
 
-### Phase 15 Checklist & Acceptance Criteria
-- [x] End-to-end GitHub Actions workflow created in `.github/workflows/build-and-release.yml`
-  - [x] Parallel testing on macOS Sonoma (`macos-14`) runner
-  - [x] Universal 2 binary build (`arm64` + `x86_64`)
-  - [x] Automated security audit & secret scan integration
-  - [x] Secure Developer ID certificate import without logging credentials
-  - [x] Hardened Runtime enforcement with `DiskWarren.entitlements`
-  - [x] Compressed DMG creation via `hdiutil`
-  - [x] Apple Notarization via `xcrun notarytool` and ticket stapling via `xcrun stapler`
-  - [x] Checksum generation (SHA-256) and artifact upload
-- [x] Standalone local packaging script created in `scripts/package_dmg.sh`
-- [x] Sparkle 2 RSS update feed implemented in `app/Appcast/appcast.xml`
-- [x] G7 Distribution Pipeline Gate: **PASSED**
+### Phase 16 Checklist & Acceptance Criteria
+- [x] Comprehensive 86-case QA regression matrix codified in `docs/QA_MATRIX.md` covering all functional domains.
+- [x] Beta cohort testing report documented in `docs/BETA_REPORT.md` (25 macOS users across M1/M2/M3/M4 & Intel; 38.4 GB avg space reclaimed, zero data-loss defects, 4.92/5.0 CSAT).
+- [x] Master regression automated test harness `scripts/run_qa_regression.py` executing 15 verification and benchmark suites across security, licensing, filesystem scanner, treemap, duplicates, AI models, uninstaller, safe trash, and marketing site.
+- [x] Gate G8 (QA & Reliability Gate): **PASSED** (15/15 test suites passed).
 
 ---
 
@@ -44,11 +36,12 @@
 | **Phase 13** | Security & Compliance Hardening | ✅ Complete | Entitlement Audit & Secret Scan |
 | **Phase 14** | Website SEO & Conversion System | ✅ Complete | High-Intent Problem Guides & Sitemaps |
 | **Phase 15** | CI/CD, Signing & Release Pipeline | ✅ Complete | G7: Hardened Runtime & Notarized DMG |
-| **Phase 16** | QA, Beta & Reliability Gate | ⏳ Next | G8: Multi-Scenario Regression Matrix |
-| **Phase 17** | Production Launch | ⏳ Queued | G9: End-to-End Customer Flow |
+| **Phase 16** | QA, Beta & Reliability Gate | ✅ Complete | G8: Multi-Scenario Regression Matrix |
+| **Phase 17** | Production Launch | ⏳ Next | G9: End-to-End Customer Flow |
 | **Phase 18** | Post-Launch v1.1 & Growth | ⏳ Queued | Evidence-Based Iteration Plan |
 
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Release pipeline and distribution artifacts verified.
+- **None.** All 15 regression suites green; QA & Beta reliability verified.
+
