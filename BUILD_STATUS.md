@@ -1,24 +1,22 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 9 Completion
+**Last Updated:** Phase 10 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 9 Verification
+## 🎯 Current Milestone: Phase 10 Verification
 
-### Phase 9 Checklist & Acceptance Criteria
-- [x] Application discovery and inventory model implemented in `InstalledAppInfo.swift`
-- [x] `AppUninstallerEngine.swift` implementing conservative leftover attribution:
-  - [x] Application Support (`~/Library/Application Support/<bundle-id>`)
-  - [x] Caches (`~/Library/Caches/<bundle-id>`)
-  - [x] Preferences (`~/Library/Preferences/<bundle-id>.plist`)
-  - [x] Saved Application State (`~/Library/Saved Application State/<bundle-id>.savedState`)
-- [x] Anti-false-positive guard: generic names (`helper`, `common`, `shared`, `update`) are strictly excluded from automated attribution
-- [x] Every leftover documents explicit `attributionEvidence`
-- [x] Unit test suite `AppUninstallerEngineTests.swift` validating leftover discovery and attribution evidence
-- [x] G5 Premium Uninstaller Gate: **PASSED**
+### Phase 10 Checklist & Acceptance Criteria
+- [x] Progressive 3-Stage Duplicate Engine implemented in `DuplicateDetectionEngine.swift`:
+  - [x] Stage 1: O(N) exact byte size bucketing
+  - [x] Stage 2: Fast partial chunk hashing (Header 4KB + Footer 4KB)
+  - [x] Stage 3: Streaming cryptographic SHA-256 verification (64KB buffer, zero RAM spikes on multi-GB files)
+- [x] Zero false positives: files with identical sizes but distinct contents are discarded
+- [x] Smart Auto-Selection strategies: `.keepNewest`, `.keepOldest`, `.manual`
+- [x] Unit test suite `DuplicateDetectionEngineTests.swift` validating size discrimination, streaming hashing, and auto-selection
+- [x] Phase 10 Verification Gate: **PASSED**
 
 ---
 
@@ -36,8 +34,8 @@
 | **Phase 7** | AI Storage Intelligence | ✅ Complete | Ollama, LM Studio, HF, ComfyUI Detection |
 | **Phase 8** | Safe Cleanup Engine | ✅ Complete | G4: Sandbox Trash Verification |
 | **Phase 9** | Application Uninstaller & Leftovers | ✅ Complete | G5: Conservative Leftover Attribution |
-| **Phase 10** | Duplicate Finder | ⏳ Next | 3-Stage Hashing & Zero False Positives |
-| **Phase 11** | Premium UX, System Monitor & Polish | ⏳ Queued | Refined Micro-interactions & Shortcuts |
+| **Phase 10** | Duplicate Finder | ✅ Complete | 3-Stage Hashing & Zero False Positives |
+| **Phase 11** | Premium UX, System Monitor & Polish | ⏳ Next | Refined Micro-interactions & Shortcuts |
 | **Phase 12** | Licensing & Commercial Infrastructure | ⏳ Queued | G6: License Validation & Offline Mode |
 | **Phase 13** | Security & Compliance Hardening | ⏳ Queued | Entitlement Audit & Secret Scan |
 | **Phase 14** | Website SEO & Conversion System | ⏳ Queued | High-Intent Problem Guides & Sitemaps |
@@ -49,4 +47,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Uninstaller engine and leftover attribution verified.
+- **None.** Duplicate finder engine verified.
