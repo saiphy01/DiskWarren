@@ -47,11 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="scroll-smooth">
       <head>
         <StructuredData />
       </head>
-      <body className="bg-[#0A0D12] text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500/30 selection:text-cyan-200">
+      <body className="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col selection:bg-cyan-500/20 selection:text-cyan-900 antialiased">
         <Navbar />
         <main className="flex-grow pt-16">
           {children}

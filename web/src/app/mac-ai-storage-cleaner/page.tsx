@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Cpu, Download, CheckCircle2, ShieldCheck, Database, HardDrive } from 'lucide-react';
+import { Download, CheckCircle2 } from 'lucide-react';
 
 export const metadata = {
   title: 'Mac AI Storage Cleaner — Ollama, LM Studio & GGUF Model Management | DiskWarren',
@@ -12,20 +12,20 @@ export default function MacAIStorageCleanerPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-14 space-y-12">
       <div className="space-y-4 text-center">
-        <span className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold uppercase tracking-wider">
+        <span className="px-3.5 py-1.5 rounded-full bg-purple-50 border border-purple-200 text-purple-800 text-xs font-semibold uppercase tracking-wider shadow-xs">
           Local AI Footprint
         </span>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
           Manage Gigabytes of Local AI Models on macOS
         </h1>
-        <p className="text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Running 7B, 13B, and 70B models eats high-speed Mac SSD space fast. DiskWarren automatically uncovers Ollama blobs, LM Studio GGUFs, Hugging Face snapshots, and ComfyUI checkpoints.
         </p>
 
         <div className="pt-4 flex justify-center">
           <Link
-            href="/#download"
-            className="px-6 py-3 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-purple-500/25"
+            href="/download"
+            className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition-all flex items-center gap-2 shadow-md shadow-purple-600/25 active:scale-95"
           >
             <Download className="w-4 h-4" />
             <span>Download AI Storage Cleaner</span>
@@ -52,12 +52,12 @@ export default function MacAIStorageCleanerPage() {
             desc: "Diffusion models and LoRA adapters take up massive space. DiskWarren indexes your models folder to give you complete visibility."
           }
         ].map((item, i) => (
-          <div key={i} className="p-6 rounded-xl bg-[#111622] border border-[#20293A] space-y-2.5">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-purple-400" />
+          <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5 hover:border-purple-200 hover:shadow-md transition-all">
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-purple-600" />
               {item.title}
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+            <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HardDrive, Hammer, Cpu, Trash2, ShieldCheck, CheckCircle2, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
+import { HardDrive, Trash2, ShieldCheck, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 
 interface SimulatedItem {
   id: string;
@@ -90,9 +90,6 @@ export default function SimulatedStorageAnalyzer() {
 
   const handleSimulateClean = () => {
     setIsSimulatedClean(true);
-    setTimeout(() => {
-      // Keep state clean for 4 seconds then offer reset
-    }, 4000);
   };
 
   const handleReset = () => {
@@ -105,14 +102,14 @@ export default function SimulatedStorageAnalyzer() {
     : items.filter(i => i.category === activeTab);
 
   return (
-    <div id="simulator" className="w-full max-w-5xl mx-auto rounded-2xl bg-[#0F141C] border border-[#232B39] shadow-2xl overflow-hidden">
+    <div id="simulator" className="w-full max-w-5xl mx-auto rounded-2xl bg-white border border-slate-200/90 shadow-xl shadow-slate-200/60 overflow-hidden transition-all">
       {/* Simulation Disclaimer Banner */}
-      <div className="bg-gradient-to-r from-cyan-950/70 via-slate-900 to-indigo-950/70 px-6 py-2.5 border-b border-[#232B39] flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2 text-cyan-300 font-medium">
-          <AlertCircle className="w-4 h-4 text-cyan-400 shrink-0" />
+      <div className="bg-gradient-to-r from-cyan-50/90 via-slate-50 to-blue-50/90 px-6 py-2.5 border-b border-slate-200 flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2 text-cyan-800 font-medium">
+          <AlertCircle className="w-4 h-4 text-cyan-600 shrink-0" />
           <span>Interactive Simulation: This demonstration uses realistic synthetic sample data to showcase DiskWarren&apos;s UI. It does not scan your computer.</span>
         </div>
-        <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono">
+        <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 border border-cyan-200 font-mono text-[11px] font-semibold">
           Mock Macintosh HD (500 GB)
         </span>
       </div>
@@ -120,20 +117,20 @@ export default function SimulatedStorageAnalyzer() {
       {/* Main App Window Frame */}
       <div className="p-6 md:p-8 space-y-6">
         {/* Storage Bar Overview */}
-        <div className="bg-[#151C27] rounded-xl p-5 border border-[#2A3445] space-y-4">
+        <div className="bg-slate-50/80 rounded-xl p-5 border border-slate-200 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <HardDrive className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-bold text-white">Macintosh HD Storage Analysis</h3>
+                <HardDrive className="w-5 h-5 text-cyan-600" />
+                <h3 className="text-base font-bold text-slate-900">Macintosh HD Storage Analysis</h3>
               </div>
-              <p className="text-xs text-slate-400 mt-1">494.38 GB Total Capacity • APFS Volume</p>
+              <p className="text-xs text-slate-500 mt-1">494.38 GB Total Capacity • APFS Volume</p>
             </div>
 
             <div className="flex items-center gap-4 text-right">
               <div>
-                <span className="text-xs text-slate-400 block">Simulated Reclaimable</span>
-                <span className="text-lg font-bold font-mono text-emerald-400">
+                <span className="text-xs text-slate-500 block">Simulated Reclaimable</span>
+                <span className="text-lg font-bold font-mono text-emerald-600">
                   {isSimulatedClean ? '0.0 GB' : `${selectedBytes.toFixed(1)} GB`}
                 </span>
               </div>
@@ -141,7 +138,7 @@ export default function SimulatedStorageAnalyzer() {
               {!isSimulatedClean ? (
                 <button
                   onClick={handleSimulateClean}
-                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95"
+                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-all flex items-center gap-1.5 shadow-sm shadow-emerald-600/25 active:scale-95"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Simulate Move to Trash</span>
@@ -149,7 +146,7 @@ export default function SimulatedStorageAnalyzer() {
               ) : (
                 <button
                   onClick={handleReset}
-                  className="px-4 py-2 rounded-lg bg-[#2A3445] hover:bg-[#344155] text-white font-semibold text-xs transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Reset Demo</span>
@@ -160,30 +157,30 @@ export default function SimulatedStorageAnalyzer() {
 
           {/* Stacked Proportional Bar */}
           <div className="space-y-2">
-            <div className="h-4 w-full bg-[#0C1017] rounded-full overflow-hidden flex gap-1 p-0.5">
-              <div className="bg-slate-600 rounded-l-full" style={{ width: '22%' }} title="System Data: 110 GB" />
+            <div className="h-4 w-full bg-slate-200 rounded-full overflow-hidden flex gap-1 p-0.5">
+              <div className="bg-slate-500 rounded-l-full" style={{ width: '22%' }} title="System Data: 110 GB" />
               <div className="bg-blue-500" style={{ width: '13%' }} title="Applications: 64 GB" />
-              <div className="bg-cyan-400 transition-all duration-500" style={{ width: isSimulatedClean ? '3%' : '10%' }} title="Developer Caches: 48 GB" />
+              <div className="bg-cyan-500 transition-all duration-500" style={{ width: isSimulatedClean ? '3%' : '10%' }} title="Developer Caches: 48 GB" />
               <div className="bg-purple-500 transition-all duration-500" style={{ width: isSimulatedClean ? '3%' : '7%' }} title="AI Models: 36 GB" />
-              <div className="bg-amber-400 transition-all duration-500" style={{ width: isSimulatedClean ? '1%' : '4%' }} title="Caches: 18 GB" />
+              <div className="bg-amber-500 transition-all duration-500" style={{ width: isSimulatedClean ? '1%' : '4%' }} title="Caches: 18 GB" />
               <div className="bg-pink-500" style={{ width: '2%' }} title="Duplicates: 8 GB" />
-              <div className="bg-emerald-500/80 rounded-r-full ml-auto transition-all duration-500" style={{ width: isSimulatedClean ? '56%' : '42%' }} title="Free Space" />
+              <div className="bg-emerald-500 rounded-r-full ml-auto transition-all duration-500" style={{ width: isSimulatedClean ? '56%' : '42%' }} title="Free Space" />
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-slate-400 pt-1">
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-slate-600 inline-block" /> System (110 GB)</span>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-slate-600 pt-1">
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-slate-500 inline-block" /> System (110 GB)</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Apps (64 GB)</span>
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block" /> Developer (34.2 GB)</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500 inline-block" /> Developer (34.2 GB)</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" /> AI Models (22.5 GB)</span>
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" /> Caches (14.8 GB)</span>
-              <span className="flex items-center gap-1 font-semibold text-emerald-400"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" /> Available ({isSimulatedClean ? '206.3 GB' : '142.8 GB'})</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" /> Caches (14.8 GB)</span>
+              <span className="flex items-center gap-1 font-semibold text-emerald-700"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" /> Available ({isSimulatedClean ? '206.3 GB' : '142.8 GB'})</span>
             </div>
           </div>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex items-center justify-between border-b border-[#232B39] pb-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div className="flex flex-wrap items-center gap-2">
             {[
               { id: 'all', label: 'All Candidates' },
               { id: 'developer', label: 'Developer (Xcode, Node)' },
@@ -194,10 +191,10 @@ export default function SimulatedStorageAnalyzer() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                    : 'text-slate-400 hover:text-white hover:bg-[#1A212D]'
+                    ? 'bg-cyan-100 text-cyan-800 border border-cyan-200 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {tab.label}
@@ -205,8 +202,8 @@ export default function SimulatedStorageAnalyzer() {
             ))}
           </div>
 
-          <div className="text-xs text-slate-400 hidden sm:flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="text-xs text-slate-500 hidden sm:flex items-center gap-1.5 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>Trash-First Guarantee</span>
           </div>
         </div>
@@ -219,8 +216,8 @@ export default function SimulatedStorageAnalyzer() {
               onClick={() => toggleSelect(item.id)}
               className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
                 item.selected && !isSimulatedClean
-                  ? 'bg-[#151D2A] border-cyan-500/40 shadow-sm shadow-cyan-500/10'
-                  : 'bg-[#111620] border-[#1E2635] hover:border-slate-700 opacity-80'
+                  ? 'bg-cyan-50/60 border-cyan-300 shadow-xs'
+                  : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -228,24 +225,26 @@ export default function SimulatedStorageAnalyzer() {
                   type="checkbox"
                   checked={item.selected && !isSimulatedClean}
                   onChange={() => toggleSelect(item.id)}
-                  className="rounded border-[#2A3445] text-cyan-500 focus:ring-cyan-500 bg-[#0C1017] w-4 h-4"
+                  className="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 bg-white w-4 h-4 cursor-pointer"
                   onClick={e => e.stopPropagation()}
                 />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white truncate">{item.name}</span>
-                    <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${
-                      item.risk === 'Low' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                    <span className="text-sm font-semibold text-slate-900 truncate">{item.name}</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                      item.risk === 'Low' 
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                        : 'bg-amber-50 text-amber-700 border border-amber-200'
                     }`}>
                       {item.risk} Risk
                     </span>
                   </div>
-                  <p className="text-xs font-mono text-slate-400 truncate mt-0.5">{item.path}</p>
+                  <p className="text-xs font-mono text-slate-500 truncate mt-0.5">{item.path}</p>
                 </div>
               </div>
 
               <div className="text-right shrink-0">
-                <span className="text-sm font-bold font-mono text-white block">{item.sizeGB} GB</span>
+                <span className="text-sm font-bold font-mono text-slate-900 block">{item.sizeGB} GB</span>
                 <span className="text-[11px] text-slate-500">
                   {item.category === 'developer' ? 'Rebuildable' : item.category === 'ai' ? 'Redownloadable' : 'Safe to recycle'}
                 </span>
@@ -255,12 +254,12 @@ export default function SimulatedStorageAnalyzer() {
         </div>
 
         {/* Bottom Safety Highlight */}
-        <div className="p-4 rounded-xl bg-[#0B1017] border border-[#1C2534] flex items-center justify-between text-xs text-slate-400">
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs text-slate-600">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Files are moved to the macOS Trash with full Put Back support. No opaque or permanent deletion.</span>
           </div>
-          <span className="font-mono text-cyan-400">DiskWarren Engine v1.0</span>
+          <span className="font-mono text-cyan-700 font-medium">DiskWarren Engine v1.0</span>
         </div>
       </div>
     </div>

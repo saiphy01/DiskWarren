@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { LifeBuoy, Mail, ShieldAlert, Key, RefreshCcw, HelpCircle, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
+import { LifeBuoy, Mail, ShieldAlert, Key, RefreshCcw, HelpCircle, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Support & Help Center — DiskWarren',
@@ -42,65 +42,65 @@ export default function SupportPage() {
     <div className="max-w-4xl mx-auto px-6 py-16 space-y-16">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-          <LifeBuoy className="w-4 h-4 text-cyan-400" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold uppercase tracking-wider shadow-xs">
+          <LifeBuoy className="w-4 h-4 text-cyan-600" />
           <span>Customer &amp; Engineering Support</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
           How can we help?
         </h1>
-        <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Find answers to common questions regarding permissions, safety, licensing, or reach our native engineering team directly.
         </p>
       </div>
 
       {/* Quick Action Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[#10141D] border border-[#222A38] rounded-xl p-6 space-y-3">
-          <div className="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-3 hover:border-slate-300 transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center">
             <Key className="w-5 h-5" />
           </div>
-          <h2 className="text-base font-semibold text-white">License Help</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h2 className="text-base font-semibold text-slate-900">License Help</h2>
+          <p className="text-xs text-slate-600 leading-relaxed">
             Need to transfer your license to a new Mac or retrieve a lost key? 
           </p>
           <a
             href="mailto:support@diskwarren.com?subject=License%20Recovery%20Request"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 pt-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 hover:text-cyan-600 pt-2"
           >
             <span>Recover license</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
 
-        <div className="bg-[#10141D] border border-[#222A38] rounded-xl p-6 space-y-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-3 hover:border-slate-300 transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
             <ShieldAlert className="w-5 h-5" />
           </div>
-          <h2 className="text-base font-semibold text-white">Permission Setup</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h2 className="text-base font-semibold text-slate-900">Permission Setup</h2>
+          <p className="text-xs text-slate-600 leading-relaxed">
             Step-by-step guidance on Full Disk Access on macOS 14 &amp; 15.
           </p>
           <Link
-            href="/download#instructions"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 pt-2"
+            href="/download"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 hover:text-cyan-600 pt-2"
           >
             <span>View permissions guide</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="bg-[#10141D] border border-[#222A38] rounded-xl p-6 space-y-3">
-          <div className="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-3 hover:border-slate-300 transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
             <RefreshCcw className="w-5 h-5" />
           </div>
-          <h2 className="text-base font-semibold text-white">Refund Request</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h2 className="text-base font-semibold text-slate-900">Refund Request</h2>
+          <p className="text-xs text-slate-600 leading-relaxed">
             Hassle-free 30-day money-back guarantee on all Pro purchases.
           </p>
           <a
             href="mailto:support@diskwarren.com?subject=Refund%20Request"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 pt-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 hover:text-cyan-600 pt-2"
           >
             <span>Request refund</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -110,18 +110,18 @@ export default function SupportPage() {
 
       {/* Frequently Asked Questions */}
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <HelpCircle className="w-5 h-5 text-cyan-400" />
+        <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <HelpCircle className="w-5 h-5 text-cyan-600" />
           Frequently Asked Questions
         </h2>
         
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
-            <div key={idx} className="bg-[#0E121A] border border-[#1E2634] rounded-xl p-6 space-y-2">
-              <h3 className="text-base font-semibold text-white">
+            <div key={idx} className="bg-white border border-slate-200 shadow-xs rounded-xl p-6 space-y-2">
+              <h3 className="text-base font-semibold text-slate-900">
                 {faq.q}
               </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 {faq.a}
               </p>
             </div>
@@ -130,33 +130,33 @@ export default function SupportPage() {
       </div>
 
       {/* Contact Direct Engineering Form / Card */}
-      <div className="bg-[#101520] border border-cyan-500/30 rounded-2xl p-8 space-y-6">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 space-y-6">
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Mail className="w-5 h-5 text-cyan-400" />
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Mail className="w-5 h-5 text-cyan-600" />
             Contact DiskWarren Engineering
           </h2>
-          <p className="text-sm text-slate-300 leading-relaxed">
+          <p className="text-sm text-slate-600 leading-relaxed">
             Have a bug report, rule suggestion for a new developer ecosystem, or specific question? 
             You will be speaking directly with the Swift developers building DiskWarren.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-300">
-          <div className="p-4 rounded-lg bg-[#0A0D12] border border-[#222A36]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-700">
+          <div className="p-4 rounded-lg bg-white border border-slate-200 shadow-xs">
             <span className="text-slate-500 block mb-1">Direct Support Email</span>
-            <a href="mailto:support@diskwarren.com" className="text-sm font-semibold text-cyan-400 hover:underline">
+            <a href="mailto:support@diskwarren.com" className="text-sm font-semibold text-cyan-700 hover:underline">
               support@diskwarren.com
             </a>
           </div>
-          <div className="p-4 rounded-lg bg-[#0A0D12] border border-[#222A36]">
+          <div className="p-4 rounded-lg bg-white border border-slate-200 shadow-xs">
             <span className="text-slate-500 block mb-1">Response Time SLA</span>
-            <span className="text-sm font-semibold text-emerald-400">Within 24 Hours (Mon – Fri)</span>
+            <span className="text-sm font-semibold text-emerald-700">Within 24 Hours (Mon &ndash; Fri)</span>
           </div>
         </div>
 
         <div className="pt-2 text-xs text-slate-500">
-          Tip: When reporting an issue, please include your macOS version (Sonoma/Sequoia), Mac architecture (M1/M2/M3/M4 or Intel), and your redacted local log file from <code className="text-cyan-300 bg-[#0A0D12] px-1 py-0.5 rounded">~/Library/Logs/DiskWarren/</code>.
+          Tip: When reporting an issue, please include your macOS version (Sonoma/Sequoia), Mac architecture (M1/M2/M3/M4 or Intel), and your redacted local log file from <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/60 font-mono">~/Library/Logs/DiskWarren/</code>.
         </div>
       </div>
     </div>
