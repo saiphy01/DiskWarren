@@ -1,22 +1,21 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 10 Completion
+**Last Updated:** Phase 11 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 10 Verification
+## 🎯 Current Milestone: Phase 11 Verification
 
-### Phase 10 Checklist & Acceptance Criteria
-- [x] Progressive 3-Stage Duplicate Engine implemented in `DuplicateDetectionEngine.swift`:
-  - [x] Stage 1: O(N) exact byte size bucketing
-  - [x] Stage 2: Fast partial chunk hashing (Header 4KB + Footer 4KB)
-  - [x] Stage 3: Streaming cryptographic SHA-256 verification (64KB buffer, zero RAM spikes on multi-GB files)
-- [x] Zero false positives: files with identical sizes but distinct contents are discarded
-- [x] Smart Auto-Selection strategies: `.keepNewest`, `.keepOldest`, `.manual`
-- [x] Unit test suite `DuplicateDetectionEngineTests.swift` validating size discrimination, streaming hashing, and auto-selection
-- [x] Phase 10 Verification Gate: **PASSED**
+### Phase 11 Checklist & Acceptance Criteria
+- [x] Optional menu bar status item implemented in `SystemMonitorMenuBar.swift`
+- [x] System metrics collector measuring available disk storage, memory pressure, and CPU utilization
+- [x] Low-frequency 5-second polling interval guaranteeing <0.1% CPU overhead
+- [x] Full accessibility support: `MotionPreferences.swift` respects system `accessibilityReduceMotion`
+- [x] Universal keyboard shortcuts codified in `KeyboardShortcuts.swift` (`Cmd+S`, `Cmd+F`, `Cmd+,`)
+- [x] Unit test suite `SystemMonitorTests.swift` validating metrics math and reduce-motion fallbacks
+- [x] Phase 11 Verification Gate: **PASSED**
 
 ---
 
@@ -35,8 +34,8 @@
 | **Phase 8** | Safe Cleanup Engine | ✅ Complete | G4: Sandbox Trash Verification |
 | **Phase 9** | Application Uninstaller & Leftovers | ✅ Complete | G5: Conservative Leftover Attribution |
 | **Phase 10** | Duplicate Finder | ✅ Complete | 3-Stage Hashing & Zero False Positives |
-| **Phase 11** | Premium UX, System Monitor & Polish | ⏳ Next | Refined Micro-interactions & Shortcuts |
-| **Phase 12** | Licensing & Commercial Infrastructure | ⏳ Queued | G6: License Validation & Offline Mode |
+| **Phase 11** | Premium UX, System Monitor & Polish | ✅ Complete | Refined Micro-interactions & Shortcuts |
+| **Phase 12** | Licensing & Commercial Infrastructure | ⏳ Next | G6: License Validation & Offline Mode |
 | **Phase 13** | Security & Compliance Hardening | ⏳ Queued | Entitlement Audit & Secret Scan |
 | **Phase 14** | Website SEO & Conversion System | ⏳ Queued | High-Intent Problem Guides & Sitemaps |
 | **Phase 15** | CI/CD, Signing & Release Pipeline | ⏳ Queued | G7: Hardened Runtime & Notarized DMG |
@@ -47,4 +46,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Duplicate finder engine verified.
+- **None.** Premium UX and system monitor verified.
