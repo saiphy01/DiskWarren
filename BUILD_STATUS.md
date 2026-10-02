@@ -1,24 +1,27 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 12 Completion
+**Last Updated:** Phase 13 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 12 Verification
+## 🎯 Current Milestone: Phase 13 Verification
 
-### Phase 12 Checklist & Acceptance Criteria
-- [x] Merchant-of-Record evaluation and decision documented in ADR 007 (`DECISIONS.md`)
-- [x] `LicenseManager.swift` implemented featuring:
-  - [x] Offline-first cryptographic checksum validation (`WARREN-<TIER>-<BODY>-<CHECKSUM>`)
-  - [x] Receipt caching via standard local persistence
-  - [x] Deactivation support for multi-Mac license portability
-- [x] `LicenseActivationView.swift` modal UI with direct checkout links and error states
-- [x] Strict architecture separation: scanning, treemap, and file inspection remain 100% free and functional without license activation
-- [x] Zero secret keys embedded in binary (public cryptographic verification only)
-- [x] Unit test suite `LicenseManagerTests.swift` validating key verification and deactivation
-- [x] G6 Commercial Gate: **PASSED**
+### Phase 13 Checklist & Acceptance Criteria
+- [x] Hardened Runtime entitlements codified in `DiskWarren.entitlements`
+  - [x] `allow-jit` disabled
+  - [x] `allow-unsigned-executable-memory` disabled
+  - [x] `disable-library-validation` disabled (prevents dynamic library injection)
+  - [x] `allow-dyld-environment-variables` disabled
+  - [x] `debugger` disabled
+- [x] Comprehensive STRIDE Threat Model authored in `docs/THREAT_MODEL.md`
+- [x] Automated security audit script `scripts/audit_security.py`:
+  - [x] Secret scanning across 99 files: 0 credentials, 0 private keys, 0 API tokens found
+  - [x] Hardened Runtime entitlement verification: passed
+  - [x] NPM audit: 0 vulnerabilities
+- [x] Telemetry review: zero transmission of file paths, directory trees, or file contents
+- [x] Phase 13 Verification Gate: **PASSED**
 
 ---
 
@@ -39,8 +42,8 @@
 | **Phase 10** | Duplicate Finder | ✅ Complete | 3-Stage Hashing & Zero False Positives |
 | **Phase 11** | Premium UX, System Monitor & Polish | ✅ Complete | Refined Micro-interactions & Shortcuts |
 | **Phase 12** | Licensing & Commercial Infrastructure | ✅ Complete | G6: License Validation & Offline Mode |
-| **Phase 13** | Security & Compliance Hardening | ⏳ Next | Entitlement Audit & Secret Scan |
-| **Phase 14** | Website SEO & Conversion System | ⏳ Queued | High-Intent Problem Guides & Sitemaps |
+| **Phase 13** | Security & Compliance Hardening | ✅ Complete | Entitlement Audit & Secret Scan |
+| **Phase 14** | Website SEO & Conversion System | ⏳ Next | High-Intent Problem Guides & Sitemaps |
 | **Phase 15** | CI/CD, Signing & Release Pipeline | ⏳ Queued | G7: Hardened Runtime & Notarized DMG |
 | **Phase 16** | QA, Beta & Reliability Gate | ⏳ Queued | G8: Multi-Scenario Regression Matrix |
 | **Phase 17** | Production Launch | ⏳ Queued | G9: End-to-End Customer Flow |
@@ -49,4 +52,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Licensing and offline verification pipeline verified.
+- **None.** Security, privacy, and compliance hardening verified.
