@@ -1,26 +1,28 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 5 Completion
+**Last Updated:** Phase 6 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 5 Verification
+## 🎯 Current Milestone: Phase 6 Verification
 
-### Phase 5 Checklist & Acceptance Criteria
-- [x] Squarified Treemap layout engine implemented in `TreemapEngine.swift` (Bruls, Huizing, van Wijk algorithm)
-- [x] Level-of-Detail (LOD) pruning: coalesces sub-pixel items to maintain 60fps rendering
-- [x] `InteractiveTreemapView.swift` implementing:
-  - [x] Responsive layout with category-themed colors
-  - [x] Hover highlight and live tooltips
-  - [x] Single click inspection
-  - [x] Double-click drill down into subdirectories
-  - [x] VoiceOver accessibility labels
-- [x] Dedicated `LargeFilesView.swift` with size threshold picker (>100MB, >500MB, >1GB, >5GB)
-- [x] Instant in-memory `GlobalSearchView.swift` with category badges and path truncation
-- [x] Unit test suite `TreemapEngineTests.swift` validating bounds containment and edge cases
-- [x] G3 Visualization Gate: **PASSED**
+### Phase 6 Checklist & Acceptance Criteria
+- [x] Declarative `CleanupRule` model implemented in `CleanupRule.swift`
+- [x] Maintainable `CleanupRuleRegistry` implemented in `CleanupRuleRegistry.swift`:
+  - [x] Xcode DerivedData, Archives, Simulator devices
+  - [x] Node.js `node_modules` and package caches (npm, pnpm, yarn)
+  - [x] Rust Cargo target directories and registry cache
+  - [x] Python pip wheel cache and virtualenvs (`.venv`, `venv`)
+  - [x] Go build cache
+  - [x] Homebrew bottled download cache
+  - [x] Android Gradle caches
+  - [x] Docker engine data
+  - [x] Browser web caches (Chrome, Safari, Brave)
+- [x] Strict safety invariant: unknown paths or files named `cache.txt` or `temp_notes.md` in personal folders are never classified as safe
+- [x] Automated unit test suite `CleanupRuleRegistryTests.swift` validating both positive matches and false-positive resistance
+- [x] Phase 6 Verification Gate: **PASSED**
 
 ---
 
@@ -34,8 +36,8 @@
 | **Phase 3** | Native macOS App Shell & Permissions | ✅ Complete | App Lifecycle & FDA Guidance |
 | **Phase 4** | Filesystem Scanner & Storage Index | ✅ Complete | G2: Traversal & Memory Benchmarks |
 | **Phase 5** | Treemap, Search & Storage Intelligence UI | ✅ Complete | G3: 60fps Interactive Treemap |
-| **Phase 6** | Categorization & Cleanup Rule Engine | ⏳ Next | Rule Registry & Fixture Validation |
-| **Phase 7** | AI Storage Intelligence | ⏳ Queued | Ollama, LM Studio, HF, ComfyUI Detection |
+| **Phase 6** | Categorization & Cleanup Rule Engine | ✅ Complete | Rule Registry & Fixture Validation |
+| **Phase 7** | AI Storage Intelligence | ⏳ Next | Ollama, LM Studio, HF, ComfyUI Detection |
 | **Phase 8** | Safe Cleanup Engine | ⏳ Queued | G4: Sandbox Trash Verification |
 | **Phase 9** | Application Uninstaller & Leftovers | ⏳ Queued | G5: Conservative Leftover Attribution |
 | **Phase 10** | Duplicate Finder | ⏳ Queued | 3-Stage Hashing & Zero False Positives |
@@ -51,4 +53,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Visualization, treemap, and search verified.
+- **None.** Rule registry and safety filters verified.
