@@ -1,30 +1,26 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 4 Completion
+**Last Updated:** Phase 5 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 4 Verification
+## 🎯 Current Milestone: Phase 5 Verification
 
-### Phase 4 Checklist & Acceptance Criteria
-- [x] Concurrent `StorageScanner` actor implemented in `StorageScanner.swift`
-- [x] Inode and device cycle detection preventing infinite recursion on symlinks
-- [x] Resilient permission-denied error boundary: avoids crashing when encountering TCC-protected or restricted folders
-- [x] Cooperative cancellation support (`cancel()` and `Task.isCancelled`)
-- [x] Live progress streaming via `ScanProgress` (files indexed, rate, elapsed time, current path)
-- [x] High-performance `StorageIndex` in `StorageIndex.swift` providing:
-  - [x] `findLargestFiles(limit:minSizeBytes:)`
-  - [x] `findLargestDirectories(limit:)`
-  - [x] In-memory text search
-  - [x] Category storage aggregation
-- [x] Automated unit test suite `StorageScannerTests.swift` validating size aggregation and index queries
-- [x] Benchmark suite `scripts/benchmark_scanner.py` executed on 10,000 synthetic nodes:
-  - [x] Throughput: **12,649 files/second**
-  - [x] Traversal duration: 0.791s
-  - [x] Zero unhandled errors, clean teardown
-- [x] G2 Scanner Gate: **PASSED**
+### Phase 5 Checklist & Acceptance Criteria
+- [x] Squarified Treemap layout engine implemented in `TreemapEngine.swift` (Bruls, Huizing, van Wijk algorithm)
+- [x] Level-of-Detail (LOD) pruning: coalesces sub-pixel items to maintain 60fps rendering
+- [x] `InteractiveTreemapView.swift` implementing:
+  - [x] Responsive layout with category-themed colors
+  - [x] Hover highlight and live tooltips
+  - [x] Single click inspection
+  - [x] Double-click drill down into subdirectories
+  - [x] VoiceOver accessibility labels
+- [x] Dedicated `LargeFilesView.swift` with size threshold picker (>100MB, >500MB, >1GB, >5GB)
+- [x] Instant in-memory `GlobalSearchView.swift` with category badges and path truncation
+- [x] Unit test suite `TreemapEngineTests.swift` validating bounds containment and edge cases
+- [x] G3 Visualization Gate: **PASSED**
 
 ---
 
@@ -37,8 +33,8 @@
 | **Phase 2** | Marketing Website MVP | ✅ Complete | G1: Deployable Next.js Marketing Site |
 | **Phase 3** | Native macOS App Shell & Permissions | ✅ Complete | App Lifecycle & FDA Guidance |
 | **Phase 4** | Filesystem Scanner & Storage Index | ✅ Complete | G2: Traversal & Memory Benchmarks |
-| **Phase 5** | Treemap, Search & Storage Intelligence UI | ⏳ Next | G3: 60fps Interactive Treemap |
-| **Phase 6** | Categorization & Cleanup Rule Engine | ⏳ Queued | Rule Registry & Fixture Validation |
+| **Phase 5** | Treemap, Search & Storage Intelligence UI | ✅ Complete | G3: 60fps Interactive Treemap |
+| **Phase 6** | Categorization & Cleanup Rule Engine | ⏳ Next | Rule Registry & Fixture Validation |
 | **Phase 7** | AI Storage Intelligence | ⏳ Queued | Ollama, LM Studio, HF, ComfyUI Detection |
 | **Phase 8** | Safe Cleanup Engine | ⏳ Queued | G4: Sandbox Trash Verification |
 | **Phase 9** | Application Uninstaller & Leftovers | ⏳ Queued | G5: Conservative Leftover Attribution |
@@ -55,4 +51,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Core scanning engine benchmarked and verified.
+- **None.** Visualization, treemap, and search verified.
