@@ -1,23 +1,22 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 7 Completion
+**Last Updated:** Phase 8 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 7 Verification
+## 🎯 Current Milestone: Phase 8 Verification
 
-### Phase 7 Checklist & Acceptance Criteria
-- [x] Dedicated `AIModelItem` domain model in `AIModelItem.swift` (Ollama, LM Studio, Hugging Face, ComfyUI)
-- [x] `AIStorageScanner.swift` implementing read-only model detection:
-  - [x] Ollama model manifests and blob digest size extraction
-  - [x] LM Studio GGUF weight files and quantization tagging (Q4_K_M, Q8_0, etc.)
-  - [x] Hugging Face Hub `models--*` snapshot hierarchy
-  - [x] Binary GGUF magic header validation (`0x47475546` / ASCII "GGUF")
-- [x] Strictly read-only: no deletion actions exist in the detection engine
-- [x] Unit test suite `AIStorageScannerTests.swift` validating binary header verification and provider paths
-- [x] Phase 7 Verification Gate: **PASSED**
+### Phase 8 Checklist & Acceptance Criteria
+- [x] `SafeTrashManager.swift` implemented enforcing:
+  - [x] Permanent blacklist on critical system paths (`/System`, `/usr`, `/bin`, `/sbin`, `/Library/Preferences/SystemConfiguration`, `Library/Keychains`)
+  - [x] Native macOS Trash recycling via `FileManager.trashItem`
+  - [x] Granular `CleanupResult` reporting `succeededURLs`, `failedURLs`, and exact reclaimed byte counts
+- [x] `CleanupAuditLogger.swift` recording append-only local audit logs in `~/Library/Application Support/DiskWarren/audit_log.json`
+- [x] Strict test isolation: destructive unit tests strictly execute within isolated `NSTemporaryDirectory()` sandboxes
+- [x] Unit test suite `SafeTrashManagerTests.swift` validating restricted path violations and safe file recycling
+- [x] G4 Cleanup Gate: **PASSED**
 
 ---
 
@@ -33,8 +32,8 @@
 | **Phase 5** | Treemap, Search & Storage Intelligence UI | ✅ Complete | G3: 60fps Interactive Treemap |
 | **Phase 6** | Categorization & Cleanup Rule Engine | ✅ Complete | Rule Registry & Fixture Validation |
 | **Phase 7** | AI Storage Intelligence | ✅ Complete | Ollama, LM Studio, HF, ComfyUI Detection |
-| **Phase 8** | Safe Cleanup Engine | ⏳ Next | G4: Sandbox Trash Verification |
-| **Phase 9** | Application Uninstaller & Leftovers | ⏳ Queued | G5: Conservative Leftover Attribution |
+| **Phase 8** | Safe Cleanup Engine | ✅ Complete | G4: Sandbox Trash Verification |
+| **Phase 9** | Application Uninstaller & Leftovers | ⏳ Next | G5: Conservative Leftover Attribution |
 | **Phase 10** | Duplicate Finder | ⏳ Queued | 3-Stage Hashing & Zero False Positives |
 | **Phase 11** | Premium UX, System Monitor & Polish | ⏳ Queued | Refined Micro-interactions & Shortcuts |
 | **Phase 12** | Licensing & Commercial Infrastructure | ⏳ Queued | G6: License Validation & Offline Mode |
@@ -48,4 +47,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** AI storage intelligence module verified.
+- **None.** Safe cleanup engine verified with sandbox fixtures.
