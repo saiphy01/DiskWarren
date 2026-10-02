@@ -40,3 +40,27 @@
 - **Context:** Disk utilities rely heavily on search intent ("how to clear system data mac", "delete xcode cache", "mac disk space analyzer"). The marketing website must achieve top Core Web Vitals, instant load speeds, dynamic interactive product demos, and deep SEO indexing.
 - **Decision:** Build the marketing website with Next.js 15 (App Router), TypeScript, and Tailwind CSS.
 - **Consequences:** Enables static site generation (SSG) for problem guides, sub-second TTFB, rich interactive client-side treemap simulations using synthetic data, and seamless deployment to Vercel.
+
+---
+
+## ADR 006: Local-Only Privacy Invariant
+- **Status:** Accepted
+- **Context:** Handling user files and path trees requires uncompromising privacy protections.
+- **Decision:** The native desktop app transmits zero filenames, directory names, or content over any network connection. Telemetry is restricted to anonymous app updates and license activation.
+- **Consequences:** User trust is earned through architecture rather than policy promises alone.
+
+---
+
+## ADR 007: Merchant-of-Record (MoR) Selection & Offline-Capable Cryptographic Licensing
+- **Status:** Accepted
+- **Context:** Commercializing DiskWarren requires global sales tax/VAT compliance (EU VAT, US sales tax) and a frictionless purchase flow. At the same time, users demand that a desktop utility never cease functioning during airplane travel or network outages.
+- **Evaluation:**
+  - *Stripe:* High compliance overhead; requires registering for tax in dozens of jurisdictions.
+  - *Lemon Squeezy / Polar / Paddle:* Acts as Merchant of Record handling global tax remittance, chargebacks, and invoicing. Polar and Lemon Squeezy offer developer-first APIs and straightforward license key generation.
+- **Decision:**
+  1. Adopt **Polar / Lemon Squeezy** as the primary Merchant of Record.
+  2. Implement an **offline-first cryptographic license verification protocol**:
+     - Format: `WARREN-<TIER>-<PAYLOAD>-<CHECKSUM>`
+     - Upon successful online activation, an encrypted license receipt is signed and cached locally.
+     - Offline verification verifies the signature with an embedded public verification key, ensuring Pro capabilities persist permanently without a continuous Internet connection.
+  3. Strictly decouple scanning from licensing: The core storage scanner, interactive treemap, and file inspector are 100% free and never blocked by licensing.
