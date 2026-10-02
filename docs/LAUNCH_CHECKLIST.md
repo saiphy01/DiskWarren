@@ -25,7 +25,7 @@
 - [x] Dedicated download portal at `/download` with Universal binary DMG download link.
 - [x] Cryptographic SHA-256 verification string displayed with terminal verification command:
   ```bash
-  echo "9e5c46b5a796e625a2e5ff4d46cfcbfd12f1708170c991e32626e2e2ec8b6cb0  DiskWarren-1.0.0.dmg" | shasum -a 256 --check
+  echo "f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303  DiskWarren-1.0.0.dmg" | shasum -a 256 --check
   ```
 - [x] Apple Silicon (`arm64`) and Intel (`x86_64`) Universal 2 compatibility confirmed.
 - [x] Minimum OS compatibility enforced: macOS 14.0 Sonoma & macOS 15.0+ Sequoia.

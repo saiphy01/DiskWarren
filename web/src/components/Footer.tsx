@@ -43,7 +43,7 @@ export default function Footer() {
               <li><Link href="/blog/how-to-delete-xcode-deriveddata" className="hover:text-cyan-600 transition-colors">Clear Xcode DerivedData</Link></li>
               <li><Link href="/how-to-delete-ollama-models" className="hover:text-cyan-600 transition-colors">Manage Ollama &amp; GGUF Models</Link></li>
               <li><Link href="/how-to-clear-system-data-mac" className="hover:text-cyan-600 transition-colors">Demystify macOS System Data</Link></li>
-              <li><Link href="/mac-cleaner-for-developers" className="hover:text-cyan-600 transition-colors">Find Stale node_modules</Link></li>
+              <li><Link href="/blog/delete-node-modules-recursively" className="hover:text-cyan-600 transition-colors">Find Stale node_modules</Link></li>
             </ul>
           </div>
 

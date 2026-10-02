@@ -95,12 +95,12 @@ Everything runs 100% locally on your Mac with zero telemetry, zero background da
 
 | Artifact | Architecture | File Size | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- |
-| `DiskWarren-1.0.0.dmg` | Universal 2 (`arm64` + `x86_64`) | 24.8 MB | `9e5c46b5a796e625a2e5ff4d46cfcbfd12f1708170c991e32626e2e2ec8b6cb0` |
+| `DiskWarren-1.0.0.dmg` | Universal 2 (`arm64` + `x86_64`) | 24.8 MB | `f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303` |
 | `appcast.xml` | Sparkle 2 RSS Feed | 1.8 KB | Validated with EdDSA Signature |
 
 ### Verification Command:
 ```bash
-echo "9e5c46b5a796e625a2e5ff4d46cfcbfd12f1708170c991e32626e2e2ec8b6cb0  DiskWarren-1.0.0.dmg" | shasum -a 256 --check
+echo "f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303  DiskWarren-1.0.0.dmg" | shasum -a 256 --check
 ```
 
 ---

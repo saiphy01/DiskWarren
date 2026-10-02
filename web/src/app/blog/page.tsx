@@ -31,6 +31,14 @@ const guides = [
     category: 'macOS Intelligence',
     readTime: '6 min read',
     date: 'Sep 28, 2026'
+  },
+  {
+    href: '/blog/delete-node-modules-recursively',
+    title: 'How to Find & Delete node_modules Recursively on macOS',
+    excerpt: 'Dormant node_modules trees consume dozens of gigabytes across ~/Projects. Learn how to clean them safely with instant Put Back protection.',
+    category: 'Developer',
+    readTime: '5 min read',
+    date: 'Sep 24, 2026'
   }
 ];
 
