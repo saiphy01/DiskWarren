@@ -1,0 +1,74 @@
+{
+  "volume": {
+    "name": "Macintosh HD",
+    "mount_point": "/",
+    "total_capacity_bytes": 494384111616,
+    "free_bytes": 142800000000,
+    "purgeable_bytes": 12400000000,
+    "file_system_type": "apfs"
+  },
+  "rules_test_fixtures": [
+    {
+      "identifier": "xcode.deriveddata",
+      "path": "/Users/testuser/Library/Developer/Xcode/DerivedData/MyApp-abcd/Build/Products",
+      "expected_category": "Developer",
+      "expected_risk": "Low Risk",
+      "synthetic_size_bytes": 15420000000
+    },
+    {
+      "identifier": "node.modules",
+      "path": "/Users/testuser/Projects/awesome-app/node_modules",
+      "expected_category": "Developer",
+      "expected_risk": "Review Required",
+      "synthetic_size_bytes": 620000000
+    },
+    {
+      "identifier": "ai.ollama",
+      "path": "/Users/testuser/.ollama/models/blobs/sha256-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_category": "AI Models",
+      "expected_risk": "Review Required",
+      "synthetic_size_bytes": 14200000000
+    },
+    {
+      "identifier": "ai.lmstudio",
+      "path": "/Users/testuser/.cache/lm-studio/models/Quantized/Meta-Llama-3-8B-Instruct.Q4_K_M.gguf",
+      "expected_category": "AI Models",
+      "expected_risk": "Review Required",
+      "synthetic_size_bytes": 4920000000
+    },
+    {
+      "identifier": "brew.caches",
+      "path": "/Users/testuser/Library/Caches/Homebrew/downloads/c42b8e3--node-20.10.0.bottle.tar.gz",
+      "expected_category": "Caches & Junk",
+      "expected_risk": "Low Risk",
+      "synthetic_size_bytes": 54000000
+    },
+    {
+      "identifier": "system.restricted",
+      "path": "/System/Library/CoreServices/Finder.app",
+      "expected_category": "System Data",
+      "expected_risk": "Restricted",
+      "synthetic_size_bytes": 85000000
+    }
+  ],
+  "duplicates_test_fixtures": [
+    {
+      "group_id": "dup-group-001",
+      "sha256": "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
+      "size_bytes": 104857600,
+      "files": [
+        "/Users/testuser/Movies/Exports/FinalCut_4K_Master.mov",
+        "/Users/testuser/Downloads/FinalCut_4K_Master_copy.mov"
+      ]
+    },
+    {
+      "group_id": "dup-group-002",
+      "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
+      "size_bytes": 52428800,
+      "files": [
+        "/Users/testuser/Documents/Backup_Archive_2026.zip",
+        "/Users/testuser/Desktop/Backup_Archive_2026.zip"
+      ]
+    }
+  ]
+}
