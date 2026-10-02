@@ -1,40 +1,33 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 1 Completion
+**Last Updated:** Phase 2 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 1 Verification
+## 🎯 Current Milestone: Phase 2 Verification
 
-### Phase 1 Checklist & Acceptance Criteria
-- [x] Information Architecture & Navigation hierarchy documented in `docs/UI_FLOWS.md`
-- [x] Design System tokens, typography, and color palettes codified in `docs/DESIGN_SYSTEM.md` and `Theme.swift`
-- [x] Reusable SwiftUI components implemented:
-  - [x] `WarrenCard` (styled surface well with subtle border)
-  - [x] `WarrenButton` (primary, secondary, danger, subtle)
-  - [x] `WarrenStorageGauge` (circular storage utilization gauge)
-  - [x] `CategoryDistributionBar` (stacked proportional category bar)
-  - [x] `RiskBadge` (Low Risk, Review Required, Restricted)
-  - [x] `CategoryBadge` (Developer, AI Models, Caches, Apps, Duplicates)
-  - [x] `BreadcrumbBar` (interactive directory path navigation)
-  - [x] `ConfirmCleanupModal` (mandatory safety review with Trash notice)
-  - [x] `StateViews` (`LoadingStateView`, `EmptyStateView`, `ErrorStateView`, `PermissionDeniedView`)
-- [x] Realistic mock fixture dataset created in `MockData.swift` and `fixtures/synthetic_filesystem_fixtures.json`
-- [x] Complete suite of screen shells implemented:
-  - [x] `DashboardView`
-  - [x] `ScanProgressView`
-  - [x] `TreemapShellView`
-  - [x] `DeveloperCleanerView`
-  - [x] `AIStorageView`
-  - [x] `SafeCleanupReviewView`
-  - [x] `AppUninstallerShellView`
-  - [x] `DuplicateFinderShellView`
-  - [x] `SettingsShellView`
-  - [x] `OnboardingShellView`
-- [x] Swift package targets configured in `app/Package.swift` (`DiskWarrenCore`, `DiskWarrenUI`, `DiskWarrenApp`)
-- [x] Phase 1 Verification Gate: **PASSED**
+### Phase 2 Checklist & Acceptance Criteria
+- [x] High-converting Next.js 15+ marketing website created in `web/`
+- [x] Responsive layout with dark-first Apple aesthetic (`#0A0D12` background, cyan/emerald accents)
+- [x] Interactive Simulated Storage Analyzer built in `src/components/SimulatedStorageAnalyzer.tsx` using realistic synthetic macOS storage dataset
+- [x] Clear simulation disclaimer banner ("Does not scan your computer")
+- [x] Feature sections covering:
+  - [x] Storage Scanner & Treemap
+  - [x] Developer Cleanup (Xcode DerivedData, node_modules, Cargo, pip, Docker)
+  - [x] Local AI Storage Intelligence (Ollama, LM Studio, Hugging Face, ComfyUI, GGUF)
+  - [x] Trash-First Safe Cleanup Engine
+  - [x] Application Uninstaller & Leftovers
+  - [x] SHA-256 Duplicate Finder
+- [x] Transparent pricing structure ($0 Free edition vs $29 Pro lifetime license)
+- [x] Full Privacy Policy (`/privacy`) matching `PRIVACY.md` zero-telemetry guarantee
+- [x] Full Terms of Service & 14-Day Refund Policy (`/terms`)
+- [x] Blog & high-intent SEO guide system (`/blog` and `/blog/how-to-delete-xcode-deriveddata`)
+- [x] Technical SEO configuration: dynamic `sitemap.xml` (`src/app/sitemap.ts`) and `robots.txt` (`src/app/robots.ts`)
+- [x] `npm run build` succeeds cleanly with Turbopack, generating 8 static routes
+- [x] Zero placeholder lorem ipsum verified
+- [x] G1 Website Gate: **PASSED**
 
 ---
 
@@ -44,8 +37,8 @@
 | :--- | :--- | :--- | :--- |
 | **Phase 0** | Project Initialization & Specification | ✅ Complete | G0: Architecture & Specs Frozen |
 | **Phase 1** | Product UX, IA & Design System | ✅ Complete | Reusable Components & Screen Shells |
-| **Phase 2** | Marketing Website MVP | ⏳ Next | G1: Deployable Next.js Marketing Site |
-| **Phase 3** | Native macOS App Shell & Permissions | ⏳ Queued | App Lifecycle & FDA Guidance |
+| **Phase 2** | Marketing Website MVP | ✅ Complete | G1: Deployable Next.js Marketing Site |
+| **Phase 3** | Native macOS App Shell & Permissions | ⏳ Next | App Lifecycle & FDA Guidance |
 | **Phase 4** | Filesystem Scanner & Storage Index | ⏳ Queued | G2: Traversal & Memory Benchmarks |
 | **Phase 5** | Treemap, Search & Storage Intelligence UI | ⏳ Queued | G3: 60fps Interactive Treemap |
 | **Phase 6** | Categorization & Cleanup Rule Engine | ⏳ Queued | Rule Registry & Fixture Validation |
@@ -65,4 +58,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** All components build cleanly and adhere to the design system.
+- **None.** Website builds cleanly and is ready for Vercel/static deployment.
