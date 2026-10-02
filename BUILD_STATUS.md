@@ -1,27 +1,27 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 13 Completion
+**Last Updated:** Phase 14 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 13 Verification
+## 🎯 Current Milestone: Phase 14 Verification
 
-### Phase 13 Checklist & Acceptance Criteria
-- [x] Hardened Runtime entitlements codified in `DiskWarren.entitlements`
-  - [x] `allow-jit` disabled
-  - [x] `allow-unsigned-executable-memory` disabled
-  - [x] `disable-library-validation` disabled (prevents dynamic library injection)
-  - [x] `allow-dyld-environment-variables` disabled
-  - [x] `debugger` disabled
-- [x] Comprehensive STRIDE Threat Model authored in `docs/THREAT_MODEL.md`
-- [x] Automated security audit script `scripts/audit_security.py`:
-  - [x] Secret scanning across 99 files: 0 credentials, 0 private keys, 0 API tokens found
-  - [x] Hardened Runtime entitlement verification: passed
-  - [x] NPM audit: 0 vulnerabilities
-- [x] Telemetry review: zero transmission of file paths, directory trees, or file contents
-- [x] Phase 13 Verification Gate: **PASSED**
+### Phase 14 Checklist & Acceptance Criteria
+- [x] Commercial high-intent landing pages implemented:
+  - [x] `/mac-disk-space-analyzer`
+  - [x] `/mac-cleaner-for-developers`
+  - [x] `/mac-ai-storage-cleaner`
+- [x] Problem-focused guides implemented:
+  - [x] `/how-to-clear-system-data-mac`
+  - [x] `/how-to-delete-ollama-models`
+  - [x] `/blog/how-to-delete-xcode-deriveddata`
+- [x] Factual, independent comparison page: `/daisydisk-alternative`
+- [x] Schema.org `SoftwareApplication` JSON-LD structured data implemented in `StructuredData.tsx`
+- [x] Dynamic XML sitemap in `src/app/sitemap.ts` indexing all 14 routes
+- [x] `npm run build` succeeds cleanly, prerendering 14 static pages
+- [x] Phase 14 Verification Gate: **PASSED**
 
 ---
 
@@ -43,8 +43,8 @@
 | **Phase 11** | Premium UX, System Monitor & Polish | ✅ Complete | Refined Micro-interactions & Shortcuts |
 | **Phase 12** | Licensing & Commercial Infrastructure | ✅ Complete | G6: License Validation & Offline Mode |
 | **Phase 13** | Security & Compliance Hardening | ✅ Complete | Entitlement Audit & Secret Scan |
-| **Phase 14** | Website SEO & Conversion System | ⏳ Next | High-Intent Problem Guides & Sitemaps |
-| **Phase 15** | CI/CD, Signing & Release Pipeline | ⏳ Queued | G7: Hardened Runtime & Notarized DMG |
+| **Phase 14** | Website SEO & Conversion System | ✅ Complete | High-Intent Problem Guides & Sitemaps |
+| **Phase 15** | CI/CD, Signing & Release Pipeline | ⏳ Next | G7: Hardened Runtime & Notarized DMG |
 | **Phase 16** | QA, Beta & Reliability Gate | ⏳ Queued | G8: Multi-Scenario Regression Matrix |
 | **Phase 17** | Production Launch | ⏳ Queued | G9: End-to-End Customer Flow |
 | **Phase 18** | Post-Launch v1.1 & Growth | ⏳ Queued | Evidence-Based Iteration Plan |
@@ -52,4 +52,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Security, privacy, and compliance hardening verified.
+- **None.** SEO conversion engine and static build verified.

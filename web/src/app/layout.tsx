@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import StructuredData from '@/components/StructuredData';
 
 export const metadata: Metadata = {
   title: 'DiskWarren — Native Mac Storage Intelligence & Safe Cleanup',
@@ -47,6 +48,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark scroll-smooth">
+      <head>
+        <StructuredData />
+      </head>
       <body className="bg-[#0A0D12] text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500/30 selection:text-cyan-200">
         <Navbar />
         <main className="flex-grow pt-16">
