@@ -1,27 +1,26 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 14 Completion
+**Last Updated:** Phase 15 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 14 Verification
+## 🎯 Current Milestone: Phase 15 Verification
 
-### Phase 14 Checklist & Acceptance Criteria
-- [x] Commercial high-intent landing pages implemented:
-  - [x] `/mac-disk-space-analyzer`
-  - [x] `/mac-cleaner-for-developers`
-  - [x] `/mac-ai-storage-cleaner`
-- [x] Problem-focused guides implemented:
-  - [x] `/how-to-clear-system-data-mac`
-  - [x] `/how-to-delete-ollama-models`
-  - [x] `/blog/how-to-delete-xcode-deriveddata`
-- [x] Factual, independent comparison page: `/daisydisk-alternative`
-- [x] Schema.org `SoftwareApplication` JSON-LD structured data implemented in `StructuredData.tsx`
-- [x] Dynamic XML sitemap in `src/app/sitemap.ts` indexing all 14 routes
-- [x] `npm run build` succeeds cleanly, prerendering 14 static pages
-- [x] Phase 14 Verification Gate: **PASSED**
+### Phase 15 Checklist & Acceptance Criteria
+- [x] End-to-end GitHub Actions workflow created in `.github/workflows/build-and-release.yml`
+  - [x] Parallel testing on macOS Sonoma (`macos-14`) runner
+  - [x] Universal 2 binary build (`arm64` + `x86_64`)
+  - [x] Automated security audit & secret scan integration
+  - [x] Secure Developer ID certificate import without logging credentials
+  - [x] Hardened Runtime enforcement with `DiskWarren.entitlements`
+  - [x] Compressed DMG creation via `hdiutil`
+  - [x] Apple Notarization via `xcrun notarytool` and ticket stapling via `xcrun stapler`
+  - [x] Checksum generation (SHA-256) and artifact upload
+- [x] Standalone local packaging script created in `scripts/package_dmg.sh`
+- [x] Sparkle 2 RSS update feed implemented in `app/Appcast/appcast.xml`
+- [x] G7 Distribution Pipeline Gate: **PASSED**
 
 ---
 
@@ -44,12 +43,12 @@
 | **Phase 12** | Licensing & Commercial Infrastructure | ✅ Complete | G6: License Validation & Offline Mode |
 | **Phase 13** | Security & Compliance Hardening | ✅ Complete | Entitlement Audit & Secret Scan |
 | **Phase 14** | Website SEO & Conversion System | ✅ Complete | High-Intent Problem Guides & Sitemaps |
-| **Phase 15** | CI/CD, Signing & Release Pipeline | ⏳ Next | G7: Hardened Runtime & Notarized DMG |
-| **Phase 16** | QA, Beta & Reliability Gate | ⏳ Queued | G8: Multi-Scenario Regression Matrix |
+| **Phase 15** | CI/CD, Signing & Release Pipeline | ✅ Complete | G7: Hardened Runtime & Notarized DMG |
+| **Phase 16** | QA, Beta & Reliability Gate | ⏳ Next | G8: Multi-Scenario Regression Matrix |
 | **Phase 17** | Production Launch | ⏳ Queued | G9: End-to-End Customer Flow |
 | **Phase 18** | Post-Launch v1.1 & Growth | ⏳ Queued | Evidence-Based Iteration Plan |
 
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** SEO conversion engine and static build verified.
+- **None.** Release pipeline and distribution artifacts verified.

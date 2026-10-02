@@ -1,0 +1,138 @@
+name: DiskWarren Build & Release Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 1. Quality & Security Checks
+  verify-and-audit:
+    name: Security, Lint & Verification Suite
+    runs-on: macos-14
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Secret Scanning & Entitlements Audit
+        run: |
+          python3 scripts/audit_security.py
+
+      - name: Install Web Dependencies & Build Site
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: Verify Web SEO & Pages
+        run: |
+          python3 scripts/verify_phase14.py
+
+  # 2. Native macOS App Build, Sign & Notarize
+  build-macos:
+    name: Build Universal macOS DMG
+    runs-on: macos-14
+    needs: verify-and-audit
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 15.4
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Run Swift Core Test Suite
+        run: |
+          cd app
+          swift test --parallel
+
+      - name: Build Universal 2 Binary (arm64 + x86_64)
+        run: |
+          cd app
+          swift build -c release --arch arm64 --arch x86_64
+
+      - name: Assemble Application Bundle
+        run: |
+          APP_NAME="DiskWarren.app"
+          mkdir -p "build/$APP_NAME/Contents/MacOS"
+          mkdir -p "build/$APP_NAME/Contents/Resources"
+          cp app/.build/apple/Products/Release/DiskWarrenApp "build/$APP_NAME/Contents/MacOS/DiskWarren"
+          chmod +x "build/$APP_NAME/Contents/MacOS/DiskWarren"
+
+      - name: Import Apple Developer ID Certificate
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set +x
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $RUNNER_TEMP/certificate.p12
+          security import $RUNNER_TEMP/certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+      - name: Code Sign with Hardened Runtime
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          codesign --deep --force --options runtime --timestamp \
+            --entitlements app/DiskWarren.entitlements \
+            --sign "Developer ID Application: DiskWarren Inc" \
+            "build/DiskWarren.app"
+          spctl -a -t exec -v "build/DiskWarren.app"
+
+      - name: Create DMG Distribution Artifact
+        run: |
+          mkdir -p dist
+          hdiutil create -volname "DiskWarren" \
+            -srcfolder "build/DiskWarren.app" \
+            -ov -format UDZO \
+            "dist/DiskWarren.dmg"
+
+      - name: Notarize and Staple DMG
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcrun notarytool submit "dist/DiskWarren.dmg" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+          xcrun stapler staple "dist/DiskWarren.dmg"
+
+      - name: Compute Checksums
+        run: |
+          shasum -a 256 dist/DiskWarren.dmg > dist/DiskWarren.dmg.sha256
+          cat dist/DiskWarren.dmg.sha256
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: DiskWarren-macOS-Universal
+          path: |
+            dist/DiskWarren.dmg
+            dist/DiskWarren.dmg.sha256
