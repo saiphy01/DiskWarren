@@ -21,7 +21,8 @@ tests = [
     "verify_phase11.py",
     "verify_phase12.py",
     "verify_phase14.py",
-    "verify_phase15.py"
+    "verify_phase15.py",
+    "verify_phase17.py"
 ]
 
 print("=====================================================================")

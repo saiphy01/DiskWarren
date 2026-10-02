@@ -24,13 +24,13 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <a
-            href="#download"
+          <Link
+            href="/download"
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black text-sm font-semibold transition-all shadow-md shadow-cyan-400/25 active:scale-95"
           >
             <Download className="w-4 h-4" />
             <span>Download v1.0</span>
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

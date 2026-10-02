@@ -49,12 +49,13 @@ export default function Footer() {
 
           {/* Legal & Trust */}
           <div>
-            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Trust & Safety</h4>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Trust & Support</h4>
             <ul className="space-y-2.5 text-sm">
+              <li><Link href="/download" className="hover:text-cyan-400 transition-colors">Download DiskWarren</Link></li>
+              <li><Link href="/support" className="hover:text-cyan-400 transition-colors">Customer & Engineering Support</Link></li>
               <li><Link href="/privacy" className="hover:text-cyan-400 transition-colors">Zero-Telemetry Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-cyan-400 transition-colors">Terms of Service</Link></li>
               <li><Link href="#safety" className="hover:text-cyan-400 transition-colors">Trash-First Safety Architecture</Link></li>
-              <li><a href="mailto:support@diskwarren.com" className="hover:text-cyan-400 transition-colors">Contact Engineering Support</a></li>
             </ul>
           </div>
         </div>
