@@ -8,6 +8,7 @@ let package = Package(
     ],
     products: [
         .executable(name: "DiskWarrenApp", targets: ["DiskWarrenApp"]),
+        .executable(name: "warren", targets: ["DiskWarrenCLI"]),
         .library(name: "DiskWarrenCore", targets: ["DiskWarrenCore"]),
         .library(name: "DiskWarrenUI", targets: ["DiskWarrenUI"])
     ],
@@ -27,6 +28,11 @@ let package = Package(
             name: "DiskWarrenApp",
             dependencies: ["DiskWarrenCore", "DiskWarrenUI"],
             path: "Sources/DiskWarrenApp"
+        ),
+        .executableTarget(
+            name: "DiskWarrenCLI",
+            dependencies: ["DiskWarrenCore"],
+            path: "Sources/DiskWarrenCLI"
         ),
         .testTarget(
             name: "DiskWarrenCoreTests",
