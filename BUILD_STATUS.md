@@ -1,28 +1,23 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 6 Completion
+**Last Updated:** Phase 7 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 6 Verification
+## 🎯 Current Milestone: Phase 7 Verification
 
-### Phase 6 Checklist & Acceptance Criteria
-- [x] Declarative `CleanupRule` model implemented in `CleanupRule.swift`
-- [x] Maintainable `CleanupRuleRegistry` implemented in `CleanupRuleRegistry.swift`:
-  - [x] Xcode DerivedData, Archives, Simulator devices
-  - [x] Node.js `node_modules` and package caches (npm, pnpm, yarn)
-  - [x] Rust Cargo target directories and registry cache
-  - [x] Python pip wheel cache and virtualenvs (`.venv`, `venv`)
-  - [x] Go build cache
-  - [x] Homebrew bottled download cache
-  - [x] Android Gradle caches
-  - [x] Docker engine data
-  - [x] Browser web caches (Chrome, Safari, Brave)
-- [x] Strict safety invariant: unknown paths or files named `cache.txt` or `temp_notes.md` in personal folders are never classified as safe
-- [x] Automated unit test suite `CleanupRuleRegistryTests.swift` validating both positive matches and false-positive resistance
-- [x] Phase 6 Verification Gate: **PASSED**
+### Phase 7 Checklist & Acceptance Criteria
+- [x] Dedicated `AIModelItem` domain model in `AIModelItem.swift` (Ollama, LM Studio, Hugging Face, ComfyUI)
+- [x] `AIStorageScanner.swift` implementing read-only model detection:
+  - [x] Ollama model manifests and blob digest size extraction
+  - [x] LM Studio GGUF weight files and quantization tagging (Q4_K_M, Q8_0, etc.)
+  - [x] Hugging Face Hub `models--*` snapshot hierarchy
+  - [x] Binary GGUF magic header validation (`0x47475546` / ASCII "GGUF")
+- [x] Strictly read-only: no deletion actions exist in the detection engine
+- [x] Unit test suite `AIStorageScannerTests.swift` validating binary header verification and provider paths
+- [x] Phase 7 Verification Gate: **PASSED**
 
 ---
 
@@ -37,8 +32,8 @@
 | **Phase 4** | Filesystem Scanner & Storage Index | ✅ Complete | G2: Traversal & Memory Benchmarks |
 | **Phase 5** | Treemap, Search & Storage Intelligence UI | ✅ Complete | G3: 60fps Interactive Treemap |
 | **Phase 6** | Categorization & Cleanup Rule Engine | ✅ Complete | Rule Registry & Fixture Validation |
-| **Phase 7** | AI Storage Intelligence | ⏳ Next | Ollama, LM Studio, HF, ComfyUI Detection |
-| **Phase 8** | Safe Cleanup Engine | ⏳ Queued | G4: Sandbox Trash Verification |
+| **Phase 7** | AI Storage Intelligence | ✅ Complete | Ollama, LM Studio, HF, ComfyUI Detection |
+| **Phase 8** | Safe Cleanup Engine | ⏳ Next | G4: Sandbox Trash Verification |
 | **Phase 9** | Application Uninstaller & Leftovers | ⏳ Queued | G5: Conservative Leftover Attribution |
 | **Phase 10** | Duplicate Finder | ⏳ Queued | 3-Stage Hashing & Zero False Positives |
 | **Phase 11** | Premium UX, System Monitor & Polish | ⏳ Queued | Refined Micro-interactions & Shortcuts |
@@ -53,4 +48,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Rule registry and safety filters verified.
+- **None.** AI storage intelligence module verified.
