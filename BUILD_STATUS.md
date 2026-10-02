@@ -1,33 +1,27 @@
 # DiskWarren — Build Status & Milestone Tracking
 
-**Last Updated:** Phase 2 Completion
+**Last Updated:** Phase 3 Completion
 **Active Branch:** `main`
 **Canonical Product Name:** `DiskWarren`
 
 ---
 
-## 🎯 Current Milestone: Phase 2 Verification
+## 🎯 Current Milestone: Phase 3 Verification
 
-### Phase 2 Checklist & Acceptance Criteria
-- [x] High-converting Next.js 15+ marketing website created in `web/`
-- [x] Responsive layout with dark-first Apple aesthetic (`#0A0D12` background, cyan/emerald accents)
-- [x] Interactive Simulated Storage Analyzer built in `src/components/SimulatedStorageAnalyzer.tsx` using realistic synthetic macOS storage dataset
-- [x] Clear simulation disclaimer banner ("Does not scan your computer")
-- [x] Feature sections covering:
-  - [x] Storage Scanner & Treemap
-  - [x] Developer Cleanup (Xcode DerivedData, node_modules, Cargo, pip, Docker)
-  - [x] Local AI Storage Intelligence (Ollama, LM Studio, Hugging Face, ComfyUI, GGUF)
-  - [x] Trash-First Safe Cleanup Engine
-  - [x] Application Uninstaller & Leftovers
-  - [x] SHA-256 Duplicate Finder
-- [x] Transparent pricing structure ($0 Free edition vs $29 Pro lifetime license)
-- [x] Full Privacy Policy (`/privacy`) matching `PRIVACY.md` zero-telemetry guarantee
-- [x] Full Terms of Service & 14-Day Refund Policy (`/terms`)
-- [x] Blog & high-intent SEO guide system (`/blog` and `/blog/how-to-delete-xcode-deriveddata`)
-- [x] Technical SEO configuration: dynamic `sitemap.xml` (`src/app/sitemap.ts`) and `robots.txt` (`src/app/robots.ts`)
-- [x] `npm run build` succeeds cleanly with Turbopack, generating 8 static routes
-- [x] Zero placeholder lorem ipsum verified
-- [x] G1 Website Gate: **PASSED**
+### Phase 3 Checklist & Acceptance Criteria
+- [x] Native macOS App target configured with `@main struct DiskWarrenApp: App`
+- [x] `AppCoordinator` managing lifecycle, active tabs, scan progress, and permissions
+- [x] Full Disk Access (FDA) detection engine implemented in `PermissionManager.swift`
+- [x] Graceful degradation: app remains fully usable with limited permissions and provides inline guidance to macOS System Settings
+- [x] Privacy-safe diagnostic logger implemented in `PrivacySafeLogger.swift`:
+  - [x] Redacts sensitive personal paths (`/Documents/`, `/Desktop/`, `/Downloads/`)
+  - [x] Retains structural file extensions while masking private filenames
+  - [x] Local in-memory rolling buffer with zero network egress
+- [x] `MainAppShellView` implementing two-column `NavigationSplitView` with sidebar and detail router
+- [x] Automated unit test suites created:
+  - [x] `PermissionManagerTests.swift` (granted, denied, and limited paths)
+  - [x] `PrivacySafeLoggerTests.swift` (path sanitization & redaction)
+- [x] Phase 3 Verification Gate: **PASSED**
 
 ---
 
@@ -38,8 +32,8 @@
 | **Phase 0** | Project Initialization & Specification | ✅ Complete | G0: Architecture & Specs Frozen |
 | **Phase 1** | Product UX, IA & Design System | ✅ Complete | Reusable Components & Screen Shells |
 | **Phase 2** | Marketing Website MVP | ✅ Complete | G1: Deployable Next.js Marketing Site |
-| **Phase 3** | Native macOS App Shell & Permissions | ⏳ Next | App Lifecycle & FDA Guidance |
-| **Phase 4** | Filesystem Scanner & Storage Index | ⏳ Queued | G2: Traversal & Memory Benchmarks |
+| **Phase 3** | Native macOS App Shell & Permissions | ✅ Complete | App Lifecycle & FDA Guidance |
+| **Phase 4** | Filesystem Scanner & Storage Index | ⏳ Next | G2: Traversal & Memory Benchmarks |
 | **Phase 5** | Treemap, Search & Storage Intelligence UI | ⏳ Queued | G3: 60fps Interactive Treemap |
 | **Phase 6** | Categorization & Cleanup Rule Engine | ⏳ Queued | Rule Registry & Fixture Validation |
 | **Phase 7** | AI Storage Intelligence | ⏳ Queued | Ollama, LM Studio, HF, ComfyUI Detection |
@@ -58,4 +52,4 @@
 ---
 
 ## 🚫 Current Blockers & Risks
-- **None.** Website builds cleanly and is ready for Vercel/static deployment.
+- **None.** App shell and permissions pipeline verified.
