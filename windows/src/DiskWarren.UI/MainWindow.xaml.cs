@@ -32,11 +32,6 @@ public partial class MainWindow : Window
             // Initialize WebView2 environment using system-installed Edge runtime
             await WebViewControl.EnsureCoreWebView2Async();
             WebViewControl.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
-            this.StateChanged += (s, e) =>
-            {
-                bool isMax = this.WindowState == WindowState.Maximized;
-                _ = WebViewControl.CoreWebView2?.ExecuteScriptAsync($"window.onWindowStateChanged?.({(isMax ? "true" : "false")});");
-            };
             WebViewControl.NavigateToString(UiHtml.Content);
         }
         catch (Exception ex)
@@ -64,25 +59,6 @@ public partial class MainWindow : Window
 
             switch (action)
             {
-                case "windowMinimize":
-                    this.WindowState = WindowState.Minimized;
-                    break;
-
-                case "windowMaximize":
-                    this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-                    break;
-
-                case "windowClose":
-                    this.Close();
-                    break;
-
-                case "windowDrag":
-                    if (System.Windows.Input.Mouse.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
-                    {
-                        try { this.DragMove(); } catch { }
-                    }
-                    break;
-
                 case "ready":
                 case "refresh":
                     await SendInitialDataAsync();
