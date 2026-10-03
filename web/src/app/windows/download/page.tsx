@@ -21,7 +21,7 @@ import CodeBlock from '@/components/CodeBlock';
 
 export default function WindowsDownloadPage() {
   const sha256Installer = "23eba299ae1e5ba7f5108307080a390a5c49fff1e49eaeeb009b2a1b0828298e";
-  const sha256Portable = "dfb01363bf683a825c54f2a9582469ce1d6296a2dfa92bba6162dadcf2398f15";
+  const sha256Portable = "1eff7da8de3baec6cb419e1f93eaa5e0ca70e3defc229413980c47d8f4ef84b2";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
   const [copiedPortable, setCopiedPortable] = useState(false);
 
@@ -153,7 +153,7 @@ export default function WindowsDownloadPage() {
                 No Admin Setup Needed
               </span>
               <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-                Size: ~21.2 MB
+                Size: ~28.2 MB
               </span>
             </div>
 
