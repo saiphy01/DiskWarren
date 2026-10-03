@@ -62,7 +62,18 @@ class MediaStoreScanner(private val context: Context) {
 
                     if (size > 0) {
                         val uri = ContentUris.withAppendedId(collectionUri, id)
-                        val safety = if (category == MediaCategory.DOWNLOADS || name.contains("screenshot", ignoreCase = true)) {
+                        val isScreenshot = category == MediaCategory.PHOTOS && (name.contains("screenshot", ignoreCase = true) || path.contains("screenshot", ignoreCase = true))
+                        val isApk = category == MediaCategory.DOWNLOADS && (name.endsWith(".apk", ignoreCase = true) || mime.contains("vnd.android.package-archive"))
+                        val isDoc = category == MediaCategory.DOWNLOADS && (mime.startsWith("application/pdf") || mime.contains("document") || mime.contains("msword") || mime.contains("sheet") || name.endsWith(".pdf", ignoreCase = true) || name.endsWith(".docx", ignoreCase = true))
+
+                        val resolvedCategory = when {
+                            isScreenshot -> MediaCategory.SCREENSHOTS
+                            isApk -> MediaCategory.APK_INSTALLERS
+                            isDoc -> MediaCategory.DOCUMENTS
+                            else -> category
+                        }
+
+                        val safety = if (resolvedCategory == MediaCategory.DOWNLOADS || resolvedCategory == MediaCategory.APK_INSTALLERS || isScreenshot) {
                             SafetyLevel.LOW_RISK
                         } else {
                             SafetyLevel.REVIEW_REQUIRED
@@ -77,7 +88,7 @@ class MediaStoreScanner(private val context: Context) {
                                 mimeType = mime,
                                 dateModified = dateModified,
                                 relativePath = path,
-                                category = category,
+                                category = resolvedCategory,
                                 safety = safety
                             )
                         )

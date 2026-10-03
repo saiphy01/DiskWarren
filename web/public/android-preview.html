@@ -622,6 +622,40 @@
       text-transform: uppercase;
     }
 
+    /* Unclubbed Category Filter Chips Bar */
+    .category-filters-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0 6px 0;
+      margin-bottom: 2px;
+    }
+    .category-filters-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .filter-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 20px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover {
+      border-color: #cbd5e1;
+      color: var(--text-main);
+    }
+    .filter-chip.active {
+      background: var(--text-main);
+      color: #ffffff;
+      border-color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+    }
+
     /* Category List Cards (Strict Mathematical Grid Alignment) */
     .category-list {
       display: flex;
@@ -707,6 +741,18 @@
     .chip-cache {
       color: var(--accent-primary);
       background: rgba(2, 132, 199, 0.1);
+    }
+    .chip-vault {
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-light);
+    }
+    .chip-system {
+      color: #64748b;
+      background: #f1f5f9;
+    }
+    .chip-apps {
+      color: #4f46e5;
+      background: rgba(79, 70, 229, 0.1);
     }
     .cat-count-sub {
       font-size: 11px;
@@ -1021,7 +1067,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Item Right Cluster */
+    /* Item Right Cluster (Size Metric & Status) */
     .item-right-cluster {
       display: flex;
       flex-direction: column;
@@ -1044,7 +1090,7 @@
       color: var(--accent-emerald-dark);
     }
 
-    /* Sticky Bottom Action Bar */
+    /* Sticky Bottom Action Bar Inside Bucket */
     .bucket-bottom-bar {
       background: #ffffff;
       border-top: 1px solid var(--border-light);
@@ -1072,7 +1118,7 @@
       color: var(--accent-emerald-dark);
     }
 
-    /* Master Delete Button */
+    /* The Master Delete Button */
     .btn-delete-selected {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #ffffff;
@@ -1266,10 +1312,19 @@
           </div>
         </div>
 
-        <!-- Storage Allocation Categories -->
+        <!-- Storage Allocation Categories (Unclubbed Discrete Hierarchy) -->
         <div class="section-header-bar">
           <span class="section-title">Storage Breakdown</span>
-          <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">6 Categories</span>
+          <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);" id="categoryHeaderCount">10 Categories</span>
+        </div>
+
+        <!-- Unclubbed Filter Chips Bar -->
+        <div class="category-filters-bar" id="categoryFiltersBar">
+          <button class="filter-chip active" data-filter="all" onclick="setCategoryFilter('all')">All (10)</button>
+          <button class="filter-chip" data-filter="media" onclick="setCategoryFilter('media')">Media (4)</button>
+          <button class="filter-chip" data-filter="apps" onclick="setCategoryFilter('apps')">Apps &amp; Cache (2)</button>
+          <button class="filter-chip" data-filter="files" onclick="setCategoryFilter('files')">Files &amp; OS (4)</button>
+          <button class="filter-chip" data-filter="reclaim" onclick="setCategoryFilter('reclaim')">Reclaimable (4)</button>
         </div>
 
         <div class="category-list" id="categoryCardsContainer"></div>
@@ -1372,14 +1427,114 @@
       } catch (e) {}
     }
 
-    // Categories Data
+    // Unclubbed Discrete Storage Hierarchy (10 Categories)
     let categories = [
-      { id: 'videos', title: 'Videos & Screen Records', count: 457, sizeBytes: 51755106304, color: '#2563eb', iconSvg: '<polygon points="5 3 19 12 5 21 5 3"/>' },
-      { id: 'photos', title: 'Photos & Images', count: 3372, sizeBytes: 39084204032, color: '#0891b2', iconSvg: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>' },
-      { id: 'apps', title: 'Apps & Cached Data', count: 48, sizeBytes: 16106127360, color: '#6366f1', isAppCache: true, iconSvg: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' },
-      { id: 'downloads', title: 'Public Downloads & APKs', count: 184, sizeBytes: 15247130624, color: '#f59e0b', isReclaimable: true, iconSvg: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>' },
-      { id: 'audio', title: 'Audio & Voice Memos', count: 215, sizeBytes: 8589934592, color: '#8b5cf6', iconSvg: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
-      { id: 'documents', title: 'Documents & Archives', count: 593, sizeBytes: 6442450944, color: '#d97706', iconSvg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' }
+      {
+        id: 'videos',
+        title: 'Videos',
+        subtitle: 'Camera recordings & stored videos',
+        group: 'media',
+        count: 385,
+        sizeBytes: 45097156608, // 42.0 GB
+        color: '#2563eb',
+        iconSvg: '<polygon points="5 3 19 12 5 21 5 3"/>'
+      },
+      {
+        id: 'photos',
+        title: 'Photos',
+        subtitle: 'Camera captures & high-res gallery',
+        group: 'media',
+        count: 3120,
+        sizeBytes: 34359738368, // 32.0 GB
+        color: '#0891b2',
+        iconSvg: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'
+      },
+      {
+        id: 'system',
+        title: 'System OS',
+        subtitle: 'Android 14 system firmware & core runtime',
+        group: 'files',
+        count: 1,
+        sizeBytes: 19327352832, // 18.0 GB
+        color: '#64748b',
+        isSystem: true,
+        iconSvg: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>'
+      },
+      {
+        id: 'downloads',
+        title: 'Public Downloads',
+        subtitle: 'Browser downloads & saved files',
+        group: 'files',
+        count: 142,
+        sizeBytes: 11811160064, // 11.0 GB
+        color: '#f59e0b',
+        isReclaimable: true,
+        iconSvg: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'
+      },
+      {
+        id: 'installed_apps',
+        title: 'Installed Apps',
+        subtitle: '48 applications (binaries & private app data)',
+        group: 'apps',
+        count: 48,
+        sizeBytes: 9448928051, // 8.8 GB
+        color: '#4f46e5',
+        iconSvg: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>'
+      },
+      {
+        id: 'audio',
+        title: 'Audio & Music',
+        subtitle: 'Music library, audio tracks & podcasts',
+        group: 'media',
+        count: 215,
+        sizeBytes: 8589934592, // 8.0 GB
+        color: '#ec4899',
+        iconSvg: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'
+      },
+      {
+        id: 'app_cache',
+        title: 'App Cache',
+        subtitle: 'Temporary media buffers & streaming cache',
+        group: 'apps',
+        count: 6,
+        sizeBytes: 7844000000, // 7.3 GB
+        color: '#8b5cf6',
+        isAppCache: true,
+        isReclaimable: true,
+        iconSvg: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>'
+      },
+      {
+        id: 'documents',
+        title: 'Documents',
+        subtitle: 'PDFs, spreadsheets, presentations & text',
+        group: 'files',
+        count: 593,
+        sizeBytes: 6442450944, // 6.0 GB
+        color: '#d97706',
+        iconSvg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'
+      },
+      {
+        id: 'screenshots',
+        title: 'Screenshots',
+        subtitle: 'Screen captures & temporary clips',
+        group: 'media',
+        count: 252,
+        sizeBytes: 3758096384, // 3.5 GB
+        color: '#06b6d4',
+        isReclaimable: true,
+        iconSvg: '<path d="M6 2v4M2 6h4M18 2v4M22 6h-4M6 22v-4M2 18h4M18 22v-4M22 18h-4"/>'
+      },
+      {
+        id: 'apks',
+        title: 'APK Installers',
+        subtitle: 'Stale package installation files',
+        group: 'files',
+        count: 42,
+        sizeBytes: 3650723840, // 3.4 GB
+        color: '#f97316',
+        isReclaimable: true,
+        iconSvg: '<line x1="16.5" y1="9.4" x2="7.55" y2="4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>'
+      }
     ];
 
     // Apps inside the Cache Bucket
@@ -1400,7 +1555,8 @@
 
     function getReclaimableDownloads() {
       const d = categories.find(c => c.id === 'downloads');
-      return d ? d.sizeBytes : 0;
+      const a = categories.find(c => c.id === 'apks');
+      return (d ? d.sizeBytes : 0) + (a ? a.sizeBytes : 0);
     }
 
     function getTotalAppCache() {
@@ -1576,16 +1732,55 @@
       `).join('');
     }
 
-    // Render Category Breakdown Cards
+    // Category Filter State & Controls
+    let currentFilter = 'all';
+    function setCategoryFilter(filter) {
+      playSound('tap');
+      currentFilter = filter;
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
+      });
+      renderCategoryCards();
+    }
+
+    // Render Category Breakdown Cards (Unclubbed Discrete Architecture)
     function renderCategoryCards() {
       const container = document.getElementById('categoryCardsContainer');
       const total = getTotalUsed();
       const totalCache = getTotalAppCache();
       let html = '';
 
-      categories.forEach(cat => {
+      const filtered = categories.filter(c => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'media') return c.group === 'media';
+        if (currentFilter === 'apps') return c.group === 'apps';
+        if (currentFilter === 'files') return c.group === 'files';
+        if (currentFilter === 'reclaim') return c.isReclaimable || c.isAppCache;
+        return true;
+      });
+
+      filtered.forEach(cat => {
         const pct = ((cat.sizeBytes / total) * 100).toFixed(1);
         const isActive = selectedCategoryId === cat.id;
+
+        let badgeHtml = '';
+        if (cat.isAppCache) {
+          badgeHtml = cat.sizeBytes > 0 
+            ? `<span class="micro-chip chip-vault">Storage Bucket</span>` 
+            : `<span class="micro-chip chip-reclaim">Cleaned ✨</span>`;
+        } else if (cat.isSystem) {
+          badgeHtml = `<span class="micro-chip chip-system">Protected OS</span>`;
+        } else if (cat.id === 'installed_apps') {
+          badgeHtml = `<span class="micro-chip chip-apps">48 Apps</span>`;
+        } else if (cat.isReclaimable) {
+          badgeHtml = cat.sizeBytes > 0 
+            ? `<span class="micro-chip chip-reclaim">Reclaimable</span>` 
+            : `<span class="micro-chip chip-system">Cleaned ✓</span>`;
+        }
+
+        const subtitle = cat.isAppCache 
+          ? (cat.sizeBytes > 0 ? `${cat.count} apps with cache • Tap to inspect bucket` : '0 apps • All caches purged')
+          : cat.subtitle;
 
         html += `
           <div class="cat-item-card ${isActive ? 'active' : ''}" onclick="${cat.isAppCache ? 'openCacheBucket()' : `selectCategory('${cat.id}')`}">
@@ -1597,10 +1792,9 @@
                 <div class="cat-meta-stack">
                   <div class="cat-name-row">
                     <span class="cat-title-text">${cat.title}</span>
-                    ${cat.id === 'downloads' && cat.sizeBytes > 0 ? `<span class="micro-chip chip-reclaim">Cleanable</span>` : ''}
-                    ${cat.isAppCache && totalCache > 0 ? `<span class="micro-chip chip-cache">${formatBytes(totalCache)} in Bucket</span>` : ''}
+                    ${badgeHtml}
                   </div>
-                  <span class="cat-count-sub">${cat.isAppCache ? `${cat.count} apps installed • Tap to inspect bucket` : `${cat.count.toLocaleString()} items`}</span>
+                  <span class="cat-count-sub">${subtitle}</span>
                 </div>
               </div>
 
@@ -1620,6 +1814,10 @@
       });
 
       container.innerHTML = html;
+      const countEl = document.getElementById('categoryHeaderCount');
+      if (countEl) {
+        countEl.innerText = `${filtered.length} of ${categories.length} Categories`;
+      }
     }
 
     // ========================================================
@@ -1756,10 +1954,11 @@
         }
       });
 
-      // Deduct from Apps Category
-      const appsCat = categories.find(c => c.id === 'apps');
-      if (appsCat) {
-        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - selectedBytes);
+      // Deduct from App Cache Category (leave Installed Apps untouched!)
+      const cacheCat = categories.find(c => c.id === 'app_cache');
+      if (cacheCat) {
+        cacheCat.sizeBytes = getTotalAppCache();
+        cacheCat.count = appList.filter(a => !a.cleared).length;
       }
 
       // Clear selection
@@ -1782,7 +1981,7 @@
       renderCategoryCards();
     }
 
-    // Global Clear Space (Clean All: Downloads + App Caches)
+    // Global Clear Space (Clean All: Downloads, APKs & App Caches)
     function executeClearSpace() {
       const totalReclaim = getReclaimableDownloads() + getTotalAppCache();
       if (totalReclaim === 0) {
@@ -1792,26 +1991,32 @@
 
       playSound('clean');
 
-      // Deduct Downloads
+      // Deduct Downloads & APKs
       const d = categories.find(c => c.id === 'downloads');
       if (d) {
         d.sizeBytes = 0;
         d.count = 0;
       }
+      const a = categories.find(c => c.id === 'apks');
+      if (a) {
+        a.sizeBytes = 0;
+        a.count = 0;
+      }
 
       // Deduct all app caches in bucket
       const totalCache = getTotalAppCache();
-      appList.forEach(a => {
-        if (!a.cleared) {
-          a.totalBytes = Math.max(0, a.totalBytes - a.cacheBytes);
-          a.cleared = true;
+      appList.forEach(app => {
+        if (!app.cleared) {
+          app.totalBytes = Math.max(0, app.totalBytes - app.cacheBytes);
+          app.cleared = true;
         }
       });
       selectedAppIds.clear();
 
-      const appsCat = categories.find(c => c.id === 'apps');
-      if (appsCat) {
-        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
+      const cacheCat = categories.find(c => c.id === 'app_cache');
+      if (cacheCat) {
+        cacheCat.sizeBytes = 0;
+        cacheCat.count = 0;
       }
 
       drawDonut();
@@ -1819,7 +2024,7 @@
       renderCategoryCards();
       renderBucketItems();
       updateBucketSelectionUI();
-      showToast(`✨ ${formatBytes(totalReclaim)} cleared (Downloads & App Caches)`);
+      showToast(`✨ ${formatBytes(totalReclaim)} cleared (Downloads, APKs & App Caches)`);
     }
 
     // Canvas Hit Testing
@@ -1835,7 +2040,7 @@
 
       const hit = slicesMeta.find(s => dist >= s.r1 - 10 && dist <= s.r2 + 10 && angle >= s.a1 && angle <= s.a2);
       if (hit) {
-        if (hit.id === 'apps') {
+        if (hit.id === 'app_cache') {
           openCacheBucket();
         } else {
           selectCategory(hit.id);

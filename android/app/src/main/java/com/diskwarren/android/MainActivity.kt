@@ -52,17 +52,29 @@ class MainActivity : ComponentActivity() {
                 lifecycleScope.launch {
                     val items = scanner.queryAllMedia()
                     mediaItems = items
-                    totalUsedBytes = items.sumOf { it.sizeBytes } + appCacheEntries.sumOf { it.totalSizeBytes }
+
+                    val appInstalledBytes = appCacheEntries.sumOf { it.totalSizeBytes - it.cacheSizeBytes }
+                    val currentAppCacheBytes = appCacheEntries.filter { !it.isCleared }.sumOf { it.cacheSizeBytes }
+                    val systemOsBytes = 19327352832L // 18.0 GB Android System Firmware
+
+                    totalUsedBytes = items.sumOf { it.sizeBytes } + appInstalledBytes + currentAppCacheBytes + systemOsBytes
 
                     categorySummaries = MediaCategory.entries
+                        .filter { it != MediaCategory.FREE_SPACE }
                         .map { cat ->
                             val catItems = items.filter { it.category == cat }
-                            val totalCatBytes = if (cat == MediaCategory.SYSTEM_APPS) {
-                                appCacheEntries.sumOf { it.totalSizeBytes }
-                            } else {
-                                catItems.sumOf { it.sizeBytes }
+                            val totalCatBytes = when (cat) {
+                                MediaCategory.INSTALLED_APPS -> appInstalledBytes
+                                MediaCategory.APP_CACHE -> currentAppCacheBytes
+                                MediaCategory.SYSTEM_OS -> systemOsBytes
+                                else -> catItems.sumOf { it.sizeBytes }
                             }
-                            val count = if (cat == MediaCategory.SYSTEM_APPS) appCacheEntries.size else catItems.size
+                            val count = when (cat) {
+                                MediaCategory.INSTALLED_APPS -> 48
+                                MediaCategory.APP_CACHE -> appCacheEntries.filter { !it.isCleared }.size
+                                MediaCategory.SYSTEM_OS -> 1
+                                else -> catItems.size
+                            }
 
                             CategorySummary(
                                 category = cat,
@@ -70,7 +82,7 @@ class MainActivity : ComponentActivity() {
                                 itemCount = count
                             )
                         }
-                        .filter { it.itemCount > 0 }
+                        .filter { it.totalSizeBytes > 0 || it.category == MediaCategory.APP_CACHE }
                 }
             }
 
@@ -80,10 +92,9 @@ class MainActivity : ComponentActivity() {
 
             fun clearReclaimable() {
                 lifecycleScope.launch {
-                    mediaItems = mediaItems.filter { it.category != MediaCategory.DOWNLOADS }
+                    mediaItems = mediaItems.filter { it.category != MediaCategory.DOWNLOADS && it.category != MediaCategory.APK_INSTALLERS }
                     appCacheEntries = appCacheEntries.map { it.copy(isCleared = true) }
-                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes } + appCacheEntries.sumOf { it.totalSizeBytes - it.cacheSizeBytes }
-                    categorySummaries = categorySummaries.filter { it.category != MediaCategory.DOWNLOADS }
+                    refreshScan()
                 }
             }
 
@@ -92,14 +103,14 @@ class MainActivity : ComponentActivity() {
                     appCacheEntries = appCacheEntries.map {
                         if (it.id == appId) it.copy(isCleared = true) else it
                     }
-                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes } + appCacheEntries.sumOf { if (it.isCleared) it.totalSizeBytes - it.cacheSizeBytes else it.totalSizeBytes }
+                    refreshScan()
                 }
             }
 
             fun clearAllAppCaches() {
                 lifecycleScope.launch {
                     appCacheEntries = appCacheEntries.map { it.copy(isCleared = true) }
-                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes } + appCacheEntries.sumOf { it.totalSizeBytes - it.cacheSizeBytes }
+                    refreshScan()
                 }
             }
 
@@ -108,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     appCacheEntries = appCacheEntries.map {
                         if (selectedIds.contains(it.id)) it.copy(isCleared = true) else it
                     }
-                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes } + appCacheEntries.sumOf { if (it.isCleared) it.totalSizeBytes - it.cacheSizeBytes else it.totalSizeBytes }
+                    refreshScan()
                 }
             }
 

@@ -9,12 +9,16 @@ enum class SafetyLevel {
 }
 
 enum class MediaCategory(val title: String) {
-    PHOTOS("Photos & Images"),
-    VIDEOS("Videos & Screen Recordings"),
-    AUDIO("Audio & Voice Memos"),
+    PHOTOS("Photos"),
+    SCREENSHOTS("Screenshots"),
+    VIDEOS("Videos"),
+    INSTALLED_APPS("Installed Apps"),
+    APP_CACHE("App Cache Bucket"),
     DOWNLOADS("Public Downloads"),
-    DOCUMENTS("Documents & Archives"),
-    SYSTEM_APPS("App Footprint"),
+    APK_INSTALLERS("APK Installers"),
+    AUDIO("Audio & Music"),
+    DOCUMENTS("Documents"),
+    SYSTEM_OS("Android System"),
     FREE_SPACE("Available Free Space")
 }
 

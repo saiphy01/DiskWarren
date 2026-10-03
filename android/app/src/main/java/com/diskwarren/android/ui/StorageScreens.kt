@@ -46,11 +46,15 @@ private val ColorSlateSystem = Color(0xFF64748B)
 fun getCategoryColor(category: MediaCategory): Color {
     return when (category) {
         MediaCategory.PHOTOS -> ColorBrandCyan
+        MediaCategory.SCREENSHOTS -> Color(0xFF06B6D4)
         MediaCategory.VIDEOS -> ColorBlueApps
-        MediaCategory.AUDIO -> ColorPurpleAI
+        MediaCategory.INSTALLED_APPS -> Color(0xFF4F46E5)
+        MediaCategory.APP_CACHE -> ColorPurpleAI
         MediaCategory.DOWNLOADS -> ColorAmberReview
+        MediaCategory.APK_INSTALLERS -> Color(0xFFF97316)
+        MediaCategory.AUDIO -> Color(0xFFEC4899)
         MediaCategory.DOCUMENTS -> Color(0xFFD97706)
-        MediaCategory.SYSTEM_APPS -> ColorSlateSystem
+        MediaCategory.SYSTEM_OS -> ColorSlateSystem
         MediaCategory.FREE_SPACE -> ColorEmeraldSafe
     }
 }
@@ -77,9 +81,9 @@ fun StorageOverviewHeader(
     var selectedCategory by remember { mutableStateOf<MediaCategory?>(null) }
     val totalCapacity = maxOf(1L, totalUsedBytes + totalAvailableBytes)
 
-    // Compute reclaimable candidates (Downloads + App Caches)
+    // Compute unclubbed reclaimable candidates (Downloads + APK Installers + App Caches)
     val downloadsBytes = categories
-        .filter { it.category == MediaCategory.DOWNLOADS }
+        .filter { it.category == MediaCategory.DOWNLOADS || it.category == MediaCategory.APK_INSTALLERS }
         .sumOf { it.totalSizeBytes }
     val totalReclaimableBytes = downloadsBytes + appCacheBytes
 
@@ -411,14 +415,19 @@ fun CategorySummaryList(
         items(categories) { cat ->
             val color = getCategoryColor(cat.category)
             val pct = (cat.totalSizeBytes.toDouble() / totalBytes.toDouble() * 100)
-            val isReclaimable = cat.category == MediaCategory.DOWNLOADS
-            val isAppCategory = cat.category == MediaCategory.SYSTEM_APPS
+            val isReclaimable = cat.category == MediaCategory.DOWNLOADS ||
+                                cat.category == MediaCategory.APK_INSTALLERS ||
+                                cat.category == MediaCategory.APP_CACHE ||
+                                cat.category == MediaCategory.SCREENSHOTS
+            val isAppCache = cat.category == MediaCategory.APP_CACHE
+            val isInstalledApps = cat.category == MediaCategory.INSTALLED_APPS
+            val isSystem = cat.category == MediaCategory.SYSTEM_OS
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        if (isAppCategory && onManageCachesClicked != null) {
+                        if (isAppCache && onManageCachesClicked != null) {
                             onManageCachesClicked()
                         } else {
                             onCategoryClicked?.invoke(cat.category)
@@ -464,7 +473,22 @@ fun CategorySummaryList(
                                         fontWeight = FontWeight.Bold,
                                         color = ColorTextPrimary
                                     )
-                                    if (isReclaimable) {
+                                    if (isAppCache) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(ColorPurpleAI.copy(alpha = 0.12f))
+                                                .padding(horizontal = 5.dp, vertical = 1.dp)
+                                        ) {
+                                            Text(
+                                                text = "Storage Bucket",
+                                                fontSize = 9.5.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = ColorPurpleAI
+                                            )
+                                        }
+                                    } else if (isReclaimable) {
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Box(
                                             modifier = Modifier
@@ -473,32 +497,37 @@ fun CategorySummaryList(
                                                 .padding(horizontal = 5.dp, vertical = 1.dp)
                                         ) {
                                             Text(
-                                                text = "Cleanable",
+                                                text = "Reclaimable",
                                                 fontSize = 9.5.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 color = ColorEmeraldSafe
                                             )
                                         }
-                                    }
-                                    if (isAppCategory && appCacheBytes > 0) {
+                                    } else if (isSystem) {
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Box(
                                             modifier = Modifier
                                                 .clip(RoundedCornerShape(4.dp))
-                                                .background(ColorBrandCyan.copy(alpha = 0.12f))
+                                                .background(ColorSlateSystem.copy(alpha = 0.12f))
                                                 .padding(horizontal = 5.dp, vertical = 1.dp)
                                         ) {
                                             Text(
-                                                text = "${MediaItem.formatBytes(appCacheBytes)} Cache",
+                                                text = "Protected",
                                                 fontSize = 9.5.sp,
                                                 fontWeight = FontWeight.Bold,
-                                                color = ColorBrandCyan
+                                                color = ColorSlateSystem
                                             )
                                         }
                                     }
                                 }
+                                val subtitleText = when {
+                                    isAppCache -> "${cat.itemCount} apps with cache • Tap to inspect bucket"
+                                    isInstalledApps -> "${cat.itemCount} applications • Code & app data"
+                                    isSystem -> "Android 14 OS • Firmware partition"
+                                    else -> "${cat.itemCount} items"
+                                }
                                 Text(
-                                    text = if (isAppCategory && appCacheBytes > 0) "${cat.itemCount} apps • Tap to clear cache" else "${cat.itemCount} items",
+                                    text = subtitleText,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = ColorTextSecondary
