@@ -13,48 +13,52 @@ public static class UiHtml
       --bg: #F8FAFC;
       --surface: #FFFFFF;
       --surface-subtle: #F1F5F9;
-      --border: rgba(226, 232, 240, 0.9);
+      --surface-card: #FFFFFF;
+      --border: rgba(226, 232, 240, 0.85);
       --border-hover: rgba(2, 132, 199, 0.35);
+      --border-focus: rgba(2, 132, 199, 0.5);
       --text-main: #0F172A;
       --text-body: #334155;
       --text-muted: #64748B;
       --text-dim: #94A3B8;
       --accent-primary: #0284C7;
       --accent-primary-hover: #0369A1;
+      --accent-cobalt: #2563EB;
       --accent-emerald: #059669;
       --accent-amber: #D97706;
       --accent-rose: #E11D48;
-      --accent-indigo: #4F46E5;
       --accent-violet: #7C3AED;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
-      --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
-      --tray-bg: rgba(255, 255, 255, 0.94);
-      --tray-border: rgba(2, 132, 199, 0.3);
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 16px 36px -6px rgba(15, 23, 42, 0.09), 0 6px 12px -2px rgba(15, 23, 42, 0.04);
+      --shadow-dock: 0 20px 48px -10px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(2, 132, 199, 0.25);
+      --dock-bg: rgba(255, 255, 255, 0.92);
     }
 
     html.dark {
-      --bg: #07090E;
-      --surface: rgba(15, 21, 36, 0.72);
-      --surface-subtle: rgba(255, 255, 255, 0.03);
+      --bg: #0B0F19;
+      --surface: rgba(17, 24, 39, 0.88);
+      --surface-subtle: rgba(31, 41, 55, 0.65);
+      --surface-card: #111827;
       --border: rgba(255, 255, 255, 0.08);
       --border-hover: rgba(56, 189, 248, 0.35);
-      --text-main: #F8FAFC;
-      --text-body: #CBD5E1;
-      --text-muted: #8E9BAE;
-      --text-dim: #546274;
+      --border-focus: rgba(56, 189, 248, 0.5);
+      --text-main: #F9FAFB;
+      --text-body: #D1D5DB;
+      --text-muted: #9CA3AF;
+      --text-dim: #6B7280;
       --accent-primary: #38BDF8;
       --accent-primary-hover: #0284C7;
-      --accent-emerald: #10B981;
-      --accent-amber: #F59E0B;
-      --accent-rose: #F43F5E;
-      --accent-indigo: #818CF8;
+      --accent-cobalt: #60A5FA;
+      --accent-emerald: #34D399;
+      --accent-amber: #FBBF24;
+      --accent-rose: #F87171;
       --accent-violet: #A78BFA;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
-      --tray-bg: rgba(15, 21, 37, 0.94);
-      --tray-border: rgba(56, 189, 248, 0.4);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.6);
+      --shadow-dock: 0 20px 48px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.35);
+      --dock-bg: rgba(17, 24, 39, 0.94);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI', Inter, system-ui, sans-serif; }
@@ -70,15 +74,15 @@ public static class UiHtml
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Scrollbars */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    /* Precision Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(2, 132, 199, 0.45); }
 
     /* Header Bar */
     .app-header {
-      height: 62px;
+      height: 64px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -87,23 +91,26 @@ public static class UiHtml
       padding: 0 24px;
       z-index: 100;
       box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
     .brand-group {
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 220px;
     }
 
     .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
       background: linear-gradient(135deg, #0284C7 0%, #2563EB 50%, #4F46E5 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.3);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.32);
     }
 
     .brand-name {
@@ -116,7 +123,7 @@ public static class UiHtml
     .badge-enterprise {
       font-size: 10px;
       padding: 2px 7px;
-      border-radius: 5px;
+      border-radius: 6px;
       font-weight: 700;
       letter-spacing: 0.4px;
       text-transform: uppercase;
@@ -125,33 +132,7 @@ public static class UiHtml
       border: 1px solid rgba(2, 132, 199, 0.2);
     }
 
-    .airgap-indicator {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--surface-subtle);
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-    }
-
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent-emerald);
-      box-shadow: 0 0 6px var(--accent-emerald);
-      animation: pulseAnim 2s infinite;
-    }
-    @keyframes pulseAnim {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    /* Segmented Navigation Bar */
+    /* Executive Segmented Navigation Pill */
     .tab-bar {
       display: flex;
       background: var(--surface-subtle);
@@ -162,9 +143,9 @@ public static class UiHtml
     }
 
     .tab-item {
-      padding: 6px 13px;
+      padding: 7px 15px;
       border-radius: 9px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
       background: transparent;
@@ -173,7 +154,8 @@ public static class UiHtml
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 7px;
+      outline: none;
     }
     .tab-item:hover {
       color: var(--text-main);
@@ -186,54 +168,22 @@ public static class UiHtml
       font-weight: 700;
     }
 
-    /* Viewport Area */
-    .app-main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 32px 100px 32px;
-      position: relative;
-    }
-
-    .view-header {
-      margin-bottom: 22px;
+    /* Toolstrip */
+    .toolstrip {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .view-title {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
-      margin-bottom: 3px;
-    }
-    .view-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
+      align-items: center;
+      gap: 8px;
+      min-width: 220px;
+      justify-content: flex-end;
     }
 
-    /* Cards */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .card:hover {
-      border-color: var(--border-hover);
-      box-shadow: var(--shadow-md);
-    }
-
-    /* Action Buttons */
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: 7px;
+      padding: 7px 15px;
       border-radius: 9px;
       font-size: 12.5px;
       font-weight: 700;
@@ -243,12 +193,12 @@ public static class UiHtml
       outline: none;
     }
     .btn-primary {
-      background: var(--accent-primary);
+      background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%);
       color: #FFFFFF;
       box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
     }
     .btn-primary:hover {
-      background: var(--accent-primary-hover);
+      filter: brightness(1.08);
       transform: translateY(-1px);
       box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
     }
@@ -268,200 +218,157 @@ public static class UiHtml
     .btn-stage {
       background: rgba(2, 132, 199, 0.08);
       color: var(--accent-primary);
-      border: 1px solid rgba(2, 132, 199, 0.22);
-      padding: 5px 12px;
+      border: 1px solid rgba(2, 132, 199, 0.24);
+      padding: 4px 10px;
       border-radius: 7px;
       font-size: 11.5px;
       font-weight: 700;
+      transition: all 0.15s ease;
     }
     .btn-stage:hover {
       background: var(--accent-primary);
       color: #FFFFFF;
       box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+      transform: translateY(-1px);
     }
 
-    /* Diagnostics Overview */
-    .drive-grid {
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Viewport Area */
+    .app-main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 110px 32px;
+      position: relative;
+    }
+
+    .view-header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .view-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+    .view-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Physical Drive Strip */
+    .drive-strip {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 16px;
       margin-bottom: 22px;
     }
-    .drive-header {
+    .drive-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow-sm);
+    }
+    .drive-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+    .drive-card.selected {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15), var(--shadow-md);
+    }
+    .drive-card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
     }
-    .drive-name {
-      font-size: 15px;
-      font-weight: 700;
+    .drive-card-title {
+      font-size: 14.5px;
+      font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .drive-format-tag {
-      font-size: 11px;
+    .drive-card-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
-      padding: 2px 7px;
-      border-radius: 4px;
       color: var(--text-muted);
-      font-weight: 600;
     }
-    .drive-bar-bg {
-      height: 7px;
+    .drive-card-bar {
+      height: 8px;
       background: var(--surface-subtle);
-      border-radius: 4px;
+      border-radius: 5px;
       overflow: hidden;
       margin-bottom: 8px;
       border: 1px solid var(--border);
+      display: flex;
     }
-    .drive-bar-fill {
+    .drive-card-fill-used {
       height: 100%;
-      border-radius: 4px;
       background: linear-gradient(90deg, #0284C7 0%, #2563EB 100%);
-      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: width 0.4s ease;
     }
-    .drive-stats {
+    .drive-card-fill-free {
+      height: 100%;
+      background: #10B981;
+      opacity: 0.35;
+      transition: width 0.4s ease;
+    }
+    .drive-card-stats {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
+      font-weight: 600;
     }
 
-    .overview-grid {
+    /* Master Space Allocation Donut Section */
+    .donut-layout-grid {
       display: grid;
-      grid-template-columns: 350px 1fr;
-      gap: 20px;
+      grid-template-columns: 400px 1fr;
+      gap: 28px;
+      align-items: center;
     }
-
-    /* Radar Ring */
-    .diagnostic-panel {
+    .donut-canvas-pod {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 28px 20px;
-    }
-    .radar-circle {
-      width: 170px;
-      height: 170px;
-      border-radius: 50%;
-      border: 1px dashed rgba(2, 132, 199, 0.35);
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-    .radar-circle::before {
-      content: '';
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 1px solid rgba(79, 70, 229, 0.2);
-    }
-    .radar-circle::after {
-      content: '';
-      position: absolute;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      border: 1px solid rgba(5, 150, 105, 0.25);
-    }
-    .radar-sweep-hand {
-      position: absolute;
-      width: 85px;
-      height: 85px;
-      top: 0;
-      right: 0;
-      transform-origin: bottom left;
-      background: conic-gradient(from 0deg, rgba(2, 132, 199, 0.3) 0deg, transparent 50deg);
-      border-radius: 100% 0 0 0;
-      animation: sweepAnim 3s linear infinite;
-    }
-    @keyframes sweepAnim {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
     }
 
-    .diagnostic-stat-box {
-      position: absolute;
-      z-index: 2;
-      text-align: center;
-    }
-    .diagnostic-number {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.6px;
-    }
-    .diagnostic-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-    }
-
-    .tiles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-    .diagnostic-tile {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+    /* Modern Legend Cards */
+    .pie-legend-container {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.18s;
+      gap: 9px;
     }
-    .diagnostic-tile:hover {
-      background: var(--surface);
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-    .tile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .tile-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .tile-size {
-      font-size: 16.5px;
-      font-weight: 800;
-      font-family: monospace;
-      color: var(--accent-primary);
-    }
-    .tile-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 2px;
-    }
-    .tile-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* PIE / DONUT BREAKDOWN STYLES */
     .pie-legend-row {
       display: flex;
       align-items: center;
@@ -470,12 +377,12 @@ public static class UiHtml
       background: var(--surface-subtle);
       border: 1px solid var(--border);
       border-radius: 10px;
-      transition: all 0.18s;
       cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .pie-legend-row:hover, .pie-legend-row.highlighted {
       background: var(--surface);
-      border-color: var(--border-hover);
+      border-color: var(--accent-primary);
       box-shadow: var(--shadow-sm);
       transform: translateX(3px);
     }
@@ -495,33 +402,146 @@ public static class UiHtml
       color: var(--text-muted);
       margin-top: 1px;
     }
-    .pie-cat-stats {
-      text-align: right;
-    }
     .pie-cat-size {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 800;
-      font-family: monospace;
       color: var(--text-main);
+      font-family: monospace;
+      text-align: right;
     }
     .pie-cat-pct {
       font-size: 11px;
-      font-weight: 700;
       color: var(--text-muted);
+      text-align: right;
+    }
+    .pie-mini-bar {
+      width: 60px;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+    .pie-mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
     }
 
-    /* DAISYDISK SUNBURST VISUALIZER */
+    /* Radar Sweep & Quick Clean Hero */
+    .radar-hero-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      margin-top: 22px;
+    }
+    .radar-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 2px dashed rgba(2, 132, 199, 0.35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .radar-sweep-hand {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0 0;
+      background: linear-gradient(90deg, #0284C7, transparent);
+      animation: radarSpin 4s linear infinite;
+    }
+    @keyframes radarSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .radar-stat-box {
+      text-align: center;
+      z-index: 2;
+    }
+    .radar-number {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--accent-primary);
+      font-family: monospace;
+    }
+    .radar-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Primary Registries Tiles */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .diagnostic-tile {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 14px;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .diagnostic-tile:hover {
+      border-color: var(--border-hover);
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .tile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tile-size {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent-primary);
+      font-family: monospace;
+    }
+    .tile-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+    .tile-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Sunburst Visualizer */
     .sunburst-box {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 14px;
       padding: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-      min-height: 580px;
-      box-shadow: var(--shadow-sm);
     }
     .sunburst-toolbar {
       width: 100%;
@@ -534,120 +554,125 @@ public static class UiHtml
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
-      font-family: monospace;
     }
     .crumb-chip {
-      color: var(--accent-primary);
-      background: rgba(2, 132, 199, 0.08);
-      border: 1px solid rgba(2, 132, 199, 0.2);
-      padding: 3px 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
       border-radius: 6px;
+      color: var(--accent-primary);
       cursor: pointer;
     }
-    .crumb-chip:hover { background: rgba(2, 132, 199, 0.15); }
-
-    #sunburstCanvas { cursor: pointer; }
-
     .sunburst-tooltip {
       position: absolute;
-      pointer-events: none;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 10px;
-      box-shadow: var(--shadow-lg);
       display: none;
-      z-index: 10;
+      background: var(--surface);
+      border: 1px solid var(--accent-primary);
+      border-radius: 9px;
+      padding: 10px 14px;
+      pointer-events: none;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
     }
-    .tip-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
-    .tip-size { font-size: 12px; font-weight: 700; color: var(--accent-primary); font-family: monospace; margin-top: 2px; }
-    .tip-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Treemap Explorer */
+    /* Treemap Wrapper */
     .treemap-wrapper {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      min-height: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: var(--shadow-sm);
+      border-radius: 14px;
+      padding: 24px;
     }
     .treemap-tiles {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      height: 420px;
-      width: 100%;
-      align-content: flex-start;
-      border-radius: 10px;
-      overflow: hidden;
+      gap: 8px;
     }
     .treemap-tile {
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: 9px;
+      padding: 12px;
+      color: #FFFFFF;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      color: #FFFFFF;
       cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease;
+      transition: all 0.18s ease;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-sm);
     }
     .treemap-tile:hover {
-      filter: brightness(1.15);
-      transform: scale(1.015);
-      z-index: 2;
+      transform: scale(1.02);
+      filter: brightness(1.1);
       box-shadow: var(--shadow-md);
     }
-    .tile-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tile-val { font-size: 11px; opacity: 0.95; font-family: monospace; font-weight: 600; }
+    .tile-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tile-val {
+      font-size: 12.5px;
+      font-weight: 800;
+      font-family: monospace;
+      opacity: 0.95;
+    }
 
-    /* Toolchain & Developer Registry Rules */
+    /* Toolchain Registry List */
     .registry-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 20px;
+      padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 11px;
       margin-bottom: 10px;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.18s;
+      transition: all 0.18s ease;
     }
     .registry-item:hover {
       border-color: var(--border-hover);
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-sm);
     }
     .reg-title {
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .reg-path {
       font-size: 11.5px;
+      color: var(--text-dim);
       font-family: monospace;
-      color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
     .reg-desc {
       font-size: 12px;
-      color: var(--text-body);
+      color: var(--text-muted);
       margin-top: 4px;
-      line-height: 1.4;
     }
-    .badge-safe { background: rgba(5, 150, 105, 0.08); color: var(--accent-emerald); border: 1px solid rgba(5, 150, 105, 0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
-    .badge-review { background: rgba(217, 119, 6, 0.08); color: var(--accent-amber); border: 1px solid rgba(217, 119, 6, 0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+    .badge-safe {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .badge-review {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(217, 119, 6, 0.1);
+      color: var(--accent-amber);
+      border: 1px solid rgba(217, 119, 6, 0.25);
+    }
 
     /* Duplicate Clusters */
     .dup-cluster {
@@ -655,128 +680,122 @@ public static class UiHtml
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow-sm);
+      margin-bottom: 14px;
     }
     .cluster-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
       padding-bottom: 8px;
-      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
     }
     .cluster-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 0;
+      padding: 7px 0;
       font-size: 12px;
-      font-family: monospace;
       color: var(--text-body);
+      font-family: monospace;
+      border-bottom: 1px dashed var(--border);
     }
+    .cluster-row:last-child { border-bottom: none; }
 
-    /* THE DAISYDISK FLOATING COLLECTOR TRAY */
-    .collector-dock {
+    /* The Floating Staging Capsule Dock */
+    .floating-dock {
       position: fixed;
-      bottom: 20px;
+      bottom: 22px;
       left: 50%;
-      transform: translateX(-50%) translateY(120px);
-      width: 92%;
-      max-width: 1100px;
-      background: var(--tray-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--tray-border);
-      box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.05);
-      border-radius: 18px;
-      padding: 12px 22px;
+      transform: translateX(-50%) translateY(90px);
+      background: var(--dock-bg);
+      border: 1.5px solid rgba(2, 132, 199, 0.35);
+      border-radius: 22px;
+      padding: 10px 18px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      z-index: 1000;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      gap: 16px;
+      box-shadow: var(--shadow-dock);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 2000;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       opacity: 0;
       pointer-events: none;
     }
-    .collector-dock.active {
+    .floating-dock.active {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
       pointer-events: auto;
     }
-    .dock-meta {
+    .dock-recycler-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(2, 132, 199, 0.12);
       display: flex;
       align-items: center;
-      gap: 16px;
-    }
-    .dock-badge {
-      background: var(--accent-primary);
-      color: #FFFFFF;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.3px;
+      justify-content: center;
+      color: var(--accent-primary);
     }
     .dock-headline {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--text-main);
-      letter-spacing: -0.3px;
-    }
-    .dock-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      max-width: 480px;
-      padding: 2px;
-    }
-    .dock-chip {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 11.5px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+      gap: 8px;
     }
-    .chip-del {
-      color: var(--text-muted);
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 13px;
+    .dock-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .chip-del:hover { color: var(--accent-rose); }
 
-    /* Modal Backdrop */
+    /* Modal Sheet */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.5);
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 3000;
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
     }
     .modal-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      width: 90%;
-      max-width: 480px;
-      padding: 24px;
+      width: 520px;
+      max-width: 90vw;
+      padding: 28px;
       box-shadow: var(--shadow-lg);
+      animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .modal-body {
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.6;
+      margin-bottom: 22px;
     }
 
-    /* Toast Notification */
-    .toast-box {
+    /* Toast */
+    .toast-pill {
       position: fixed;
-      top: 75px;
+      bottom: 86px;
       right: 28px;
       background: var(--surface);
       border: 1px solid var(--accent-primary);
@@ -784,91 +803,82 @@ public static class UiHtml
       padding: 10px 18px;
       border-radius: 30px;
       font-size: 12.5px;
-      font-weight: 600;
+      font-weight: 700;
       box-shadow: var(--shadow-lg);
       display: none;
-      z-index: 3000;
+      z-index: 4000;
+      animation: toastIn 0.25s ease;
+    }
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header Navigation -->
+  <!-- Precision Header -->
   <header class=""app-header"">
     <div class=""brand-group"">
       <div class=""brand-logo"">
-        <svg width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#FFFFFF"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
+        <svg width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#FFFFFF"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
           <circle cx=""12"" cy=""12"" r=""10""/><path d=""m4.93 4.93 4.24 4.24""/><path d=""m14.83 9.17 4.24-4.24""/><path d=""m14.83 14.83 4.24 4.24""/><path d=""m9.17 14.83-4.24 4.24""/><circle cx=""12"" cy=""12"" r=""4""/>
         </svg>
       </div>
       <div>
         <div style=""display:flex; align-items:center; gap:8px;"">
           <span class=""brand-name"">DiskWarren</span>
-          <span class=""badge-enterprise"">Professional Edition</span>
+          <span class=""badge-enterprise"">Precision v1.0</span>
         </div>
       </div>
     </div>
 
-    <!-- Cupertino / Fluent Segmented Tabs -->
+    <!-- Segmented Master Navigation -->
     <nav class=""tab-bar"">
-      <button class=""tab-item active"" onclick=""switchTab('diagnostics')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 2v20M2 12h20""/><circle cx=""12"" cy=""12"" r=""10""/></svg>
-        Storage Diagnostics
+      <button class=""tab-item active"" onclick=""switchTab('dashboard')"">
+        <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M21.21 15.89A10 10 0 1 1 8 2.83""/><path d=""M22 12A10 10 0 0 0 12 2v10z""/></svg>
+        Storage Map &amp; Space Pie
       </button>
-      <button class=""tab-item"" onclick=""switchTab('piechart')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M21.21 15.89A10 10 0 1 1 8 2.83""/><path d=""M22 12A10 10 0 0 0 12 2v10z""/></svg>
-        Space Pie Chart
-      </button>
-      <button class=""tab-item"" onclick=""switchTab('sunburst')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><circle cx=""12"" cy=""12"" r=""4""/><path d=""m4.93 4.93 4.24 4.24""/></svg>
-        Radial Sunburst
-      </button>
-      <button class=""tab-item"" onclick=""switchTab('treemap')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""18"" height=""18"" x=""3"" y=""3"" rx=""2""/><path d=""M3 9h18M9 21V9""/></svg>
-        Treemap
+      <button class=""tab-item"" onclick=""switchTab('visualizer')"">
+        <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><circle cx=""12"" cy=""12"" r=""4""/><path d=""m4.93 4.93 4.24 4.24""/></svg>
+        Deep Visualizer
       </button>
       <button class=""tab-item"" onclick=""switchTab('toolchains')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""16 18 22 12 16 6""/><polyline points=""8 6 2 12 8 18""/></svg>
-        Toolchains
+        <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""16 18 22 12 16 6""/><polyline points=""8 6 2 12 8 18""/></svg>
+        Developer Toolchains
       </button>
       <button class=""tab-item"" onclick=""switchTab('duplicates')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""14"" height=""14"" x=""8"" y=""8"" rx=""2""/><path d=""M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2""/></svg>
-        Duplicates
-      </button>
-      <button class=""tab-item"" onclick=""switchTab('safety')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z""/></svg>
-        Safety
-      </button>
-      <button class=""tab-item"" onclick=""switchTab('license')"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><path d=""m9 12 2 2 4-4""/></svg>
-        Licensing
+        <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""14"" height=""14"" x=""8"" y=""8"" rx=""2""/><path d=""M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2""/></svg>
+        Duplicate Finder
       </button>
     </nav>
 
-    <!-- Controls: Theme Toggle & Airgap -->
-    <div style=""display:flex; align-items:center; gap:10px;"">
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
+    <!-- Toolstrip -->
+    <div class=""toolstrip"">
+      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openSafetyModal()"">
+        🛡️ Air-Gap &amp; Safety
+      </button>
+      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openLicenseModal()"">
+        ★ Pro Edition
+      </button>
+      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
+        🔊 Sound On
+      </button>
+      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
         ☀️ Light
       </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
-        🔊 Audio On
-      </button>
-      <div class=""airgap-indicator"">
-        <div class=""pulse-dot""></div>
-        <span>Air-Gapped Engine</span>
-      </div>
     </div>
   </header>
 
-  <!-- Viewports Content -->
+  <!-- Viewports -->
   <main class=""app-main"">
 
-    <!-- 1. STORAGE DIAGNOSTICS & VOLUME ALLOCATION -->
-    <section id=""view-diagnostics"">
+    <!-- 1. STORAGE MAP & SPACE PIE (FLAGSHIP VIEW) -->
+    <section id=""view-dashboard"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">System Volume Allocation &amp; Storage Health</h1>
-          <p class=""view-subtitle"">Deterministic filesystem analysis of partition structures, cluster allocations, and disposable toolchain registries.</p>
+          <h1 class=""view-title"">System Volume Allocation &amp; Space Pie</h1>
+          <p class=""view-subtitle"">High-precision filesystem telemetry, partition cluster analysis, and disposable package caches.</p>
         </div>
         <button class=""btn btn-primary"" onclick=""triggerStorageRefresh()"">
           <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""23 4 23 10 17 10""/><polyline points=""1 20 1 14 7 14""/><path d=""M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15""/></svg>
@@ -876,45 +886,51 @@ public static class UiHtml
         </button>
       </div>
 
-      <!-- NTFS Volume Partitions -->
-      <div class=""drive-grid"" id=""volumeDrivesContainer"">
+      <!-- Physical Drive Hardware Cards -->
+      <div class=""drive-strip"" id=""volumeDrivesContainer"">
         <!-- Live from C# -->
       </div>
 
-      <!-- INTERACTIVE SPACE ALLOCATION PIE BREAKDOWN CARD -->
+      <!-- THE MASTER DONUT ALLOCATION CARD -->
       <div class=""card"" style=""margin-bottom: 22px;"">
-        <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"">
+        <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px;"">
           <div>
-            <h3 style=""font-size:16px; font-weight:800; color:var(--text-main);"">Partition Space Allocation (Pie Breakdown)</h3>
-            <p style=""font-size:12px; color:var(--text-muted);"">Proportional capacity distribution across system, developer toolchains, application binaries, and free space.</p>
+            <h3 style=""font-size:16px; font-weight:800; color:var(--text-main);"">Partition Capacity Breakdown (Interactive Donut)</h3>
+            <p style=""font-size:12px; color:var(--text-muted);"">Polar sector distribution across system kernel, developer toolchains, applications, and free space.</p>
           </div>
-          <div id=""diagnosticsDriveSelector"" style=""display:flex; gap:8px;"">
-            <!-- Drive selector chips -->
+          <div id=""dashboardDriveSelector"" style=""display:flex; gap:8px;"">
+            <!-- Drive selector buttons -->
           </div>
         </div>
 
-        <div style=""display:grid; grid-template-columns: 310px 1fr; gap: 24px; align-items: center;"">
-          <div style=""display:flex; justify-content:center; position:relative;"">
-            <canvas id=""diagnosticsPieCanvas"" width=""300"" height=""300"" style=""cursor:pointer;""></canvas>
+        <div class=""donut-layout-grid"">
+          <!-- Canvas with Telemetry Pod -->
+          <div class=""donut-canvas-pod"">
+            <canvas id=""masterDonutCanvas"" style=""cursor:pointer;""></canvas>
+            <div style=""font-size:11.5px; color:var(--text-muted); margin-top:12px; text-align:center;"">
+              Hover over any slice to inspect category allocation • Click slice to filter
+            </div>
           </div>
-          <div id=""diagnosticsPieLegend"" style=""display:flex; flex-direction:column; gap:8px;"">
-            <!-- Dynamic Category Rows with Progress & Badges -->
+
+          <!-- Dynamic Category Cards -->
+          <div class=""pie-legend-container"" id=""dashboardDonutLegend"">
+            <!-- Dynamic Category Breakdown Rows -->
           </div>
         </div>
       </div>
 
-      <!-- CleanMyMac Diagnostic Ring & Primary Reclaim Targets -->
-      <div class=""overview-grid"">
-        <div class=""card diagnostic-panel"">
+      <!-- Quick Clean Hero & Primary Registries -->
+      <div class=""radar-hero-grid"">
+        <div class=""card"" style=""display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px 20px;"">
           <div class=""radar-circle"">
             <div class=""radar-sweep-hand""></div>
-            <div class=""diagnostic-stat-box"">
-              <div class=""diagnostic-number"" id=""reclaimableHeadlineSize"">10.4 GB</div>
-              <div class=""diagnostic-label"">Reclaimable</div>
+            <div class=""radar-stat-box"">
+              <div class=""radar-number"" id=""reclaimableHeadlineSize"">10.4 GB</div>
+              <div class=""radar-label"">Safe Reclaimable</div>
             </div>
           </div>
-          <p style=""font-size:12px; color:var(--text-muted); margin-bottom:14px; max-width:240px;"">
-            Safely disposable package archives and compiler caches ready for collector staging.
+          <p style=""font-size:12px; color:var(--text-muted); margin-bottom:16px; max-width:260px;"">
+            Verified disposable compiler caches, package archives, and crash logs ready for zero-risk recycling.
           </p>
           <button class=""btn btn-primary"" style=""width:100%;"" onclick=""stageAllLowRiskTargets()"">
             Stage All Verified Safe Targets
@@ -922,7 +938,7 @@ public static class UiHtml
         </div>
 
         <div class=""card"">
-          <h3 style=""font-size:15px; font-weight:700; color:var(--text-main); margin-bottom:14px;"">Primary Storage Reclaim Registries</h3>
+          <h3 style=""font-size:15px; font-weight:800; color:var(--text-main); margin-bottom:14px;"">Primary Storage Reclaim Registries</h3>
           <div class=""tiles-grid"" id=""primaryRegistriesGrid"">
             <!-- Dynamic -->
           </div>
@@ -930,91 +946,57 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 2. FULL-SCREEN EXPANDED SPACE ALLOCATION PIE VIEW -->
-    <section id=""view-piechart"" style=""display:none;"">
+    <!-- 2. DEEP VISUALIZER (SUNBURST & TREEMAP) -->
+    <section id=""view-visualizer"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Volume Space Allocation &amp; Capacity Pie</h1>
-          <p class=""view-subtitle"">Interactive circular breakdown of disk capacity, consumed categories, developer caches, and free space.</p>
+          <h1 class=""view-title"">Hierarchical Deep Storage Visualizer</h1>
+          <p class=""view-subtitle"">Concentric multi-ring disk layout and proportional cluster blocks. Click to drill down into subfolders.</p>
         </div>
-        <div id=""mainPieDriveSelector"" style=""display:flex; gap:8px;"">
-          <!-- Drive selector chips -->
-        </div>
-      </div>
-
-      <div class=""card"" style=""padding:32px;"">
-        <div style=""display:grid; grid-template-columns: 460px 1fr; gap: 40px; align-items: center;"">
-          <div style=""display:flex; flex-direction:column; align-items:center; position:relative;"">
-            <canvas id=""mainPieCanvas"" width=""440"" height=""440"" style=""cursor:pointer;""></canvas>
-            <div style=""font-size:12px; color:var(--text-muted); margin-top:14px; text-align:center;"">
-              Hover over any slice to inspect category allocation • Click slice to filter
-            </div>
+        <div style=""display:flex; gap:10px;"">
+          <div class=""tab-bar"">
+            <button class=""tab-item active"" id=""btnVizSunburst"" onclick=""switchVizMode('sunburst')"">Radial Sunburst</button>
+            <button class=""tab-item"" id=""btnVizTreemap"" onclick=""switchVizMode('treemap')"">Squarified Treemap</button>
           </div>
-          <div>
-            <h3 style=""font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:14px;"" id=""mainPieLegendHeader"">Capacity Breakdown</h3>
-            <div id=""mainPieLegend"" style=""display:flex; flex-direction:column; gap:10px;"">
-              <!-- Dynamic Rows -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. DAISYDISK RADIAL SUNBURST MAP -->
-    <section id=""view-sunburst"" style=""display:none;"">
-      <div class=""view-header"">
-        <div>
-          <h1 class=""view-title"">Hierarchical Radial Sunburst Visualizer</h1>
-          <p class=""view-subtitle"">Concentric multi-ring disk layout. Click any sector to drill into subdirectories; hover to inspect exact allocation.</p>
-        </div>
-        <div style=""display:flex; gap:8px;"">
           <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</button>
           <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph')"">User Profile</button>
         </div>
       </div>
 
-      <div class=""sunburst-box"">
-        <div class=""sunburst-toolbar"">
-          <div class=""sunburst-crumbs"" id=""sunburstCrumbsContainer"">
-            <span style=""color:var(--text-dim);"">Root:</span>
-            <span class=""crumb-chip"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</span>
+      <!-- Sunburst Subview -->
+      <div id=""subview-sunburst"">
+        <div class=""sunburst-box"">
+          <div class=""sunburst-toolbar"">
+            <div class=""sunburst-crumbs"" id=""sunburstCrumbsContainer"">
+              <span style=""color:var(--text-dim);"">Root:</span>
+              <span class=""crumb-chip"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</span>
+            </div>
+            <div style=""font-size:12px; color:var(--text-muted);"">
+              Click sector to zoom in • Shift+click to stage to dock
+            </div>
           </div>
-          <div style=""font-size:12px; color:var(--text-muted);"">
-            Double-click or click sector to zoom in • Shift+click to stage
+
+          <canvas id=""sunburstCanvas""></canvas>
+
+          <div class=""sunburst-tooltip"" id=""sunburstHoverTooltip"">
+            <div style=""font-size:13px; font-weight:800; color:var(--text-main);"" id=""tooltipTitle"">Directory</div>
+            <div style=""font-size:14px; font-weight:800; color:var(--accent-primary); font-family:monospace;"" id=""tooltipSize"">0 MB</div>
+            <div style=""font-size:11px; color:var(--text-muted); margin-top:2px;"" id=""tooltipSub"">Click to drill • Shift+click to stage</div>
           </div>
         </div>
+      </div>
 
-        <canvas id=""sunburstCanvas"" width=""520"" height=""520""></canvas>
-
-        <div class=""sunburst-tooltip"" id=""sunburstHoverTooltip"">
-          <div class=""tip-title"" id=""tooltipTitle"">Directory</div>
-          <div class=""tip-size"" id=""tooltipSize"">0 MB</div>
-          <div class=""tip-sub"" id=""tooltipSub"">Click to drill down • Shift+click to stage</div>
+      <!-- Treemap Subview -->
+      <div id=""subview-treemap"" style=""display:none;"">
+        <div class=""treemap-wrapper"">
+          <div class=""treemap-tiles"" id=""treemapTilesContainer"">
+            <!-- Dynamic -->
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. TREEMAP VIEW -->
-    <section id=""view-treemap"" style=""display:none;"">
-      <div class=""view-header"">
-        <div>
-          <h1 class=""view-title"">Proportional Squarified Treemap</h1>
-          <p class=""view-subtitle"">Capacity blocks scaled to filesystem cluster consumption. Click any block to add to collector tray.</p>
-        </div>
-        <div style=""display:flex; gap:8px;"">
-          <button class=""btn btn-secondary"" onclick=""drillTreemap('C:\\Users\\saiph\\Downloads')"">Downloads</button>
-          <button class=""btn btn-secondary"" onclick=""drillTreemap('C:\\Users\\saiph')"">User Profile</button>
-        </div>
-      </div>
-
-      <div class=""treemap-wrapper"">
-        <div class=""treemap-tiles"" id=""treemapTilesContainer"">
-          <!-- Dynamic -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. TOOLCHAIN ARTIFACTS & DEVELOPER REGISTRIES -->
+    <!-- 3. DEVELOPER TOOLCHAINS -->
     <section id=""view-toolchains"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -1031,12 +1013,12 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 6. CRYPTOGRAPHIC BYTE DUPLICATES -->
+    <!-- 4. DUPLICATE FINDER -->
     <section id=""view-duplicates"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Two-Phase SHA-256 Duplicate Analysis</h1>
-          <p class=""view-subtitle"">Deterministic byte-for-byte verification. Phase 1 groups matching lengths; Phase 2 computes full SHA-256 cryptographic signatures.</p>
+          <h1 class=""view-title"">Two-Phase SHA-256 Duplicate File Analysis</h1>
+          <p class=""view-subtitle"">Deterministic byte-for-byte cryptographic verification. Phase 1 groups matching lengths; Phase 2 computes SHA-256 signatures.</p>
         </div>
         <button class=""btn btn-primary"" onclick=""executeDuplicateScan()"">
           <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><circle cx=""11"" cy=""11"" r=""8""/><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""/></svg>
@@ -1046,188 +1028,234 @@ public static class UiHtml
 
       <div id=""duplicatesResultsContainer"">
         <div class=""card"" style=""text-align:center; padding:48px; color:var(--text-muted);"">
-          Click 'Scan Downloads for Duplicates' to discover identical file copies.
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. SAFETY ARCHITECTURE & REVERSIBILITY -->
-    <section id=""view-safety"" style=""display:none;"">
-      <div class=""view-header"">
-        <div>
-          <h1 class=""view-title"">Safety by Design &amp; Win32 Reversibility</h1>
-          <p class=""view-subtitle"">Enterprise safeguard protocols preventing destructive accidental deletion.</p>
-        </div>
-      </div>
-
-      <div class=""card"" style=""margin-bottom:16px;"">
-        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-emerald); margin-bottom:6px;"">✓ 1. Native Win32 Recycle Bin Reversibility</h3>
-        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
-          DiskWarren dispatches all deletion operations exclusively through the official Windows Shell API (<code style=""color:var(--accent-primary);"">SHFileOperation</code>) with the <code style=""color:var(--accent-primary);"">FOF_ALLOWUNDO</code> flag. Cleaned files reside in your desktop Recycle Bin and can be restored immediately at any time.
-        </p>
-      </div>
-
-      <div class=""card"" style=""margin-bottom:16px;"">
-        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-primary); margin-bottom:6px;"">✓ 2. Kernel-Enforced System Directory Immunity</h3>
-        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
-          Critical Windows infrastructure (<code style=""color:var(--accent-primary);"">C:\Windows</code>, <code style=""color:var(--accent-primary);"">System32</code>, <code style=""color:var(--accent-primary);"">Program Files</code>, EFI boot partitions, and registry hives) are hardcoded as immutable and protected from modification or indexing by the safety barrier.
-        </p>
-      </div>
-
-      <div class=""card"">
-        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-amber); margin-bottom:6px;"">✓ 3. Explicit Collector Staging Verification</h3>
-        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
-          No automated background tasks or silent purges occur. Candidate files must be explicitly placed into the <strong>Collector Tray</strong>, reviewed by the user, and confirmed before execution.
-        </p>
-      </div>
-    </section>
-
-    <!-- 8. LICENSING & CRYPTOGRAPHIC VERIFICATION -->
-    <section id=""view-license"" style=""display:none;"">
-      <div class=""view-header"">
-        <div>
-          <h1 class=""view-title"">Cryptographic License &amp; Enterprise Activation</h1>
-          <p class=""view-subtitle"">Offline signature verification for secure, air-gapped environments. Perpetual lifetime ownership.</p>
-        </div>
-      </div>
-
-      <div class=""card"" style=""margin-bottom:20px; border-color:rgba(2, 132, 199, 0.4);"">
-        <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"">
-          <div>
-            <span style=""font-size:11px; text-transform:uppercase; font-weight:700; color:var(--accent-primary);"">License Authentication Status</span>
-            <h2 id=""licenseTierHeader"" style=""font-size:22px; font-weight:800; color:var(--text-main);"">Pro Lifetime (Single PC)</h2>
-          </div>
-          <span id=""licenseStatusBadge"" style=""background:rgba(5, 150, 105, 0.1); color:var(--accent-emerald); border:1px solid rgba(5, 150, 105, 0.3); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700;"">Active &amp; Verified</span>
-        </div>
-
-        <div style=""display:flex; gap:10px;"">
-          <input type=""text"" id=""licenseKeyInput"" style=""flex:1; background:var(--surface-subtle); border:1px solid var(--border); border-radius:9px; padding:10px 14px; color:var(--text-main); font-family:monospace; font-size:13px;"" value=""DW1-WIN-PRO-LIFETIME-3151DBDA"" />
-          <button class=""btn btn-primary"" onclick=""authenticateLicense()"">Verify Cryptographic Key</button>
+          Click 'Scan Downloads for Duplicates' to discover identical file copies across user folders.
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- THE DAISYDISK FLOATING COLLECTOR TRAY -->
-  <div class=""collector-dock"" id=""collectorDock"">
-    <div class=""dock-meta"">
-      <span class=""dock-badge"">COLLECTOR TRAY</span>
-      <div>
-        <div class=""dock-headline"" id=""dockHeadlineText"">0 Items • 0 MB Staged</div>
-        <div style=""font-size:11px; color:var(--text-muted);"">Reversible Win32 Recycle Bin Execution</div>
-      </div>
+  <!-- The Floating Staging Capsule Dock -->
+  <div class=""floating-dock"" id=""collectorDock"">
+    <div class=""dock-recycler-icon"">
+      <svg width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""3 6 5 6 21 6""/><path d=""M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2""/><line x1=""10"" y1=""11"" x2=""10"" y2=""17""/><line x1=""14"" y1=""11"" x2=""14"" y2=""17""/></svg>
     </div>
-
-    <div class=""dock-scroll"" id=""dockScrollContainer"">
-      <!-- Staged Chips -->
+    <div>
+      <div class=""dock-headline"" id=""dockHeadlineText"">0 Items Staged</div>
+      <div style=""font-size:11.5px; color:var(--text-muted);"">Reversible Windows Recycle Bin Action</div>
     </div>
-
-    <div style=""display:flex; align-items:center; gap:10px;"">
-      <button class=""btn btn-secondary"" style=""padding:7px 12px; font-size:12px;"" onclick=""clearCollectorTray()"">
+    <div class=""dock-actions"">
+      <button class=""btn btn-secondary"" style=""padding:6px 12px; font-size:12px;"" onclick=""clearCollectorTray()"">
         Clear
       </button>
-      <button class=""btn btn-primary"" style=""background:#059669; box-shadow:0 2px 10px rgba(5,150,105,0.3);"" onclick=""openConfirmationModal()"">
-        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""3 6 5 6 21 6""/><path d=""M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2""/></svg>
-        Recycle Staged Items
+      <button class=""btn btn-primary"" style=""padding:6px 16px; font-size:12px;"" onclick=""openConfirmationModal()"">
+        Recycle Safely
       </button>
     </div>
   </div>
 
-  <!-- Reversible Deletion Modal -->
-  <div class=""modal-overlay"" id=""confirmModal"">
+  <!-- Safety & Air-Gap Modal -->
+  <div class=""modal-overlay"" id=""safetyModal"">
     <div class=""modal-card"">
-      <h3 style=""font-size:17px; font-weight:800; color:var(--text-main); margin-bottom:8px;"">Confirm Safe Recycling</h3>
-      <p style=""font-size:13.5px; color:var(--text-muted); line-height:1.5; margin-bottom:18px;"" id=""modalMessageText"">
-        The selected items will be safely moved to your Windows Recycle Bin. You can restore them at any time.
-      </p>
-      <div style=""display:flex; justify-content:flex-end; gap:10px;"">
-        <button class=""btn btn-secondary"" onclick=""closeConfirmationModal()"">Cancel</button>
-        <button class=""btn btn-primary"" style=""background:#059669;"" onclick=""dispatchBatchRecycle()"">
-          Move to Recycle Bin
-        </button>
+      <div class=""modal-title"">🛡️ Air-Gapped Zero-Risk Guarantee</div>
+      <div class=""modal-body"">
+        <p style=""margin-bottom:12px;"">
+          <strong>1. 100% Offline Air-Gapped Operation:</strong> DiskWarren executes exclusively locally on your machine with zero external telemetry, zero network sockets, and zero data uploads.
+        </p>
+        <p style=""margin-bottom:12px;"">
+          <strong>2. Two-Phase Win32 Shell Reversibility:</strong> All staged deletions are dispatched via the Win32 <code>SHFileOperation</code> API with the <code>FOF_ALLOWUNDO</code> flag. Files are moved directly to your Windows Recycle Bin and can be restored at any time.
+        </p>
+        <p>
+          <strong>3. Windows Defender CFA Compliant:</strong> DiskWarren respects Windows Defender Controlled Folder Access and will never touch protected user personal files or system boot sectors.
+        </p>
+      </div>
+      <div style=""display:flex; justify-content:flex-end;"">
+        <button class=""btn btn-primary"" onclick=""closeSafetyModal()"">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Box -->
-  <div class=""toast-box"" id=""toastPill"">Notification</div>
+  <!-- Licensing Modal -->
+  <div class=""modal-overlay"" id=""licenseModal"">
+    <div class=""modal-card"">
+      <div class=""modal-title"">★ DiskWarren Professional Edition</div>
+      <div class=""modal-body"">
+        <p style=""margin-bottom:14px;"">
+          Enter your license key to unlock unlimited family machines, continuous background monitoring, and scheduled duplicate scrubbing.
+        </p>
+        <div style=""margin-bottom:14px;"">
+          <input type=""text"" id=""licenseKeyInput"" placeholder=""DW-PRO-XXXX-XXXX-XXXX"" style=""width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--text-main); font-family:monospace; font-size:13px; outline:none;"" />
+        </div>
+        <div style=""font-size:11.5px; color:var(--text-muted);"">
+          Current Status: <span id=""licenseStatusBadge"" style=""color:var(--accent-emerald); font-weight:700;"">Active &amp; Verified</span>
+        </div>
+      </div>
+      <div style=""display:flex; justify-content:flex-end; gap:8px;"">
+        <button class=""btn btn-secondary"" onclick=""closeLicenseModal()"">Cancel</button>
+        <button class=""btn btn-primary"" onclick=""authenticateLicense()"">Activate Key</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- Confirmation Modal -->
+  <div class=""modal-overlay"" id=""confirmModal"">
+    <div class=""modal-card"">
+      <div class=""modal-title"">Confirm Safe Recycle</div>
+      <div class=""modal-body"" id=""modalMessageText"">
+        Are you sure you want to move staged items to the Windows Recycle Bin?
+      </div>
+      <div style=""display:flex; justify-content:flex-end; gap:10px;"">
+        <button class=""btn btn-secondary"" onclick=""closeConfirmationModal()"">Cancel</button>
+        <button class=""btn btn-primary"" onclick=""dispatchBatchRecycle()"">Recycle to Windows Bin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class=""toast-pill"" id=""toastPill"">Notification</div>
+
+  <!-- JavaScript Application Architecture -->
   <script>
-    // State
+    // State Model
     let drives = [];
     let rules = [];
     let treemapItems = [];
     let sunburstTree = null;
     let stagedItems = [];
-    let soundEnabled = true;
-    let isDarkTheme = false;
-    let audioCtx = null;
     let selectedDriveIdx = 0;
-    let hoveredPieSliceIdx = -1;
+    let hoveredDonutIdx = -1;
+    let activeTab = 'dashboard';
+    let vizMode = 'sunburst';
+    let isDarkTheme = false;
+    let soundEnabled = true;
 
-    // Theme Switcher
-    function toggleTheme() {
-      isDarkTheme = !isDarkTheme;
-      document.documentElement.className = isDarkTheme ? 'dark' : 'light';
-      document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
-      renderSunburst();
-      renderAllPieCharts();
+    // Web Audio Synthesizer
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-
-    // Procedural Audio Synthesizer
-    function playChime(type) {
+    function playSound(type) {
       if (!soundEnabled) return;
       try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        initAudio();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
         const now = audioCtx.currentTime;
-        if (type === 'stage') {
+        if (type === 'click') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(580, now);
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'stage') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.09);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
           osc.start(now);
           osc.stop(now + 0.09);
         } else if (type === 'clean') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(523.25, now);
-          osc.frequency.setValueAtTime(659.25, now + 0.08);
-          osc.frequency.setValueAtTime(783.99, now + 0.16);
-          osc.frequency.setValueAtTime(1046.50, now + 0.24);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-          osc.start(now);
-          osc.stop(now + 0.55);
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.06);
+            gain.gain.setValueAtTime(0.1, now + i * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.06);
+            osc.stop(now + i * 0.06 + 0.35);
+          });
         }
-      } catch (e) {}
+      } catch (e) { }
+    }
+
+    // High-DPI Scaled Context Helper
+    function getScaledContext(canvas, cssWidth, cssHeight) {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.round(cssWidth * dpr);
+      canvas.height = Math.round(cssHeight * dpr);
+      canvas.style.width = cssWidth + 'px';
+      canvas.style.height = cssHeight + 'px';
+      const ctx = canvas.getContext('2d');
+      ctx.resetTransform?.();
+      ctx.scale(dpr, dpr);
+      return ctx;
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      playSound('click');
+      activeTab = tabId;
+      document.querySelectorAll('.tab-bar .tab-item').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.app-main > section').forEach(s => s.style.display = 'none');
+      document.getElementById('view-' + tabId).style.display = 'block';
+
+      if (tabId === 'dashboard') {
+        setTimeout(renderAllDashboardCharts, 40);
+      } else if (tabId === 'visualizer') {
+        setTimeout(() => {
+          if (vizMode === 'sunburst') renderSunburst();
+          else renderTreemap();
+        }, 40);
+      }
+    }
+
+    function switchVizMode(mode) {
+      playSound('click');
+      vizMode = mode;
+      document.getElementById('btnVizSunburst').classList.toggle('active', mode === 'sunburst');
+      document.getElementById('btnVizTreemap').classList.toggle('active', mode === 'treemap');
+      document.getElementById('subview-sunburst').style.display = mode === 'sunburst' ? 'block' : 'none';
+      document.getElementById('subview-treemap').style.display = mode === 'treemap' ? 'block' : 'none';
+      if (mode === 'sunburst') setTimeout(renderSunburst, 30);
+      else setTimeout(renderTreemap, 30);
+    }
+
+    // Theme & Audio Toggles
+    function toggleTheme() {
+      playSound('click');
+      isDarkTheme = !isDarkTheme;
+      document.documentElement.className = isDarkTheme ? 'dark' : 'light';
+      document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
+      renderAllDashboardCharts();
+      if (activeTab === 'visualizer' && vizMode === 'sunburst') renderSunburst();
     }
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Audio On' : '🔇 Audio Off';
+      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Sound On' : '🔇 Mute';
+      if (soundEnabled) playSound('click');
     }
 
-    function switchTab(viewId) {
-      document.querySelectorAll('.tab-bar .tab-item').forEach(b => b.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      document.querySelectorAll('.app-main > section').forEach(s => s.style.display = 'none');
-      document.getElementById('view-' + viewId).style.display = 'block';
-
-      if (viewId === 'sunburst') {
-        setTimeout(renderSunburst, 50);
-      } else if (viewId === 'piechart') {
-        setTimeout(renderAllPieCharts, 50);
-      }
+    // Modal Operations
+    function openSafetyModal() { playSound('click'); document.getElementById('safetyModal').style.display = 'flex'; }
+    function closeSafetyModal() { document.getElementById('safetyModal').style.display = 'none'; }
+    function openLicenseModal() { playSound('click'); document.getElementById('licenseModal').style.display = 'flex'; }
+    function closeLicenseModal() { document.getElementById('licenseModal').style.display = 'none'; }
+    function openConfirmationModal() {
+      if (stagedItems.length === 0) return;
+      playSound('click');
+      const count = stagedItems.length;
+      const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
+      document.getElementById('modalMessageText').innerText = `Are you sure you want to move ${count} staged ${count === 1 ? 'item' : 'items'} (${formatBytes(totalBytes)}) to the Windows Recycle Bin?`;
+      document.getElementById('confirmModal').style.display = 'flex';
     }
+    function closeConfirmationModal() { document.getElementById('confirmModal').style.display = 'none'; }
 
+    // Toast
     function showToast(msg) {
       const t = document.getElementById('toastPill');
       t.innerText = msg;
@@ -1235,188 +1263,68 @@ public static class UiHtml
       setTimeout(() => { t.style.display = 'none'; }, 3000);
     }
 
-    // Collector Operations
-    function stageItemToDock(name, path, sizeBytes, formattedSize) {
-      if (stagedItems.some(i => i.path === path)) {
-        showToast('Already in Collector Tray: ' + name);
-        return;
-      }
-      stagedItems.push({ name, path, sizeBytes, formattedSize });
-      updateDockUI();
-      playChime('stage');
-      showToast('Staged to Collector Tray: ' + name);
-    }
-
-    function removeStagedItem(path) {
-      stagedItems = stagedItems.filter(i => i.path !== path);
-      updateDockUI();
-    }
-
-    function clearCollectorTray() {
-      stagedItems = [];
-      updateDockUI();
-    }
-
-    function updateDockUI() {
-      const dock = document.getElementById('collectorDock');
-      const count = stagedItems.length;
-      if (count === 0) {
-        dock.classList.remove('active');
-        return;
-      }
-      dock.classList.add('active');
-
-      const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
-      document.getElementById('dockHeadlineText').innerText = `${count} ${count === 1 ? 'Item' : 'Items'} • ${formatBytes(totalBytes)} Staged`;
-
-      let chips = '';
-      stagedItems.forEach(i => {
-        chips += `
-          <div class=""dock-chip"">
-            <span>${i.name}</span>
-            <strong style=""color:var(--accent-primary);"">${i.formattedSize}</strong>
-            <span class=""chip-del"" onclick=""removeStagedItem('${i.path.replace(/\\/g, '\\\\')}')"">&times;</span>
-          </div>`;
-      });
-      document.getElementById('dockScrollContainer').innerHTML = chips;
-    }
-
-    function openConfirmationModal() {
-      if (stagedItems.length === 0) return;
-      const count = stagedItems.length;
-      const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
-      document.getElementById('modalMessageText').innerText = `Are you sure you want to move ${count} staged ${count === 1 ? 'item' : 'items'} (${formatBytes(totalBytes)}) to the Windows Recycle Bin?`;
-      document.getElementById('confirmModal').style.display = 'flex';
-    }
-
-    function closeConfirmationModal() {
-      document.getElementById('confirmModal').style.display = 'none';
-    }
-
-    function dispatchBatchRecycle() {
-      closeConfirmationModal();
-      const paths = stagedItems.map(i => i.path);
-      if (window.chrome && window.chrome.webview) {
-        window.chrome.webview.postMessage({ action: 'batchRecycle', paths: paths });
-      }
-      playChime('clean');
-      showToast(`Cleaned ${stagedItems.length} items to Windows Recycle Bin!`);
-      clearCollectorTray();
-    }
-
-    function stageAllLowRiskTargets() {
-      let count = 0;
-      rules.forEach(r => {
-        if (r.safety === 0) {
-          if (!stagedItems.some(i => i.path === r.path)) {
-            stagedItems.push({ name: r.title, path: r.path, sizeBytes: r.sizeBytes, formattedSize: r.formattedSize });
-            count++;
-          }
-        }
-      });
-      updateDockUI();
-      playChime('stage');
-      showToast(`Staged ${count} verified low-risk targets to Collector Tray.`);
-    }
-
-    // Callbacks from C# Bridge
-    window.onInitialDataReceived = function(data) {
-      drives = data.drives || [];
-      rules = data.rules || [];
-      treemapItems = data.treemap || [];
-      if (data.sunburst) sunburstTree = data.sunburst;
-
-      renderVolumes();
-      renderPrimaryRegistries();
-      renderTreemap();
-      renderToolchainsRegistry();
-      renderSunburst();
-      renderAllPieCharts();
-    };
-
-    window.onSunburstDataReceived = function(tree) {
-      sunburstTree = tree;
-      renderSunburst();
-    };
-
-    window.onDuplicatesReceived = function(dups) {
-      const container = document.getElementById('duplicatesResultsContainer');
-      if (!dups || dups.length === 0) {
-        container.innerHTML = '<div class=""card"" style=""text-align:center; padding:48px; color:var(--text-muted);"">No identical duplicate files found in selected scope.</div>';
-        return;
-      }
-      let html = '';
-      dups.forEach(g => {
-        html += `
-          <div class=""dup-cluster"">
-            <div class=""cluster-head"">
-              <span style=""color:var(--accent-primary);"">${g.fileSizeFormatted} each (SHA-256: ${g.hashSha256.substring(0, 12)}...)</span>
-              <span style=""color:var(--text-muted);"">${g.filePaths.length} identical copies</span>
-            </div>`;
-        g.filePaths.forEach((fp, idx) => {
-          const fn = fp.split('\\').pop();
-          html += `
-            <div class=""cluster-row"">
-              <span style=""overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:72%;"">${fp}</span>
-              ${idx > 0 ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${fn}', '${fp.replace(/\\/g, '\\\\')}', ${g.fileSizeBytes}, '${g.fileSizeFormatted}')"">+ Stage Duplicate</button>` : '<span style=""font-size:11px; color:var(--accent-emerald); font-weight:700;"">Original (Preserved)</span>'}
-            </div>`;
-        });
-        html += `</div>`;
-      });
-      container.innerHTML = html;
-      showToast(`Discovered ${dups.length} duplicate clusters.`);
-    };
-
-    window.onLicenseUpdated = function(status) {
-      if (status && status.isActive && status.tier !== 0) {
-        const tierName = status.tier === 1 ? 'Pro Lifetime (Single PC)' : 'PowerPack Lifetime (Family)';
-        document.getElementById('licenseTierHeader').innerText = tierName;
-        document.getElementById('licenseStatusBadge').innerText = 'Active & Verified';
-        showToast('License Key Authenticated: ' + status.statusMessage);
-      }
-    };
-
-    // Render NTFS Volume Partitions
+    // Physical Hardware Drives Strip
     function renderVolumes() {
       const container = document.getElementById('volumeDrivesContainer');
+      const selector = document.getElementById('dashboardDriveSelector');
       if (drives.length === 0) return;
-      let html = '';
-      drives.forEach(d => {
+
+      let stripHtml = '';
+      let selHtml = '';
+
+      drives.forEach((d, i) => {
+        const isSel = i === selectedDriveIdx;
         const usedGb = (d.totalSizeBytes - d.freeSizeBytes) / (1024*1024*1024);
+        const freeGb = d.freeSizeBytes / (1024*1024*1024);
         const totalGb = d.totalSizeBytes / (1024*1024*1024);
-        const pct = d.usedPercent.toFixed(1);
-        html += `
-          <div class=""card"">
-            <div class=""drive-header"">
-              <span class=""drive-name"">
-                <svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#0284C7"" stroke-width=""2""><rect width=""20"" height=""8"" x=""2"" y=""14"" rx=""2""/><path d=""M6 18h.01M10 18h.01""/><path d=""M4 14V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8""/></svg>
-                Drive ${d.driveName} [${d.volumeLabel || 'Local Volume'}]
+        const pctUsed = d.usedPercent.toFixed(1);
+
+        stripHtml += `
+          <div class=""drive-card ${isSel ? 'selected' : ''}"" onclick=""selectDrive(${i})"">
+            <div class=""drive-card-top"">
+              <span class=""drive-card-title"">
+                <svg width=""17"" height=""17"" viewBox=""0 0 24 24"" fill=""none"" stroke=""${isSel ? '#0284C7' : 'currentColor'}"" stroke-width=""2""><rect width=""20"" height=""8"" x=""2"" y=""14"" rx=""2""/><path d=""M6 18h.01M10 18h.01""/><path d=""M4 14V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8""/></svg>
+                Drive ${d.driveName} (${d.volumeLabel || 'Volume'})
               </span>
-              <span class=""drive-format-tag"">${d.driveFormat}</span>
+              <span class=""drive-card-badge"">${d.driveFormat}</span>
             </div>
-            <div class=""drive-bar-bg"">
-              <div class=""drive-bar-fill"" style=""width: ${pct}%;""></div>
+            <div class=""drive-card-bar"">
+              <div class=""drive-card-fill-used"" style=""width: ${pctUsed}%;""></div>
+              <div class=""drive-card-fill-free"" style=""width: ${100 - pctUsed}%;""></div>
             </div>
-            <div class=""drive-stats"">
-              <span>Used: ${usedGb.toFixed(1)} GB (${pct}%)</span>
-              <span>Free: ${d.formattedFree} of ${totalGb.toFixed(1)} GB</span>
+            <div class=""drive-card-stats"">
+              <span>${usedGb.toFixed(1)} GB Used (${pctUsed}%)</span>
+              <span style=""color:var(--accent-emerald); font-weight:700;"">${freeGb.toFixed(1)} GB Free of ${totalGb.toFixed(1)} GB</span>
             </div>
           </div>`;
+
+        selHtml += `
+          <button class=""btn ${isSel ? 'btn-primary' : 'btn-secondary'}"" style=""padding:4px 10px; font-size:11.5px;"" onclick=""selectDrive(${i})"">
+            Drive ${d.driveName} (${d.formattedTotal})
+          </button>`;
       });
-      container.innerHTML = html;
+
+      container.innerHTML = stripHtml;
+      if (selector) selector.innerHTML = selHtml;
+    }
+
+    function selectDrive(idx) {
+      playSound('click');
+      selectedDriveIdx = idx;
+      renderVolumes();
+      renderAllDashboardCharts();
     }
 
     // ==========================================
-    // PIE & DONUT SPACE ALLOCATION ENGINE
+    // THE MASTER SPACE DONUT ALLOCATION ENGINE
     // ==========================================
-    function getPieDataForCurrentDrive() {
+    function getDonutData() {
       if (drives.length === 0) return [];
       const drive = drives[selectedDriveIdx] || drives[0];
       const total = drive.totalSizeBytes;
       const free = drive.freeSizeBytes;
       const used = total - free;
 
-      // Realistic category breakdown based on discovered rules and drive size
       const toolchainBytes = rules.reduce((acc, r) => acc + r.sizeBytes, 0) || Math.round(used * 0.08);
       const appBytes = Math.round(Math.min(used * 0.35, 75 * 1024 * 1024 * 1024));
       const sysBytes = Math.round(Math.min(used * 0.22, 45 * 1024 * 1024 * 1024));
@@ -1424,198 +1332,224 @@ public static class UiHtml
       const userDocBytes = Math.max(0, used - toolchainBytes - appBytes - sysBytes - tempBytes);
 
       return [
-        { name: 'Free Available Space', sizeBytes: free, formatted: formatBytes(free), color: '#10B981', desc: 'Unallocated NTFS filesystem blocks ready for writing', isReclaimable: false },
-        { name: 'Developer Toolchain & Registries', sizeBytes: toolchainBytes, formatted: formatBytes(toolchainBytes), color: '#0284C7', desc: 'NuGet, npm, Gradle, Cargo & Go module package downloads', isReclaimable: true },
-        { name: 'Applications & Binaries', sizeBytes: appBytes, formatted: formatBytes(appBytes), color: '#7C3AED', desc: 'Installed software, Windows Store packages & executables', isReclaimable: false },
-        { name: 'System & OS Core Infrastructure', sizeBytes: sysBytes, formatted: formatBytes(sysBytes), color: '#4F46E5', desc: 'Windows kernel, WinSxS repository & driver stores', isReclaimable: false },
-        { name: 'Downloads & Ephemeral Temp', sizeBytes: tempBytes, formatted: formatBytes(tempBytes), color: '#E11D48', desc: 'User Downloads folder and Windows %TEMP% build output', isReclaimable: true },
-        { name: 'User Documents & Local Media', sizeBytes: userDocBytes, formatted: formatBytes(userDocBytes), color: '#D97706', desc: 'Personal archives, code repositories and documents', isReclaimable: false }
+        { name: 'Free Available Capacity', sizeBytes: free, formatted: formatBytes(free), color: '#10B981', desc: 'Unallocated NTFS filesystem blocks ready for instant writes', isReclaimable: false },
+        { name: 'Developer Toolchains & Registries', sizeBytes: toolchainBytes, formatted: formatBytes(toolchainBytes), color: '#0284C7', desc: 'Global NuGet, npm, Cargo, pip & Gradle package cache tarballs', isReclaimable: true },
+        { name: 'Applications & Executables', sizeBytes: appBytes, formatted: formatBytes(appBytes), color: '#7C3AED', desc: 'Installed software suites, Windows Store apps & system binaries', isReclaimable: false },
+        { name: 'System Core & Kernel Volume', sizeBytes: sysBytes, formatted: formatBytes(sysBytes), color: '#4F46E5', desc: 'Windows OS kernel, WinSxS component store & servicing registry', isReclaimable: false },
+        { name: 'Downloads & Ephemeral Temp', sizeBytes: tempBytes, formatted: formatBytes(tempBytes), color: '#E11D48', desc: 'User Downloads folder and Windows %TEMP% compilation leftovers', isReclaimable: true },
+        { name: 'User Documents & Local Media', sizeBytes: userDocBytes, formatted: formatBytes(userDocBytes), color: '#D97706', desc: 'Personal workspaces, source repositories and media archives', isReclaimable: false }
       ];
     }
 
-    function selectPieDrive(idx) {
-      selectedDriveIdx = idx;
-      renderAllPieCharts();
-    }
+    let donutSlicesMeta = [];
 
-    function renderAllPieCharts() {
-      renderDriveSelectors();
-      drawDonutChart('diagnosticsPieCanvas', 300, 300, 60, 125, 'diagnosticsPieLegend');
-      drawDonutChart('mainPieCanvas', 440, 440, 95, 190, 'mainPieLegend');
-    }
-
-    function renderDriveSelectors() {
-      const diagSel = document.getElementById('diagnosticsDriveSelector');
-      const mainSel = document.getElementById('mainPieDriveSelector');
-      if (!diagSel || drives.length === 0) return;
-
-      let html = '';
-      drives.forEach((d, i) => {
-        const active = i === selectedDriveIdx;
-        html += `
-          <button class=""btn ${active ? 'btn-primary' : 'btn-secondary'}"" style=""padding:4px 10px; font-size:11.5px;"" onclick=""selectPieDrive(${i})"">
-            Drive ${d.driveName} (${d.formattedTotal})
-          </button>`;
-      });
-
-      diagSel.innerHTML = html;
-      if (mainSel) mainSel.innerHTML = html;
-    }
-
-    let pieSlicesMeta = [];
-
-    function drawDonutChart(canvasId, width, height, rInner, rOuter, legendId) {
-      const canvas = document.getElementById(canvasId);
+    function drawMasterDonut() {
+      const canvas = document.getElementById('masterDonutCanvas');
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
+
+      const width = 360;
+      const height = 360;
+      const ctx = getScaledContext(canvas, width, height);
       const cx = width / 2;
       const cy = height / 2;
 
       ctx.clearRect(0, 0, width, height);
 
-      const items = getPieDataForCurrentDrive();
+      const items = getDonutData();
       const drive = drives[selectedDriveIdx] || drives[0];
       const totalBytes = drive ? drive.totalSizeBytes : 1;
 
-      pieSlicesMeta = [];
+      donutSlicesMeta = [];
+      const rInner = 82;
+      const rOuter = 152;
+      const gap = 0.026; // Precision angular gap between slices
       let startAngle = -Math.PI / 2;
 
       items.forEach((item, idx) => {
-        const sweep = (item.sizeBytes / totalBytes) * (2 * Math.PI);
-        const endAngle = startAngle + sweep;
-        const isHovered = hoveredPieSliceIdx === idx;
-        const rOut = isHovered ? rOuter + 7 : rOuter;
-        const rIn = isHovered ? rInner - 2 : rInner;
+        const rawSweep = (item.sizeBytes / totalBytes) * (2 * Math.PI);
+        const sweep = Math.max(0.001, rawSweep - gap);
+        const arcStart = startAngle + gap / 2;
+        const arcEnd = arcStart + sweep;
+        const isHovered = hoveredDonutIdx === idx;
 
-        pieSlicesMeta.push({
+        // Radial outward hover vector shift
+        const midAngle = (arcStart + arcEnd) / 2;
+        const shift = isHovered ? 9 : 0;
+        const ox = Math.cos(midAngle) * shift;
+        const oy = Math.sin(midAngle) * shift;
+        const rIn = isHovered ? rInner - 2 : rInner;
+        const rOut = isHovered ? rOuter + 6 : rOuter;
+
+        donutSlicesMeta.push({
           idx: idx,
           item: item,
-          a1: startAngle,
-          a2: endAngle,
+          a1: arcStart,
+          a2: arcEnd,
           r1: rIn,
-          r2: rOut
+          r2: rOut,
+          ox: ox,
+          oy: oy
         });
 
         // Draw Arc Sector
+        ctx.save();
+        if (isHovered) {
+          ctx.shadowColor = item.color;
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetX = ox * 0.4;
+          ctx.shadowOffsetY = oy * 0.4;
+        }
+
         ctx.beginPath();
-        ctx.arc(cx, cy, rOut, startAngle, endAngle);
-        ctx.arc(cx, cy, rIn, endAngle, startAngle, true);
+        ctx.arc(cx + ox, cy + oy, rOut, arcStart, arcEnd);
+        ctx.arc(cx + ox, cy + oy, rIn, arcEnd, arcStart, true);
         ctx.closePath();
 
         ctx.fillStyle = item.color;
-        ctx.globalAlpha = isHovered ? 1.0 : 0.88;
+        ctx.globalAlpha = hoveredDonutIdx >= 0 ? (isHovered ? 1.0 : 0.45) : 0.92;
         ctx.fill();
 
-        ctx.strokeStyle = isDarkTheme ? '#07090E' : '#FFFFFF';
+        ctx.strokeStyle = isDarkTheme ? '#0B0F19' : '#FFFFFF';
         ctx.lineWidth = 2.5;
         ctx.stroke();
+        ctx.restore();
 
-        startAngle = endAngle;
+        startAngle += rawSweep;
       });
 
-      // Center Hub
-      ctx.globalAlpha = 1;
+      // Framing Track Ring
       ctx.beginPath();
       ctx.arc(cx, cy, rInner - 3, 0, 2 * Math.PI);
-      ctx.fillStyle = isDarkTheme ? '#0F172A' : '#FFFFFF';
-      ctx.fill();
-      ctx.strokeStyle = isDarkTheme ? 'rgba(56, 189, 248, 0.4)' : '#E2E8F0';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isDarkTheme ? 'rgba(255, 255, 255, 0.08)' : 'rgba(226, 232, 240, 0.9)';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // Center Telemetry Text
+      // Center Telemetry Pod
+      ctx.beginPath();
+      ctx.arc(cx, cy, rInner - 4, 0, 2 * Math.PI);
+      ctx.fillStyle = isDarkTheme ? '#111827' : '#FFFFFF';
+      ctx.fill();
+
+      // Center Hub Typography
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      if (hoveredPieSliceIdx >= 0 && items[hoveredPieSliceIdx]) {
-        const h = items[hoveredPieSliceIdx];
+
+      if (hoveredDonutIdx >= 0 && items[hoveredDonutIdx]) {
+        const h = items[hoveredDonutIdx];
         const pct = ((h.sizeBytes / totalBytes) * 100).toFixed(1);
-        ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
-        ctx.font = 'bold 14px -apple-system, sans-serif';
-        ctx.fillText(h.name.substring(0, 16), cx, cy - 12);
-        ctx.font = 'bold 15px monospace';
+
+        ctx.fillStyle = isDarkTheme ? '#9CA3AF' : '#64748B';
+        ctx.font = '700 10.5px -apple-system, sans-serif';
+        ctx.fillText(h.name.toUpperCase().substring(0, 18), cx, cy - 20);
+
+        ctx.fillStyle = isDarkTheme ? '#F9FAFB' : '#0F172A';
+        ctx.font = '800 24px monospace';
+        ctx.fillText(h.formatted, cx, cy + 2);
+
         ctx.fillStyle = h.color;
-        ctx.fillText(`${h.formatted} (${pct}%)`, cx, cy + 12);
+        ctx.font = '700 12px -apple-system, sans-serif';
+        ctx.fillText(`${pct}% ALLOCATED`, cx, cy + 24);
       } else {
-        const pctFree = (((drive ? drive.freeSizeBytes : 0) / totalBytes) * 100).toFixed(1);
-        ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
-        ctx.font = 'bold 15px -apple-system, sans-serif';
-        ctx.fillText(`Drive ${drive ? drive.driveName : 'C:\\'}`, cx, cy - 12);
-        ctx.font = 'bold 13px monospace';
+        const freeBytes = drive ? drive.freeSizeBytes : 0;
+        const pctFree = (((freeBytes) / totalBytes) * 100).toFixed(1);
+
+        ctx.fillStyle = isDarkTheme ? '#9CA3AF' : '#64748B';
+        ctx.font = '700 10.5px -apple-system, sans-serif';
+        ctx.fillText(`DRIVE ${drive ? drive.driveName : 'C:'} AVAILABLE`, cx, cy - 20);
+
+        ctx.fillStyle = isDarkTheme ? '#F9FAFB' : '#0F172A';
+        ctx.font = '800 24px monospace';
+        ctx.fillText(formatBytes(freeBytes), cx, cy + 2);
+
         ctx.fillStyle = '#10B981';
-        ctx.fillText(`${pctFree}% Free`, cx, cy + 12);
-      }
-
-      // Render Dynamic Legend
-      if (legendId) {
-        const legendEl = document.getElementById(legendId);
-        if (legendEl) {
-          let legHtml = '';
-          items.forEach((item, idx) => {
-            const pct = ((item.sizeBytes / totalBytes) * 100).toFixed(1);
-            const isHover = hoveredPieSliceIdx === idx;
-            legHtml += `
-              <div class=""pie-legend-row ${isHover ? 'highlighted' : ''}"" onmouseenter=""hoverPieSlice(${idx})"" onmouseleave=""hoverPieSlice(-1)"">
-                <div style=""display:flex; align-items:center; gap:10px;"">
-                  <div class=""pie-swatch"" style=""background:${item.color};""></div>
-                  <div>
-                    <div class=""pie-cat-title"">${item.name}</div>
-                    <div class=""pie-cat-sub"">${item.desc}</div>
-                  </div>
-                </div>
-                <div style=""display:flex; align-items:center; gap:12px;"">
-                  <div class=""pie-cat-stats"">
-                    <div class=""pie-cat-size"">${item.formatted}</div>
-                    <div class=""pie-cat-pct"">${pct}%</div>
-                  </div>
-                  ${item.isReclaimable ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${item.name}', 'C:\\\\Users\\\\saiph\\\\.nuget', ${item.sizeBytes}, '${item.formatted}')"">+ Stage</button>` : ''}
-                </div>
-              </div>`;
-          });
-          legendEl.innerHTML = legHtml;
-        }
+        ctx.font = '700 12px -apple-system, sans-serif';
+        ctx.fillText(`${pctFree}% FREE SPACE`, cx, cy + 24);
       }
     }
 
-    function hoverPieSlice(idx) {
-      hoveredPieSliceIdx = idx;
-      renderAllPieCharts();
+    function renderDonutLegend() {
+      const legendEl = document.getElementById('dashboardDonutLegend');
+      if (!legendEl) return;
+
+      const items = getDonutData();
+      const drive = drives[selectedDriveIdx] || drives[0];
+      const totalBytes = drive ? drive.totalSizeBytes : 1;
+      let html = '';
+
+      items.forEach((item, idx) => {
+        const pct = ((item.sizeBytes / totalBytes) * 100).toFixed(1);
+        const isHover = hoveredDonutIdx === idx;
+
+        html += `
+          <div class=""pie-legend-row ${isHover ? 'highlighted' : ''}"" onmouseenter=""hoverDonutSlice(${idx})"" onmouseleave=""hoverDonutSlice(-1)"">
+            <div style=""display:flex; align-items:center; gap:12px; min-width:0;"">
+              <div class=""pie-swatch"" style=""background:${item.color};""></div>
+              <div style=""min-width:0;"">
+                <div class=""pie-cat-title"">${item.name}</div>
+                <div class=""pie-cat-sub"">${item.desc}</div>
+              </div>
+            </div>
+            <div style=""display:flex; align-items:center; gap:14px; flex-shrink:0;"">
+              <div>
+                <div class=""pie-cat-size"">${item.formatted}</div>
+                <div class=""pie-cat-pct"">${pct}%</div>
+                <div class=""pie-mini-bar"">
+                  <div class=""pie-mini-bar-fill"" style=""width:${pct}%; background:${item.color};""></div>
+                </div>
+              </div>
+              ${item.isReclaimable ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${item.name}', 'C:\\\\Users\\\\saiph\\\\.nuget', ${item.sizeBytes}, '${item.formatted}')"">+ Stage</button>` : ''}
+            </div>
+          </div>`;
+      });
+
+      legendEl.innerHTML = html;
     }
 
-    // Attach Canvas Events for Pie Charts
-    function bindPieCanvasHover(canvasId, width, height) {
-      const canvas = document.getElementById(canvasId);
+    function hoverDonutSlice(idx) {
+      if (hoveredDonutIdx !== idx) {
+        hoveredDonutIdx = idx;
+        drawMasterDonut();
+        document.querySelectorAll('.pie-legend-row').forEach((el, i) => {
+          el.classList.toggle('highlighted', i === idx);
+        });
+      }
+    }
+
+    // Attach Canvas Events for Donut
+    function bindDonutEvents() {
+      const canvas = document.getElementById('masterDonutCanvas');
       if (!canvas) return;
 
       canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left - width / 2;
-        const y = e.clientY - rect.top - height / 2;
+        const x = e.clientX - rect.left - 180;
+        const y = e.clientY - rect.top - 180;
         const dist = Math.sqrt(x*x + y*y);
         let angle = Math.atan2(y, x);
         if (angle < -Math.PI / 2) angle += 2 * Math.PI;
 
-        const found = pieSlicesMeta.find(s => dist >= s.r1 && dist <= s.r2 && angle >= s.a1 && angle <= s.a2);
+        const found = donutSlicesMeta.find(s => dist >= s.r1 && dist <= s.r2 && angle >= s.a1 && angle <= s.a2);
         const newIdx = found ? found.idx : -1;
-
-        if (newIdx !== hoveredPieSliceIdx) {
-          hoveredPieSliceIdx = newIdx;
-          renderAllPieCharts();
-        }
+        hoverDonutSlice(newIdx);
       });
 
       canvas.addEventListener('mouseleave', () => {
-        hoveredPieSliceIdx = -1;
-        renderAllPieCharts();
+        hoverDonutSlice(-1);
       });
 
       canvas.addEventListener('click', () => {
-        if (hoveredPieSliceIdx >= 0) {
-          const item = getPieDataForCurrentDrive()[hoveredPieSliceIdx];
+        if (hoveredDonutIdx >= 0) {
+          const item = getDonutData()[hoveredDonutIdx];
           if (item && item.isReclaimable) {
             stageItemToDock(item.name, 'C:\\\\Users\\\\saiph\\\\Downloads', item.sizeBytes, item.formatted);
           }
         }
       });
+    }
+
+    function renderAllDashboardCharts() {
+      drawMasterDonut();
+      renderDonutLegend();
     }
 
     // Render Primary Registries
@@ -1674,7 +1608,7 @@ public static class UiHtml
       container.innerHTML = html;
     }
 
-    // Render Treemap
+    // Treemap Engine
     function renderTreemap() {
       const container = document.getElementById('treemapTilesContainer');
       const colors = ['#0284C7', '#2563EB', '#4F46E5', '#7C3AED', '#DB2777', '#E11D48', '#059669', '#0891B2'];
@@ -1696,18 +1630,16 @@ public static class UiHtml
       container.innerHTML = html;
     }
 
-    // ==========================================
-    // DAISYDISK SUNBURST ENGINE
-    // ==========================================
+    // Sunburst Engine
     let sunburstSectors = [];
     let hoveredSector = null;
 
     function renderSunburst() {
       const canvas = document.getElementById('sunburstCanvas');
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = 520;
+      const height = 520;
+      const ctx = getScaledContext(canvas, width, height);
       const cx = width / 2;
       const cy = height / 2;
 
@@ -1725,7 +1657,6 @@ public static class UiHtml
       const totalBytes = sunburstTree.children.reduce((acc, c) => acc + c.sizeBytes, 0) || 1;
       const colors = ['#0284C7', '#2563EB', '#4F46E5', '#7C3AED', '#DB2777', '#E11D48', '#059669', '#D97706'];
 
-      // Ring 1 (Inner Ring)
       const rInner = 75;
       const rOuter = 150;
       let startAngle = -Math.PI / 2;
@@ -1745,7 +1676,6 @@ public static class UiHtml
           level: 1
         });
 
-        // Ring 2 (Outer Sub-Ring)
         if (child.children && child.children.length > 0) {
           const subTotal = child.children.reduce((acc, sc) => acc + sc.sizeBytes, 0) || 1;
           let subStart = startAngle;
@@ -1768,7 +1698,6 @@ public static class UiHtml
         startAngle = endAngle;
       });
 
-      // Draw All Sectors
       sunburstSectors.forEach(sec => {
         const isHovered = hoveredSector === sec;
         ctx.beginPath();
@@ -1780,7 +1709,7 @@ public static class UiHtml
         ctx.globalAlpha = isHovered ? 1.0 : (sec.level === 1 ? 0.88 : 0.65);
         ctx.fill();
 
-        ctx.strokeStyle = isDarkTheme ? '#07090E' : '#FFFFFF';
+        ctx.strokeStyle = isDarkTheme ? '#0B0F19' : '#FFFFFF';
         ctx.lineWidth = isHovered ? 3 : 2;
         ctx.stroke();
       });
@@ -1789,13 +1718,12 @@ public static class UiHtml
       ctx.globalAlpha = 1;
       ctx.beginPath();
       ctx.arc(cx, cy, rInner - 4, 0, 2 * Math.PI);
-      ctx.fillStyle = isDarkTheme ? '#0F172A' : '#FFFFFF';
+      ctx.fillStyle = isDarkTheme ? '#111827' : '#FFFFFF';
       ctx.fill();
       ctx.strokeStyle = isDarkTheme ? 'rgba(56, 189, 248, 0.4)' : '#E2E8F0';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Center Hub Text
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
@@ -1814,13 +1742,14 @@ public static class UiHtml
       }
     }
 
-    // Canvas Events for Sunburst
-    const canvasEl = document.getElementById('sunburstCanvas');
-    if (canvasEl) {
+    function bindSunburstEvents() {
+      const canvasEl = document.getElementById('sunburstCanvas');
+      if (!canvasEl) return;
+
       canvasEl.addEventListener('mousemove', (e) => {
         const rect = canvasEl.getBoundingClientRect();
-        const x = e.clientX - rect.left - canvasEl.width / 2;
-        const y = e.clientY - rect.top - canvasEl.height / 2;
+        const x = e.clientX - rect.left - 260;
+        const y = e.clientY - rect.top - 260;
         const dist = Math.sqrt(x*x + y*y);
         let angle = Math.atan2(y, x);
         if (angle < -Math.PI / 2) angle += 2 * Math.PI;
@@ -1863,6 +1792,7 @@ public static class UiHtml
     }
 
     function drillSunburst(path) {
+      playSound('click');
       document.getElementById('sunburstCrumbsContainer').innerHTML = `
         <span style=""color:var(--text-dim);"">Root:</span>
         <span class=""crumb-chip"" onclick=""drillSunburst('${path.replace(/\\/g, '\\\\')}')"">${path.split('\\').pop() || path}</span>
@@ -1874,13 +1804,78 @@ public static class UiHtml
     }
 
     function drillTreemap(path) {
+      playSound('click');
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'scanDir', path: path });
       }
       showToast('Analyzing ' + path + '...');
     }
 
+    // Collector Operations
+    function stageItemToDock(name, path, sizeBytes, formattedSize) {
+      if (stagedItems.some(i => i.path === path)) {
+        showToast('Already staged in dock: ' + name);
+        return;
+      }
+      stagedItems.push({ name, path, sizeBytes, formattedSize });
+      updateDockUI();
+      playSound('stage');
+      showToast('Staged to dock: ' + name);
+    }
+
+    function removeStagedItem(path) {
+      stagedItems = stagedItems.filter(i => i.path !== path);
+      updateDockUI();
+    }
+
+    function clearCollectorTray() {
+      playSound('click');
+      stagedItems = [];
+      updateDockUI();
+      showToast('Collector dock cleared.');
+    }
+
+    function updateDockUI() {
+      const dock = document.getElementById('collectorDock');
+      const count = stagedItems.length;
+      if (count === 0) {
+        dock.classList.remove('active');
+        return;
+      }
+      dock.classList.add('active');
+      const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
+      document.getElementById('dockHeadlineText').innerText = `${count} ${count === 1 ? 'Target' : 'Targets'} • ${formatBytes(totalBytes)} Staged`;
+    }
+
+    function dispatchBatchRecycle() {
+      closeConfirmationModal();
+      const paths = stagedItems.map(i => i.path);
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ action: 'batchRecycle', paths: paths });
+      }
+      playSound('clean');
+      showToast(`Cleaned ${stagedItems.length} items to Windows Recycle Bin!`);
+      clearCollectorTray();
+    }
+
+    function stageAllLowRiskTargets() {
+      let count = 0;
+      rules.forEach(r => {
+        if (r.safety === 0) {
+          if (!stagedItems.some(i => i.path === r.path)) {
+            stagedItems.push({ name: r.title, path: r.path, sizeBytes: r.sizeBytes, formattedSize: r.formattedSize });
+            count++;
+          }
+        }
+      });
+      updateDockUI();
+      playSound('stage');
+      showToast(`Staged ${count} verified low-risk targets.`);
+    }
+
+    // Duplicate Analysis
     function executeDuplicateScan() {
+      playSound('click');
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'findDuplicates' });
       }
@@ -1888,6 +1883,7 @@ public static class UiHtml
     }
 
     function triggerStorageRefresh() {
+      playSound('click');
       showToast('Scanning volume partitions and developer registries...');
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'refresh' });
@@ -1909,14 +1905,72 @@ public static class UiHtml
       return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
+    // Callbacks from C# Bridge
+    window.onInitialDataReceived = function(data) {
+      drives = data.drives || [];
+      rules = data.rules || [];
+      treemapItems = data.treemap || [];
+      if (data.sunburst) sunburstTree = data.sunburst;
+
+      renderVolumes();
+      renderAllDashboardCharts();
+      renderPrimaryRegistries();
+      renderTreemap();
+      renderToolchainsRegistry();
+      renderSunburst();
+    };
+
+    window.onSunburstDataReceived = function(tree) {
+      sunburstTree = tree;
+      renderSunburst();
+    };
+
+    window.onDuplicatesReceived = function(dups) {
+      const container = document.getElementById('duplicatesResultsContainer');
+      if (!dups || dups.length === 0) {
+        container.innerHTML = '<div class=""card"" style=""text-align:center; padding:48px; color:var(--text-muted);"">No identical duplicate files found in selected scope.</div>';
+        return;
+      }
+      let html = '';
+      dups.forEach(g => {
+        html += `
+          <div class=""dup-cluster"">
+            <div class=""cluster-head"">
+              <span style=""color:var(--accent-primary); font-family:monospace;"">${g.fileSizeFormatted} each (SHA-256: ${g.hashSha256.substring(0, 14)}...)</span>
+              <span style=""color:var(--text-muted);"">${g.filePaths.length} identical copies</span>
+            </div>`;
+        g.filePaths.forEach((fp, idx) => {
+          const fn = fp.split('\\').pop();
+          html += `
+            <div class=""cluster-row"">
+              <span style=""overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:72%;"">${fp}</span>
+              ${idx > 0 ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${fn}', '${fp.replace(/\\/g, '\\\\')}', ${g.fileSizeBytes}, '${g.fileSizeFormatted}')"">+ Stage Duplicate</button>` : '<span style=""font-size:11px; color:var(--accent-emerald); font-weight:700;"">Original (Preserved)</span>'}
+            </div>`;
+        });
+        html += `</div>`;
+      });
+      container.innerHTML = html;
+      showToast(`Discovered ${dups.length} duplicate clusters.`);
+    };
+
+    window.onLicenseUpdated = function(status) {
+      if (status && status.isActive && status.tier !== 0) {
+        document.getElementById('licenseStatusBadge').innerText = 'Active & Verified';
+        closeLicenseModal();
+        showToast('License Key Authenticated: ' + status.statusMessage);
+      }
+    };
+
+    // DOM Ready
     window.addEventListener('DOMContentLoaded', () => {
-      bindPieCanvasHover('diagnosticsPieCanvas', 300, 300);
-      bindPieCanvasHover('mainPieCanvas', 440, 440);
+      bindDonutEvents();
+      bindSunburstEvents();
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'ready' });
       }
     });
   </script>
 </body>
-</html>";
+</html>
+";
 }
