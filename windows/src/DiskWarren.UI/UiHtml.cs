@@ -82,35 +82,37 @@ public static class UiHtml
 
     /* Header Bar */
     .app-header {
-      height: 64px;
+      height: 56px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 0 0 20px;
       z-index: 100;
       box-shadow: var(--shadow-sm);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      user-select: none;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
       gap: 12px;
-      min-width: 220px;
+      min-width: 200px;
     }
 
     .brand-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 11px;
-      background: linear-gradient(135deg, #0284C7 0%, #2563EB 50%, #4F46E5 100%);
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.32);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
+      flex-shrink: 0;
+      overflow: hidden;
     }
 
     .brand-name {
@@ -168,13 +170,68 @@ public static class UiHtml
       font-weight: 700;
     }
 
-    /* Toolstrip */
+    /* Right Zone: Toolstrip + Window Controls */
+    .header-right-zone {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 10px;
+    }
+
     .toolstrip {
       display: flex;
       align-items: center;
-      gap: 8px;
-      min-width: 220px;
-      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    /* Windows 11 Fluent Caption Buttons */
+    .window-controls {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      margin-left: 6px;
+    }
+
+    .win-btn {
+      width: 46px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      outline: none;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+
+    .win-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text-main);
+    }
+
+    html.dark .win-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #F9FAFB;
+    }
+
+    .win-btn:active {
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    html.dark .win-btn:active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .win-btn-close:hover {
+      background: #E81123 !important;
+      color: #FFFFFF !important;
+    }
+
+    .win-btn-close:active {
+      background: #C42B1C !important;
+      color: #FFFFFF !important;
     }
 
     /* Buttons */
@@ -817,12 +874,62 @@ public static class UiHtml
 </head>
 <body>
 
-  <!-- Precision Header -->
-  <header class=""app-header"">
+  <!-- Precision Header with Window Chrome Controls -->
+  <header class=""app-header"" onmousedown=""handleHeaderMouseDown(event)"" ondblclick=""handleHeaderDblClick(event)"">
     <div class=""brand-group"">
-      <div class=""brand-logo"">
-        <svg width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#FFFFFF"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
-          <circle cx=""12"" cy=""12"" r=""10""/><path d=""m4.93 4.93 4.24 4.24""/><path d=""m14.83 9.17 4.24-4.24""/><path d=""m14.83 14.83 4.24 4.24""/><path d=""m9.17 14.83-4.24 4.24""/><circle cx=""12"" cy=""12"" r=""4""/>
+      <div class=""brand-logo"" title=""DiskWarren Storage Intelligence"">
+        <svg viewBox=""0 0 512 512"" width=""34"" height=""34"" style=""display:block;"">
+          <defs>
+            <linearGradient id=""winHdrBgGrad"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
+              <stop offset=""0%"" stop-color=""#0B0F19""/>
+              <stop offset=""50%"" stop-color=""#0F172A""/>
+              <stop offset=""100%"" stop-color=""#020617""/>
+            </linearGradient>
+            <linearGradient id=""winHdrBorderGrad"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
+              <stop offset=""0%"" stop-color=""#06B6D4"" stop-opacity=""0.7""/>
+              <stop offset=""50%"" stop-color=""#2563EB"" stop-opacity=""0.4""/>
+              <stop offset=""100%"" stop-color=""#1E293B"" stop-opacity=""0.2""/>
+            </linearGradient>
+            <linearGradient id=""winHdrCyanBlue"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
+              <stop offset=""0%"" stop-color=""#22D3EE""/>
+              <stop offset=""35%"" stop-color=""#06B6D4""/>
+              <stop offset=""80%"" stop-color=""#2563EB""/>
+              <stop offset=""100%"" stop-color=""#4F46E5""/>
+            </linearGradient>
+            <linearGradient id=""winHdrIndigoViolet"" x1=""0%"" y1=""100%"" x2=""100%"" y2=""0%"">
+              <stop offset=""0%"" stop-color=""#4F46E5""/>
+              <stop offset=""60%"" stop-color=""#6366F1""/>
+              <stop offset=""100%"" stop-color=""#8B5CF6""/>
+            </linearGradient>
+            <linearGradient id=""winHdrEmeraldGrad"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
+              <stop offset=""0%"" stop-color=""#6EE7B7""/>
+              <stop offset=""40%"" stop-color=""#10B981""/>
+              <stop offset=""100%"" stop-color=""#059669""/>
+            </linearGradient>
+            <radialGradient id=""winHdrApertureGlow"" cx=""50%"" cy=""50%"" r=""50%"">
+              <stop offset=""0%"" stop-color=""#06B6D4"" stop-opacity=""0.35""/>
+              <stop offset=""50%"" stop-color=""#2563EB"" stop-opacity=""0.12""/>
+              <stop offset=""100%"" stop-color=""#0B0F19"" stop-opacity=""0""/>
+            </radialGradient>
+          </defs>
+          <rect x=""20"" y=""20"" width=""472"" height=""472"" rx=""124"" fill=""url(#winHdrBgGrad)""/>
+          <rect x=""20"" y=""20"" width=""472"" height=""472"" rx=""124"" fill=""none"" stroke=""url(#winHdrBorderGrad)"" stroke-width=""4""/>
+          <circle cx=""256"" cy=""256"" r=""190"" fill=""url(#winHdrApertureGlow)""/>
+          <circle cx=""256"" cy=""256"" r=""176"" fill=""none"" stroke=""rgba(255, 255, 255, 0.08)"" stroke-width=""3""/>
+          <circle cx=""256"" cy=""256"" r=""148"" fill=""none"" stroke=""rgba(255, 255, 255, 0.1)"" stroke-width=""2"" stroke-dasharray=""6 14""/>
+          <circle cx=""256"" cy=""256"" r=""118"" fill=""none"" stroke=""rgba(255, 255, 255, 0.06)"" stroke-width=""3""/>
+          <line x1=""256"" y1=""52"" x2=""256"" y2=""68"" stroke=""#06B6D4"" stroke-width=""4"" stroke-linecap=""round"" opacity=""0.8""/>
+          <line x1=""460"" y1=""256"" x2=""444"" y2=""256"" stroke=""#2563EB"" stroke-width=""4"" stroke-linecap=""round"" opacity=""0.6""/>
+          <line x1=""256"" y1=""460"" x2=""256"" y2=""444"" stroke=""#4F46E5"" stroke-width=""4"" stroke-linecap=""round"" opacity=""0.6""/>
+          <line x1=""52"" y1=""256"" x2=""68"" y2=""256"" stroke=""#06B6D4"" stroke-width=""4"" stroke-linecap=""round"" opacity=""0.8""/>
+          <path d=""M 140 372 A 166 166 0 1 1 396 320"" fill=""none"" stroke=""url(#winHdrCyanBlue)"" stroke-width=""32"" stroke-linecap=""round""/>
+          <path d=""M 148 188 A 122 122 0 0 1 364 212"" fill=""none"" stroke=""url(#winHdrIndigoViolet)"" stroke-width=""20"" stroke-linecap=""round"" opacity=""0.9""/>
+          <path d=""M 148 244 L 202 362 L 256 270 L 310 362 L 364 244"" fill=""none"" stroke=""url(#winHdrCyanBlue)"" stroke-width=""26"" stroke-linecap=""round"" stroke-linejoin=""round""/>
+          <polygon points=""256,220 292,274 220,274"" fill=""rgba(6, 182, 212, 0.22)""/>
+          <circle cx=""256"" cy=""226"" r=""26"" fill=""#10B981"" opacity=""0.3""/>
+          <path d=""M 256 196 Q 256 226 286 226 Q 256 226 256 256 Q 256 226 226 226 Q 256 226 256 196 Z"" fill=""url(#winHdrEmeraldGrad)""/>
+          <circle cx=""256"" cy=""226"" r=""5"" fill=""#FFFFFF""/>
+          <circle cx=""396"" cy=""320"" r=""7"" fill=""#22D3EE""/>
         </svg>
       </div>
       <div>
@@ -853,20 +960,35 @@ public static class UiHtml
       </button>
     </nav>
 
-    <!-- Toolstrip -->
-    <div class=""toolstrip"">
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openSafetyModal()"">
-        🛡️ Air-Gap &amp; Safety
-      </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openLicenseModal()"">
-        ★ Pro Edition
-      </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
-        🔊 Sound On
-      </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
-        ☀️ Light
-      </button>
+    <!-- Right Zone: Toolstrip + Native Windows Caption Controls -->
+    <div class=""header-right-zone"">
+      <div class=""toolstrip"">
+        <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openSafetyModal()"">
+          🛡️ Air-Gap &amp; Safety
+        </button>
+        <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openLicenseModal()"">
+          ★ Pro Edition
+        </button>
+        <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
+          🔊 Sound On
+        </button>
+        <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
+          ☀️ Light
+        </button>
+      </div>
+
+      <!-- Windows 11 Fluent Caption Buttons -->
+      <div class=""window-controls"">
+        <button class=""win-btn win-btn-minimize"" onclick=""minimizeWindow()"" title=""Minimize"" aria-label=""Minimize"">
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""0"" y1=""5"" x2=""10"" y2=""5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
+        </button>
+        <button class=""win-btn win-btn-maximize"" onclick=""maximizeWindow()"" title=""Maximize"" aria-label=""Maximize"">
+          <svg id=""maxRestoreIcon"" width=""10"" height=""10"" viewBox=""0 0 10 10""><rect x=""1"" y=""1"" width=""8"" height=""8"" fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" rx=""1""/></svg>
+        </button>
+        <button class=""win-btn win-btn-close"" onclick=""closeWindow()"" title=""Close"" aria-label=""Close"">
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""1.5"" y1=""1.5"" x2=""8.5"" y2=""8.5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/><line x1=""8.5"" y1=""1.5"" x2=""1.5"" y2=""8.5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -1121,6 +1243,43 @@ public static class UiHtml
 
   <!-- JavaScript Application Architecture -->
   <script>
+    // Native Windows Caption & Window Dragging Bridge
+    function handleHeaderMouseDown(e) {
+      if (e.target.closest('button, input, select, .tab-item, .win-btn, a, .interactive')) return;
+      if (e.button === 0) {
+        window.chrome?.webview?.postMessage({ action: 'dragWindow' });
+      }
+    }
+
+    function handleHeaderDblClick(e) {
+      if (e.target.closest('button, input, select, .tab-item, .win-btn, a, .interactive')) return;
+      maximizeWindow();
+    }
+
+    function minimizeWindow() {
+      window.chrome?.webview?.postMessage({ action: 'minimize' });
+    }
+
+    function maximizeWindow() {
+      window.chrome?.webview?.postMessage({ action: 'maximize' });
+    }
+
+    function closeWindow() {
+      window.chrome?.webview?.postMessage({ action: 'close' });
+    }
+
+    window.onWindowStateChanged = function(isMaximized) {
+      const icon = document.getElementById('maxRestoreIcon');
+      if (!icon) return;
+      if (isMaximized) {
+        icon.innerHTML = '<rect x=""2.5"" y=""1"" width=""6.5"" height=""6.5"" fill=""none"" stroke=""currentColor"" stroke-width=""1.1"" rx=""0.5""/><path d=""M 1,3 L 1,9 L 7,9"" fill=""none"" stroke=""currentColor"" stroke-width=""1.1""/>';
+        icon.parentElement.setAttribute('title', 'Restore Down');
+      } else {
+        icon.innerHTML = '<rect x=""1"" y=""1"" width=""8"" height=""8"" fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" rx=""1""/>';
+        icon.parentElement.setAttribute('title', 'Maximize');
+      }
+    };
+
     // State Model
     let drives = [];
     let rules = [];

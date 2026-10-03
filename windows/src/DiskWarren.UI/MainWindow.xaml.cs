@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Input;
 using DiskWarren.Core.Duplicates;
 using DiskWarren.Core.Licensing;
 using DiskWarren.Core.Models;
@@ -23,6 +24,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Loaded += MainWindow_Loaded;
+        StateChanged += MainWindow_StateChanged;
+    }
+
+    private void MainWindow_StateChanged(object? sender, EventArgs e)
+    {
+        bool isMaximized = WindowState == WindowState.Maximized;
+        _ = WebViewControl.CoreWebView2?.ExecuteScriptAsync($"window.onWindowStateChanged?.({(isMaximized ? "true" : "false")});");
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -59,6 +67,25 @@ public partial class MainWindow : Window
 
             switch (action)
             {
+                case "minimize":
+                    WindowState = WindowState.Minimized;
+                    break;
+
+                case "maximize":
+                    WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+                    break;
+
+                case "close":
+                    Close();
+                    break;
+
+                case "dragWindow":
+                    if (Mouse.LeftButton == MouseButtonState.Pressed)
+                    {
+                        try { DragMove(); } catch { }
+                    }
+                    break;
+
                 case "ready":
                 case "refresh":
                     await SendInitialDataAsync();

@@ -38,8 +38,8 @@ def create_round_icon(source_img: Image.Image, output_path: str, size: int):
     print(f"Generated round icon: {output_path} ({size}x{size})")
 
 def main():
-    root_dir = os.path.dirname(os.path.abspath(__file__))
-    svg_source = os.path.join(root_dir, "web", "public", "logo-icon.svg")
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    svg_source = os.path.join(root_dir, "logo-icon.svg")
     
     print(f"Master SVG source: {svg_source}")
     
@@ -54,11 +54,21 @@ def main():
     img_32 = render_svg_to_png(svg_source, os.path.join(web_dir, "favicon-32x32.png"), 32)
     img_16 = render_svg_to_png(svg_source, os.path.join(web_dir, "favicon-16x16.png"), 16)
     
+    # Copy SVGs to web/public
+    shutil.copy2(svg_source, os.path.join(web_dir, "logo-icon.svg"))
+    shutil.copy2(os.path.join(root_dir, "favicon.svg"), os.path.join(web_dir, "favicon.svg"))
+    shutil.copy2(os.path.join(root_dir, "favicon.svg"), os.path.join(web_dir, "icon.svg"))
+
     # Multi-resolution favicon.ico (16, 32, 48)
     ico_path = os.path.join(web_dir, "favicon.ico")
     master_1024.save(ico_path, format="ICO", sizes=[(16, 16), (32, 32), (48, 48)])
     print(f"Generated multi-res ICO: {ico_path} (16, 32, 48)")
     
+    # Windows App Icon (16, 24, 32, 48, 64, 128, 256)
+    win_ico_path = os.path.join(root_dir, "windows", "src", "DiskWarren.UI", "app.ico")
+    master_1024.save(win_ico_path, format="ICO", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    print(f"Generated Windows app.ico: {win_ico_path}")
+
     # 3. Mirror into shared/design-system/branding
     branding_dir = os.path.join(root_dir, "shared", "design-system", "branding")
     for f in ["icon-512.png", "icon-192.png", "apple-touch-icon.png", "favicon-32x32.png", "favicon-16x16.png", "favicon.ico"]:

@@ -1,114 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <!-- Background Gradient -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0B0F19"/>
-      <stop offset="50%" stop-color="#0F172A"/>
-      <stop offset="100%" stop-color="#020617"/>
-    </linearGradient>
+    <style>
+      .bg-chassis { fill: #0B0F19; stroke: #06B6D4; stroke-width: 2.5; }
+      .platter-arc { stroke: url(#favCyanBlue); stroke-width: 9; stroke-linecap: round; fill: none; }
+      .warren-w { stroke: url(#favCyanBlue); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .emerald-core { fill: #10B981; }
+      .spark-white { fill: #FFFFFF; }
 
-    <!-- Border Highlight -->
-    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.6"/>
-      <stop offset="50%" stop-color="#2563EB" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#1E293B" stop-opacity="0.1"/>
-    </linearGradient>
+      @media (prefers-color-scheme: light) {
+        .bg-chassis { fill: #090D16; stroke: #2563EB; stroke-width: 3; }
+        .platter-arc { stroke: url(#favCyanBlue); }
+      }
+    </style>
 
-    <!-- Primary Brand Platter Gradient -->
-    <linearGradient id="cyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="favCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#22D3EE"/>
-      <stop offset="35%" stop-color="#06B6D4"/>
-      <stop offset="80%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#4F46E5"/>
+      <stop offset="40%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#2563EB"/>
     </linearGradient>
 
-    <!-- Secondary Vault Gradient -->
-    <linearGradient id="indigoViolet" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#4F46E5"/>
-      <stop offset="60%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
-    </linearGradient>
-
-    <!-- Reclaim Spark Emerald Gradient -->
-    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6EE7B7"/>
-      <stop offset="40%" stop-color="#10B981"/>
+    <linearGradient id="favEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
       <stop offset="100%" stop-color="#059669"/>
     </linearGradient>
-
-    <!-- Radial Core Ambient Glow -->
-    <radialGradient id="apertureGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.35"/>
-      <stop offset="50%" stop-color="#2563EB" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#0B0F19" stop-opacity="0"/>
-    </radialGradient>
-
-    <!-- Glow Filter -->
-    <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="10" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
-
-    <filter id="sparkGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
   </defs>
 
-  <!-- Squircle Base Chassis -->
-  <rect x="20" y="20" width="472" height="472" rx="124" fill="url(#bgGrad)"/>
-  <rect x="20" y="20" width="472" height="472" rx="124" fill="none" stroke="url(#borderGrad)" stroke-width="3"/>
+  <!-- High-contrast Chassis Base (Crisp on both light and dark browser tabs) -->
+  <rect class="bg-chassis" x="6" y="6" width="116" height="116" rx="30"/>
 
-  <!-- Inner Ambient Atmospheric Glow -->
-  <circle cx="256" cy="256" r="190" fill="url(#apertureGlow)"/>
+  <!-- Platter Storage Arc Sweep -->
+  <path class="platter-arc" d="M 36 94 A 42 42 0 1 1 98 80" />
 
-  <!-- Storage Platter Concentric Track Telemetry (Burrow Rings) -->
-  <circle cx="256" cy="256" r="176" fill="none" stroke="rgba(255, 255, 255, 0.05)" stroke-width="2"/>
-  <circle cx="256" cy="256" r="148" fill="none" stroke="rgba(255, 255, 255, 0.07)" stroke-width="1.5" stroke-dasharray="6 14"/>
-  <circle cx="256" cy="256" r="118" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="2"/>
+  <!-- The Interlocking "W" Warren Vector -->
+  <path class="warren-w" d="M 38 62 L 51 92 L 64 68 L 77 92 L 90 62" />
 
-  <!-- Precision Sector Markers (0, 90, 180, 270 deg) -->
-  <line x1="256" y1="52" x2="256" y2="68" stroke="#06B6D4" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
-  <line x1="460" y1="256" x2="444" y2="256" stroke="#2563EB" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-  <line x1="256" y1="460" x2="256" y2="444" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-  <line x1="52" y1="256" x2="68" y2="256" stroke="#06B6D4" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <!-- Center Emerald Reclaim Diamond Spark -->
+  <path class="emerald-core" d="M 64 48 Q 64 58 74 58 Q 64 58 64 68 Q 64 58 54 58 Q 64 58 64 48 Z" />
+  <circle class="spark-white" cx="64" cy="58" r="2"/>
 
-  <!-- Outer Heavy Platter Sector Sweep (300 degree power arc) -->
-  <path d="M 140 372 A 166 166 0 1 1 396 320" 
-        fill="none" 
-        stroke="url(#cyanBlue)" 
-        stroke-width="28" 
-        stroke-linecap="round"
-        filter="url(#coreGlow)"/>
-
-  <!-- Inner Concentric Vault Arc -->
-  <path d="M 148 188 A 122 122 0 0 1 364 212" 
-        fill="none" 
-        stroke="url(#indigoViolet)" 
-        stroke-width="18" 
-        stroke-linecap="round" 
-        opacity="0.9"/>
-
-  <!-- The Interlocking "W" Warren Vector (Dynamic Storage Fold & Clean Wings) -->
-  <path d="M 148 244 L 202 362 L 256 270 L 310 362 L 364 244" 
-        fill="none" 
-        stroke="url(#cyanBlue)" 
-        stroke-width="24" 
-        stroke-linecap="round" 
-        stroke-linejoin="round"/>
-
-  <!-- Central Apex Upward Reclaim Triangle Fill (Subtle Tech Shield) -->
-  <polygon points="256,220 292,274 220,274" fill="rgba(6, 182, 212, 0.16)"/>
-
-  <!-- The Core Reclaim Spark (Emerald 4-Point Star Aperture) -->
-  <g filter="url(#sparkGlow)">
-    <circle cx="256" cy="226" r="22" fill="#10B981" opacity="0.25"/>
-    <!-- Precision 4-Point Spark -->
-    <path d="M 256 196 Q 256 226 286 226 Q 256 226 256 256 Q 256 226 226 226 Q 256 226 256 196 Z" 
-          fill="url(#emeraldGrad)"/>
-    <circle cx="256" cy="226" r="4.5" fill="#FFFFFF"/>
-  </g>
-
-  <!-- Accent Status Light Micro-Node -->
-  <circle cx="396" cy="320" r="6" fill="#22D3EE"/>
+  <!-- Telemetry Dot -->
+  <circle cx="98" cy="80" r="3" fill="#22D3EE"/>
 </svg>
