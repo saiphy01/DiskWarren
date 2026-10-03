@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
+            var systemCacheBytes by remember { mutableStateOf(3006477107L) } // 2.8 GB System Cache
             val totalAppCacheBytes = appCacheEntries.filter { !it.isCleared }.sumOf { it.cacheSizeBytes }
 
             fun refreshScan() {
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
                     val appInstalledBytes = appCacheEntries.sumOf { it.totalSizeBytes - it.cacheSizeBytes }
                     val currentAppCacheBytes = appCacheEntries.filter { !it.isCleared }.sumOf { it.cacheSizeBytes }
-                    val systemOsBytes = 19327352832L // 18.0 GB Android System Firmware
+                    val systemOsBytes = 16320875725L + systemCacheBytes // 15.2 GB Base OS + System Cache
 
                     totalUsedBytes = items.sumOf { it.sizeBytes } + appInstalledBytes + currentAppCacheBytes + systemOsBytes
 
@@ -90,10 +91,17 @@ class MainActivity : ComponentActivity() {
                 refreshScan()
             }
 
+            fun clearSystemCache() {
+                lifecycleScope.launch {
+                    systemCacheBytes = 0L
+                    refreshScan()
+                }
+            }
+
             fun clearReclaimable() {
                 lifecycleScope.launch {
                     mediaItems = mediaItems.filter { it.category != MediaCategory.DOWNLOADS && it.category != MediaCategory.APK_INSTALLERS }
-                    appCacheEntries = appCacheEntries.map { it.copy(isCleared = true) }
+                    systemCacheBytes = 0L
                     refreshScan()
                 }
             }
@@ -133,8 +141,10 @@ class MainActivity : ComponentActivity() {
                         totalUsedBytes = totalUsedBytes,
                         totalAvailableBytes = 0L,
                         categories = categorySummaries,
+                        systemCacheBytes = systemCacheBytes,
                         appCacheBytes = totalAppCacheBytes,
                         onScanClicked = { refreshScan() },
+                        onClearSystemCache = { clearSystemCache() },
                         onClearClicked = { clearReclaimable() },
                         onManageCachesClicked = { showAppCacheSheet = true }
                     )

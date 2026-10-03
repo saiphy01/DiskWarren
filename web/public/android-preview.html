@@ -1259,11 +1259,11 @@
 
             <!-- Balanced Dual Action Pill Row -->
             <div class="reclaim-action-row">
-              <button class="btn-action-cache" id="btnHeroClearCache" onclick="openCacheBucket()">
+              <button class="btn-action-cache" id="btnHeroClearCache" onclick="clearSystemCache()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                 </svg>
-                <span id="heroCacheBtnText">Open Cache Bucket</span>
+                <span id="heroCacheBtnText">Clear Cache</span>
               </button>
               <button class="btn-action-all" id="btnHeroCleanAll" onclick="executeClearSpace()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1552,6 +1552,7 @@
 
     const totalDriveBytes = 256 * 1024 * 1024 * 1024; // 256 GB
     let selectedCategoryId = null;
+    let systemCacheBytes = 3006477107; // 2.8 GB System Cache (Dalvik, ART & OS shaders)
 
     function getReclaimableDownloads() {
       const d = categories.find(c => c.id === 'downloads');
@@ -1670,7 +1671,7 @@
       const drivePct = ((total / totalDriveBytes) * 100).toFixed(1);
       const totalCache = getTotalAppCache();
       const totalDownloads = getReclaimableDownloads();
-      const totalReclaim = totalDownloads + totalCache;
+      const totalReclaim = totalDownloads + systemCacheBytes;
 
       teleLabel.innerText = totalReclaim === 0 ? 'PROTECTED & OPTIMIZED' : 'USED CAPACITY';
       teleLabel.style.color = totalReclaim === 0 ? '#10b981' : '#94a3b8';
@@ -1691,21 +1692,23 @@
         reclaimStatusText.innerText = 'RECLAIMABLE STORAGE';
         reclaimStatusText.style.color = '#059669';
         reclaimSizeText.innerText = formatBytes(totalReclaim);
-        reclaimDescText.innerText = `${formatBytes(totalCache)} App Caches • ${formatBytes(totalDownloads)} Downloads`;
+        reclaimDescText.innerText = systemCacheBytes > 0 
+          ? `${formatBytes(systemCacheBytes)} System Cache • ${formatBytes(totalDownloads)} Downloads` 
+          : `${formatBytes(totalDownloads)} Downloads & APKs`;
       } else {
         reclaimStatusText.innerText = 'STORAGE OPTIMIZED';
         reclaimStatusText.style.color = '#059669';
         reclaimSizeText.innerText = 'All Clean';
-        reclaimDescText.innerText = 'Downloads & App Caches protected';
+        reclaimDescText.innerText = 'System cache & downloads protected';
       }
 
-      // Update Hero Cache Button
-      if (totalCache > 0) {
+      // Update Hero Cache Button (Clears System Cache, NOT App Cache)
+      if (systemCacheBytes > 0) {
         btnHeroClearCache.classList.remove('cleaned');
-        heroCacheBtnText.innerText = 'Open Cache Bucket';
+        heroCacheBtnText.innerText = 'Clear Cache';
       } else {
         btnHeroClearCache.classList.add('cleaned');
-        heroCacheBtnText.innerText = 'Bucket Empty ✓';
+        heroCacheBtnText.innerText = 'Cache Cleared ✓';
       }
 
       // Update Hero Clean All Button
@@ -1981,9 +1984,34 @@
       renderCategoryCards();
     }
 
-    // Global Clear Space (Clean All: Downloads, APKs & App Caches)
+    // Clear System Cache (OS Dalvik, ART, Shaders, Logs - Leaves App Cache in Bucket untouched!)
+    function clearSystemCache() {
+      if (systemCacheBytes === 0) {
+        showToast('System cache is already cleared!');
+        return;
+      }
+      playSound('clean');
+      const freed = systemCacheBytes;
+      systemCacheBytes = 0;
+
+      // Deduct from System OS category
+      const sysCat = categories.find(c => c.id === 'system');
+      if (sysCat) {
+        sysCat.sizeBytes = Math.max(16320875725, sysCat.sizeBytes - freed);
+        sysCat.subtitle = 'Android 14 system firmware • Cache cleared';
+      }
+
+      // NOTE: appList and App Cache Bucket are untouched! App caches remain safe in the bucket!
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+
+      showToast(`✨ Cleared ${formatBytes(freed)} System Cache (OS Dalvik & Shader buffers)`);
+    }
+
+    // Global Clear Space (Clean All: System Cache + Downloads + APKs)
     function executeClearSpace() {
-      const totalReclaim = getReclaimableDownloads() + getTotalAppCache();
+      const totalReclaim = getReclaimableDownloads() + systemCacheBytes;
       if (totalReclaim === 0) {
         showToast('Storage already optimized!');
         return;
@@ -2003,28 +2031,19 @@
         a.count = 0;
       }
 
-      // Deduct all app caches in bucket
-      const totalCache = getTotalAppCache();
-      appList.forEach(app => {
-        if (!app.cleared) {
-          app.totalBytes = Math.max(0, app.totalBytes - app.cacheBytes);
-          app.cleared = true;
-        }
-      });
-      selectedAppIds.clear();
-
-      const cacheCat = categories.find(c => c.id === 'app_cache');
-      if (cacheCat) {
-        cacheCat.sizeBytes = 0;
-        cacheCat.count = 0;
+      // Clear system cache (leave app caches inside bucket untouched!)
+      const freedSys = systemCacheBytes;
+      systemCacheBytes = 0;
+      const sysCat = categories.find(c => c.id === 'system');
+      if (sysCat && freedSys > 0) {
+        sysCat.sizeBytes = Math.max(16320875725, sysCat.sizeBytes - freedSys);
+        sysCat.subtitle = 'Android 14 system firmware • Cache cleared';
       }
 
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
-      renderBucketItems();
-      updateBucketSelectionUI();
-      showToast(`✨ ${formatBytes(totalReclaim)} cleared (Downloads, APKs & App Caches)`);
+      showToast(`✨ ${formatBytes(totalReclaim)} cleared (System Cache & Downloads)`);
     }
 
     // Canvas Hit Testing

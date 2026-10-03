@@ -73,19 +73,21 @@ fun StorageOverviewHeader(
     totalUsedBytes: Long,
     totalAvailableBytes: Long = 0L,
     categories: List<CategorySummary> = emptyList(),
+    systemCacheBytes: Long = 0L,
     appCacheBytes: Long = 0L,
     onScanClicked: () -> Unit,
+    onClearSystemCache: (() -> Unit)? = null,
     onClearClicked: (() -> Unit)? = null,
     onManageCachesClicked: (() -> Unit)? = null
 ) {
     var selectedCategory by remember { mutableStateOf<MediaCategory?>(null) }
     val totalCapacity = maxOf(1L, totalUsedBytes + totalAvailableBytes)
 
-    // Compute unclubbed reclaimable candidates (Downloads + APK Installers + App Caches)
+    // Compute unclubbed reclaimable candidates (Downloads + APK Installers + System Cache)
     val downloadsBytes = categories
         .filter { it.category == MediaCategory.DOWNLOADS || it.category == MediaCategory.APK_INSTALLERS }
         .sumOf { it.totalSizeBytes }
-    val totalReclaimableBytes = downloadsBytes + appCacheBytes
+    val totalReclaimableBytes = downloadsBytes + systemCacheBytes
 
     Card(
         modifier = Modifier
@@ -154,7 +156,7 @@ fun StorageOverviewHeader(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Reclaimable Space Banner (Downloads & App Caches) - 2-Tier Architecture
+            // Reclaimable Space Banner (Downloads & System Caches) - 2-Tier Architecture
             if (totalReclaimableBytes > 0) {
                 Column(
                     modifier = Modifier
@@ -188,7 +190,7 @@ fun StorageOverviewHeader(
                                 color = ColorEmeraldSafe,
                                 letterSpacing = 0.5.sp
                             )
-                            val desc = if (appCacheBytes > 0) "${MediaItem.formatBytes(appCacheBytes)} Caches • ${MediaItem.formatBytes(totalReclaimableBytes - appCacheBytes)} Downloads" else "Downloads"
+                            val desc = if (systemCacheBytes > 0) "${MediaItem.formatBytes(systemCacheBytes)} System Cache • ${MediaItem.formatBytes(downloadsBytes)} Downloads" else "Downloads & APKs"
                             Text(
                                 text = "${MediaItem.formatBytes(totalReclaimableBytes)} • $desc",
                                 fontSize = 12.sp,
@@ -204,22 +206,21 @@ fun StorageOverviewHeader(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (appCacheBytes > 0 && onManageCachesClicked != null) {
-                            OutlinedButton(
-                                onClick = onManageCachesClicked,
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(10.dp),
-                                contentPadding = PaddingValues(vertical = 8.dp),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorEmeraldSafe),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.4f))
-                            ) {
-                                Text(
-                                    text = "Clear Cache",
-                                    fontSize = 11.5.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ColorEmeraldSafe
-                                )
-                            }
+                        OutlinedButton(
+                            onClick = { onClearSystemCache?.invoke() },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorEmeraldSafe),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.4f)),
+                            enabled = systemCacheBytes > 0
+                        ) {
+                            Text(
+                                text = if (systemCacheBytes > 0) "Clear Cache" else "Cache Cleared ✓",
+                                fontSize = 11.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (systemCacheBytes > 0) ColorEmeraldSafe else ColorTextSecondary
+                            )
                         }
 
                         Button(
