@@ -19,7 +19,7 @@ import {
 import CodeBlock from '@/components/CodeBlock';
 
 export default function AndroidDownloadPage() {
-  const sha256Apk = "c4891a27e4df3211b98ac54902187e59bfa119854d193e2b29c540989fce97a2";
+  const sha256Apk = "2731c26db5a1afe6c7981c9a970ad83982bd59d4f41a0deafdf505c2d87fe003";
   const [copiedApk, setCopiedApk] = useState(false);
 
   const handleCopyApk = () => {

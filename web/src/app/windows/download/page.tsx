@@ -20,8 +20,8 @@ import {
 import CodeBlock from '@/components/CodeBlock';
 
 export default function WindowsDownloadPage() {
-  const sha256Installer = "b7a840e6c84d7281e289f6685f4019be4ad30263fca305607da615560942aa5c";
-  const sha256Portable = "5e917d23a4b08c90f114d59a7f3408f62118335b7e8025eef086d79075ce8e3a";
+  const sha256Installer = "23eba299ae1e5ba7f5108307080a390a5c49fff1e49eaeeb009b2a1b0828298e";
+  const sha256Portable = "dfb01363bf683a825c54f2a9582469ce1d6296a2dfa92bba6162dadcf2398f15";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
   const [copiedPortable, setCopiedPortable] = useState(false);
 

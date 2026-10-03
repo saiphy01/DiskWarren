@@ -26,6 +26,7 @@ obj/
 .gradle/
 build/
 *.apk
+!web/public/downloads/*.apk
 *.aab
 .idea/
 *.iml

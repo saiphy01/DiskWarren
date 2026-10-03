@@ -24,76 +24,83 @@ export default function NotFound() {
       </div>
 
       {/* Suggested Quick Links Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
-        <Link
-          href="/"
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+        <a
+          href="https://diskwarren.com/"
           className="p-5 rounded-xl bg-white border border-slate-200 hover:border-cyan-300 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center">
             <Home className="w-4 h-4" />
           </div>
           <h3 className="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-            Homepage
+            Mac Edition
           </h3>
           <p className="text-xs text-slate-500">
-            Storage intelligence &amp; interactive simulator.
+            APFS treemap &amp; developer storage cleanup.
           </p>
-        </Link>
+        </a>
 
-        <Link
-          href="/download"
-          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-cyan-300 hover:shadow-md transition-all space-y-2 group"
+        <a
+          href="https://windows.diskwarren.com/"
+          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all space-y-2 group"
+        >
+          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <HardDrive className="w-4 h-4" />
+          </div>
+          <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+            Windows Edition
+          </h3>
+          <p className="text-xs text-slate-500">
+            NTFS MFT traversal, WSL2 &amp; Visual Studio cleanup.
+          </p>
+        </a>
+
+        <a
+          href="https://android.diskwarren.com/"
+          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-emerald-300 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
             <Download className="w-4 h-4" />
           </div>
-          <h3 className="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-            Download App
+          <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
+            Android Edition
           </h3>
           <p className="text-xs text-slate-500">
-            Get the native macOS Universal 2 DMG.
+            WhatsApp media &amp; duplicate photo recovery.
           </p>
-        </Link>
+        </a>
 
-        <Link
-          href="/blog"
-          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-cyan-300 hover:shadow-md transition-all space-y-2 group"
+        <a
+          href="https://ios.diskwarren.com/"
+          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-purple-300 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
             <BookOpen className="w-4 h-4" />
           </div>
-          <h3 className="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-            Storage Guides
+          <h3 className="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
+            iPhone Edition
           </h3>
           <p className="text-xs text-slate-500">
-            Xcode, Docker, Ollama &amp; System Data tutorials.
+            PhotoKit duplicates &amp; 4K ProRes inspector.
           </p>
-        </Link>
-
-        <Link
-          href="/support"
-          className="p-5 rounded-xl bg-white border border-slate-200 hover:border-cyan-300 hover:shadow-md transition-all space-y-2 group"
-        >
-          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-            <LifeBuoy className="w-4 h-4" />
-          </div>
-          <h3 className="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-            Support Center
-          </h3>
-          <p className="text-xs text-slate-500">
-            Direct tickets &amp; searchable FAQ knowledge base.
-          </p>
-        </Link>
+        </a>
       </div>
 
-      <div className="pt-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm transition-all shadow-md shadow-cyan-600/25"
+      <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="https://diskwarren.com/"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all shadow-md"
         >
-          <span>Return to Safety</span>
+          <span>Return to Homepage</span>
           <ArrowRight className="w-4 h-4" />
-        </Link>
+        </a>
+        <a
+          href="https://diskwarren.com/support"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-all"
+        >
+          <LifeBuoy className="w-4 h-4" />
+          <span>Support Center</span>
+        </a>
       </div>
     </div>
   );
