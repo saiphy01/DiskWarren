@@ -61,8 +61,14 @@ public final class PermissionManager: PermissionManaging, @unchecked Sendable {
     
     public func openSystemSettingsFullDiskAccess() {
         #if os(macOS)
-        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles") {
-            NSWorkspace.shared.open(url)
+        let modernURL = URL(string: "x-apple.systempreferences:com.apple.Settings.PrivacySecurity.extension?Privacy_AllFiles")
+        let legacyURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")
+        
+        if let modern = modernURL, NSWorkspace.shared.open(modern) {
+            return
+        }
+        if let legacy = legacyURL {
+            NSWorkspace.shared.open(legacy)
         }
         #endif
     }

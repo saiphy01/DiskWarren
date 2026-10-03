@@ -29,7 +29,9 @@ public final class AIStorageScanner: Sendable {
                 guard let res = try? fileURL.resourceValues(forKeys: [.isRegularFileKey]),
                       res.isRegularFile == true else { continue }
                 
-                let modelName = fileURL.lastPathComponent
+                let tag = fileURL.lastPathComponent
+                let parentName = fileURL.deletingLastPathComponent().lastPathComponent
+                let modelName = (parentName.isEmpty || parentName == "manifests") ? tag : "\(parentName):\(tag)"
                 var calculatedSize: Int64 = 0
                 
                 // Parse manifest to extract blob digest
@@ -37,9 +39,8 @@ public final class AIStorageScanner: Sendable {
                    let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let layers = json["layers"] as? [[String: Any]] {
                     for layer in layers {
-                        if let size = layer["size"] as? Int64 {
-                            calculatedSize += size
-                        }
+                        let size = (layer["size"] as? NSNumber)?.int64Value ?? (layer["size"] as? Int64) ?? 0
+                        calculatedSize += size
                     }
                 }
                 

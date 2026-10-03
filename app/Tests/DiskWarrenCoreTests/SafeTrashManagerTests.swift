@@ -29,6 +29,17 @@ final class SafeTrashManagerTests: XCTestCase {
                 return
             }
         }
+        
+        // Root and user root protections
+        let rootPath = URL(fileURLWithPath: "/")
+        XCTAssertTrue(trashManager.isRestrictedPath(rootPath.path))
+        
+        let usersPath = URL(fileURLWithPath: "/Users")
+        XCTAssertTrue(trashManager.isRestrictedPath(usersPath.path))
+        
+        let homePath = FileManager.default.homeDirectoryForCurrentUser
+        XCTAssertTrue(trashManager.isRestrictedPath(homePath.path))
+        XCTAssertTrue(trashManager.isRestrictedPath(homePath.appendingPathComponent("Library").path))
     }
     
     func testSafeSandboxRecycle() throws {

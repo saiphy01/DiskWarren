@@ -99,6 +99,14 @@ export default function Navbar() {
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
             <Link 
+              href="/#safety" 
+              onClick={closeMobileMenu}
+              className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
+            >
+              <span>Safety First &amp; Trash-First</span>
+              <ArrowRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link 
               href="/pricing" 
               onClick={closeMobileMenu}
               className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"

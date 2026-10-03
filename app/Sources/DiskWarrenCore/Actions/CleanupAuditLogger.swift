@@ -61,9 +61,12 @@ public final class CleanupAuditLogger: Sendable {
         }
         
         existingRecords.append(record)
+        if existingRecords.count > 1000 {
+            existingRecords.removeFirst(existingRecords.count - 1000)
+        }
         
         if let encoded = try? JSONEncoder().encode(existingRecords) {
-            try? encoded.write(to: fileURL)
+            try? encoded.write(to: fileURL, options: .atomic)
         }
     }
 }

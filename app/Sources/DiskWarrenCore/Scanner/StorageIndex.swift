@@ -11,7 +11,7 @@ public final class StorageIndex: @unchecked Sendable {
     }
     
     private func indexNodes(node: StorageNode) {
-        if node.type == .file {
+        if node.type == .file || node.type == .bundle {
             allFiles.append(node)
         } else if node.type == .directory {
             allDirectories.append(node)

@@ -111,7 +111,7 @@ public final class CleanupRuleRegistry: @unchecked Sendable {
             consequences: "Next 'cargo build' will recompile crates from source.",
             matcher: { path in
                 let n = path.replacingOccurrences(of: "\\", with: "/")
-                return n.hasSuffix("/target/debug") || n.hasSuffix("/target/release") || n.contains("/target/")
+                return n.hasSuffix("/target") || n.hasSuffix("/target/debug") || n.hasSuffix("/target/release") || n.contains("/target/debug/") || n.contains("/target/release/")
             }
         ))
         

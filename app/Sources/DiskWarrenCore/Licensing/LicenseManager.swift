@@ -60,7 +60,7 @@ public final class LicenseManager: ObservableObject, @unchecked Sendable {
             return false
         }
         
-        let tier: LicenseTier = (tierString == "PRO") ? .pro : .free
+        let tier: LicenseTier = (tierString == "PRO" || tierString == "POWER") ? .pro : .free
         self.status = .activated(key: trimmed, tier: tier)
         saveLicenseReceipt(key: trimmed, tier: tier)
         return true
@@ -87,7 +87,28 @@ public final class LicenseManager: ObservableObject, @unchecked Sendable {
             return
         }
         
-        let tier = (tierStr == LicenseTier.pro.rawValue) ? LicenseTier.pro : LicenseTier.free
-        self.status = .activated(key: key, tier: tier)
+        let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        let components = trimmed.components(separatedBy: "-")
+        guard components.count == 4, trimmed.hasPrefix("WARREN-") else {
+            self.status = .unregistered
+            return
+        }
+        
+        let tierString = components[1]
+        let body = components[2]
+        let checksum = components[3]
+        
+        let expectedPayload = "WARREN:\(tierString):\(body)"
+        let digest = SHA256.hash(data: Data(expectedPayload.utf8))
+        let hexDigest = digest.map { String(format: "%02hhX", $0) }.joined()
+        let computedChecksum = String(hexDigest.prefix(4))
+        
+        guard checksum == computedChecksum else {
+            self.status = .unregistered
+            return
+        }
+        
+        let tier = (tierStr == LicenseTier.pro.rawValue || tierString == "PRO" || tierString == "POWER") ? LicenseTier.pro : LicenseTier.free
+        self.status = .activated(key: trimmed, tier: tier)
     }
 }

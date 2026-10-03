@@ -7,7 +7,7 @@ public actor StorageScanner {
     private var directoriesCount: Int = 0
     private var totalBytes: Int64 = 0
     private var permissionDeniedCount: Int = 0
-    private let startTime: Date = Date()
+    private var startTime: Date = Date()
     
     public init() {}
     
@@ -20,6 +20,7 @@ public actor StorageScanner {
         progressHandler: (@Sendable (ScanProgress) -> Void)? = nil
     ) async throws -> StorageNode {
         isCancelled = false
+        startTime = Date()
         visitedInodes.removeAll()
         filesCount = 0
         directoriesCount = 0

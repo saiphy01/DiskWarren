@@ -104,13 +104,13 @@ struct WarrenCLI {
 
     static func listRules() {
         print("--- [REGISTERED DEVELOPER & AI CLEANUP RULES] ---")
-        let rules = CleanupRuleRegistry.defaultRules
+        let rules = CleanupRuleRegistry.shared.allRules()
         print("Total registered rules: \(rules.count)\n")
 
         for rule in rules {
             print("• [\(rule.category.rawValue.uppercased())] \(rule.name) (\(rule.id))")
-            print("  Risk: \(rule.riskTier.rawValue.uppercased()) | Default Path: \(rule.defaultPathPattern)")
-            print("  Description: \(rule.description)")
+            print("  Risk: \(rule.riskTier.rawValue.uppercased()) | Rule ID: \(rule.id)")
+            print("  Description: \(rule.itemDescription)")
             print("")
         }
     }
@@ -121,14 +121,16 @@ struct WarrenCLI {
         let scanner = StorageScanner()
         let startTime = CFAbsoluteTimeGetCurrent()
 
-        if let root = await scanner.scan(directory: url) {
+        do {
+            let root = try await scanner.scan(rootURL: url)
             let elapsed = CFAbsoluteTimeGetCurrent() - startTime
-            let sizeGB = Double(root.size) / 1_000_000_000.0
+            let sizeGB = Double(root.sizeBytes) / 1_000_000_000.0
+            let childCount = root.children?.count ?? 0
             print("\n[✓] Scan Complete in \(String(format: "%.2f", elapsed))s")
             print("Total Size: \(String(format: "%.2f", sizeGB)) GB")
-            print("Total Items Scanned: \(root.itemCount)")
-        } else {
-            print("[FAIL] Unable to scan target path: \(path)")
+            print("Immediate Children Indexed: \(childCount)")
+        } catch {
+            print("[FAIL] Unable to scan target path \(path): \(error.localizedDescription)")
             exit(1)
         }
     }

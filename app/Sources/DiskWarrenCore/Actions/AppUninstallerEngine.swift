@@ -84,39 +84,63 @@ public final class AppUninstallerEngine: Sendable {
         homeURL: URL = FileManager.default.homeDirectoryForCurrentUser
     ) -> [AppLeftoverItem] {
         var leftovers: [AppLeftoverItem] = []
+        let cleanAppName = appName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanBundleId = bundleId.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Strict safety guard: bundleId must be valid reverse-DNS format without path traversal
+        guard !cleanBundleId.isEmpty,
+              cleanBundleId.contains("."),
+              !cleanBundleId.contains("/"),
+              !cleanBundleId.contains("\\"),
+              cleanBundleId.count >= 4 else {
+            return []
+        }
+        
+        let validAppName = !cleanAppName.isEmpty &&
+                           cleanAppName.count >= 2 &&
+                           !cleanAppName.contains("/") &&
+                           !cleanAppName.contains("\\") &&
+                           cleanAppName != "." &&
+                           cleanAppName != ".." &&
+                           !isGenericName(cleanAppName)
+        
         let fm = FileManager.default
         let library = homeURL.appendingPathComponent("Library")
         
         // 1. Application Support (~/Library/Application Support/<bundleId> or <appName>)
         let appSupport = library.appendingPathComponent("Application Support")
-        let appSupportBundle = appSupport.appendingPathComponent(bundleId)
-        let appSupportName = appSupport.appendingPathComponent(appName)
+        let appSupportBundle = appSupport.appendingPathComponent(cleanBundleId)
         
         if fm.fileExists(atPath: appSupportBundle.path) {
             leftovers.append(AppLeftoverItem(
                 path: appSupportBundle.path,
                 type: .applicationSupport,
                 sizeBytes: calculateDirectorySize(url: appSupportBundle),
-                attributionEvidence: "Exact bundle identifier match: \(bundleId)"
+                attributionEvidence: "Exact bundle identifier match: \(cleanBundleId)"
             ))
-        } else if !isGenericName(appName) && fm.fileExists(atPath: appSupportName.path) {
-            leftovers.append(AppLeftoverItem(
-                path: appSupportName.path,
-                type: .applicationSupport,
-                sizeBytes: calculateDirectorySize(url: appSupportName),
-                attributionEvidence: "Exact application name match: \(appName)"
-            ))
+        }
+        
+        if validAppName {
+            let appSupportName = appSupport.appendingPathComponent(cleanAppName)
+            if fm.fileExists(atPath: appSupportName.path) && appSupportName.path != appSupportBundle.path {
+                leftovers.append(AppLeftoverItem(
+                    path: appSupportName.path,
+                    type: .applicationSupport,
+                    sizeBytes: calculateDirectorySize(url: appSupportName),
+                    attributionEvidence: "Exact application name match: \(cleanAppName)"
+                ))
+            }
         }
         
         // 2. Caches (~/Library/Caches/<bundleId>)
         let caches = library.appendingPathComponent("Caches")
-        let cacheBundle = caches.appendingPathComponent(bundleId)
+        let cacheBundle = caches.appendingPathComponent(cleanBundleId)
         if fm.fileExists(atPath: cacheBundle.path) {
             leftovers.append(AppLeftoverItem(
                 path: cacheBundle.path,
                 type: .caches,
                 sizeBytes: calculateDirectorySize(url: cacheBundle),
-                attributionEvidence: "Exact bundle identifier cache match: \(bundleId)"
+                attributionEvidence: "Exact bundle identifier cache match: \(cleanBundleId)"
             ))
         }
         

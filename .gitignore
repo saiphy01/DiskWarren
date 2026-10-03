@@ -24,6 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .turbo/
+*.tsbuildinfo
 
 # Environment & Secrets (NEVER COMMIT)
 .env

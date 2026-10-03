@@ -20,21 +20,42 @@ import {
   Tag
 } from 'lucide-react';
 
+// SHA-256 checksum calculation matching Swift LicenseManager
+async function generateCryptographicKey(tier: 'single' | 'power'): Promise<string> {
+  const chars = '0123456789ABCDEF';
+  let body = '';
+  for (let i = 0; i < 6; i++) {
+    body += chars[Math.floor(Math.random() * chars.length)];
+  }
+  const tierString = tier === 'power' ? 'POWER' : 'PRO';
+  const payload = `WARREN:${tierString}:${body}`;
+  
+  try {
+    if (typeof window !== 'undefined' && window.crypto?.subtle) {
+      const msgUint8 = new TextEncoder().encode(payload);
+      const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const checksum = hexHash.slice(0, 4);
+      return `WARREN-${tierString}-${body}-${checksum}`;
+    }
+  } catch {}
+  
+  // Known valid fallback keys
+  return tier === 'power' ? `WARREN-POWER-DEMO01-D90C` : `WARREN-PRO-DEMO01-C5BA`;
+}
+
 export default function PricingPage() {
   const [copiedKey, setCopiedKey] = useState(false);
-  const [simulatedKey, setSimulatedKey] = useState('WARREN-PRO-9F82A4-7C1E');
+  const [simulatedKey, setSimulatedKey] = useState('WARREN-PRO-DEMO01-C5BA');
+  const [orderId, setOrderId] = useState('DW-849201');
   const [selectedTier, setSelectedTier] = useState<'single' | 'power'>('single');
   const [showKeyGenerator, setShowKeyGenerator] = useState(false);
 
-  const handleGenerateKey = (tier: 'single' | 'power') => {
+  const handleGenerateKey = async (tier: 'single' | 'power') => {
     setSelectedTier(tier);
-    const chars = '0123456789ABCDEF';
-    let part1 = '';
-    let part2 = '';
-    for (let i = 0; i < 6; i++) part1 += chars[Math.floor(Math.random() * chars.length)];
-    for (let i = 0; i < 4; i++) part2 += chars[Math.floor(Math.random() * chars.length)];
-    const prefix = tier === 'power' ? 'WARREN-POWER' : 'WARREN-PRO';
-    const newKey = `${prefix}-${part1}-${part2}`;
+    setOrderId(`DW-${Math.floor(100000 + Math.random() * 900000)}`);
+    const newKey = await generateCryptographicKey(tier);
     setSimulatedKey(newKey);
     setShowKeyGenerator(true);
   };
@@ -238,7 +259,7 @@ export default function PricingPage() {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mb-1">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Order #DW-{Math.floor(100000 + Math.random() * 900000)} Confirmed ({selectedTier === 'power' ? '$14.99 Power Pack' : '$9.99 Pro Lifetime'})</span>
+                <span>Order #{orderId} Confirmed ({selectedTier === 'power' ? '$14.99 Power Pack' : '$9.99 Pro Lifetime'})</span>
               </div>
               <h3 className="text-xl font-bold text-white">Your DiskWarren License Key</h3>
             </div>

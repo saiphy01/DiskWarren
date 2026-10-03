@@ -10,7 +10,7 @@ export default function StructuredData() {
     description: 'Native macOS disk storage intelligence and safe cleanup application. Deep intelligence for Xcode, Docker, Node.js, and local AI model weights.',
     offers: {
       '@type': 'Offer',
-      price: '29.00',
+      price: '9.99',
       priceCurrency: 'USD',
     },
     aggregateRating: {

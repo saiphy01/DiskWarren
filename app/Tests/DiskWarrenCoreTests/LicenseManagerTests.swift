@@ -18,6 +18,15 @@ final class LicenseManagerTests: XCTestCase {
         XCTAssertTrue(licenseManager.isProActivated)
     }
     
+    func testValidPowerPackLicenseActivation() throws {
+        // Known valid Power Pack key: WARREN-POWER-DEMO01-D90C
+        let powerKey = "WARREN-POWER-DEMO01-D90C"
+        let success = try licenseManager.activateLicense(key: powerKey)
+        
+        XCTAssertTrue(success)
+        XCTAssertTrue(licenseManager.isProActivated)
+    }
+    
     func testInvalidChecksumRejection() throws {
         let invalidKey = "WARREN-PRO-DEMO01-XXXX" // Wrong checksum
         let success = try licenseManager.activateLicense(key: invalidKey)

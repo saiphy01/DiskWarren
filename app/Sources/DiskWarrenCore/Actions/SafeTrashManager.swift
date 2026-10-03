@@ -65,14 +65,49 @@ public final class SafeTrashManager: Sendable {
     public func isRestrictedPath(_ path: String) -> Bool {
         let normalized = path.replacingOccurrences(of: "\\", with: "/")
         
+        // Protect filesystem root and top-level mounts
+        if normalized == "/" || normalized.isEmpty {
+            return true
+        }
+        
+        let components = normalized.split(separator: "/").map(String.init)
+        if components.count < 2 {
+            return true
+        }
+        
+        // Permanent non-negotiable restricted system prefixes
         for prefix in restrictedPrefixes {
             if normalized == prefix || normalized.hasPrefix(prefix + "/") {
                 return true
             }
         }
         
+        // Restricted sensitive substrings
         for sub in restrictedSubstrings {
             if normalized.contains(sub) {
+                return true
+            }
+        }
+        
+        // Protect user home directory and primary container directories themselves
+        let fm = FileManager.default
+        let homePath = fm.homeDirectoryForCurrentUser.path.replacingOccurrences(of: "\\", with: "/")
+        if normalized == homePath || normalized == "/Users" {
+            return true
+        }
+        
+        let protectedUserRoots = [
+            homePath + "/Desktop",
+            homePath + "/Documents",
+            homePath + "/Downloads",
+            homePath + "/Library",
+            homePath + "/Library/Application Support",
+            homePath + "/Library/Caches",
+            homePath + "/Library/Preferences"
+        ]
+        
+        for protected in protectedUserRoots {
+            if normalized == protected {
                 return true
             }
         }
@@ -96,8 +131,8 @@ public final class SafeTrashManager: Sendable {
         // Step 2: Recycle each eligible item
         for url in urls {
             do {
-                // Calculate size before recycling
-                let size = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
+                // Calculate accurate item size (file or recursive directory) before recycling
+                let size = calculateItemSize(at: url)
                 
                 #if os(macOS)
                 var resultingURL: NSURL?
@@ -108,7 +143,7 @@ public final class SafeTrashManager: Sendable {
                 #endif
                 
                 succeeded.append(url)
-                reclaimed += Int64(size)
+                reclaimed += size
             } catch {
                 failed.append((url: url, error: error.localizedDescription))
             }
@@ -119,5 +154,32 @@ public final class SafeTrashManager: Sendable {
             failedURLs: failed,
             reclaimedBytes: reclaimed
         )
+    }
+    
+    private func calculateItemSize(at url: URL) -> Int64 {
+        let fm = FileManager.default
+        var isDir: ObjCBool = false
+        guard fm.fileExists(atPath: url.path, isDirectory: &isDir) else { return 0 }
+        
+        if !isDir.boolValue {
+            let values = try? url.resourceValues(forKeys: [.totalFileAllocatedSizeKey, .fileSizeKey])
+            return Int64(values?.totalFileAllocatedSize ?? values?.fileSize ?? 0)
+        }
+        
+        // For directories, calculate recursive allocated size of contained files
+        guard let enumerator = fm.enumerator(
+            at: url,
+            includingPropertiesForKeys: [.totalFileAllocatedSizeKey, .fileSizeKey, .isRegularFileKey],
+            options: [.skipsPackageDescendants]
+        ) else { return 0 }
+        
+        var total: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            if let values = try? fileURL.resourceValues(forKeys: [.totalFileAllocatedSizeKey, .fileSizeKey, .isRegularFileKey]),
+               values.isRegularFile == true {
+                total += Int64(values.totalFileAllocatedSize ?? values.fileSize ?? 0)
+            }
+        }
+        return total
     }
 }
