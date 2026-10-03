@@ -3,114 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiskWarren Android — CDO Executive Storage Suite</title>
+  <title>DiskWarren Android — Executive Storage Suite & Per-App Cache Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-chassis: #090d16;
       --bg-screen: #f8fafc;
       --card-bg: #ffffff;
-      --border-light: #e2e8f0;
-      --border-subtle: #f1f5f9;
+      --border-light: rgba(15, 23, 42, 0.08);
+      --border-medium: rgba(15, 23, 42, 0.12);
       --text-main: #0f172a;
       --text-muted: #64748b;
       --text-dim: #94a3b8;
-      --accent-primary: #0284c7;
       --accent-emerald: #10b981;
       --accent-emerald-dark: #059669;
-      --accent-emerald-soft: rgba(16, 185, 129, 0.08);
+      --accent-emerald-light: #ecfdf5;
+      --accent-primary: #0284c7;
+      --accent-primary-light: #e0f2fe;
+      --accent-indigo: #6366f1;
       --accent-amber: #f59e0b;
-      --accent-purple: #8b5cf6;
-      --accent-blue: #2563eb;
+      --accent-rose: #f43f5e;
+      --phone-w: 392px;
+      --phone-h: 840px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
-      background: radial-gradient(circle at 50% 15%, #1e293b 0%, #0a0f1d 100%);
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background-color: #0b0f19;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.8) 0%, transparent 75%),
+        linear-gradient(to bottom, #0f172a 0%, #020617 100%);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
+      justify-content: flex-start;
+      padding: 30px 16px 50px 16px;
+      color: #f8fafc;
+      user-select: none;
     }
 
+    /* Executive Meta Header */
     .preview-header {
       text-align: center;
-      margin-bottom: 20px;
-      color: #f8fafc;
+      margin-bottom: 24px;
+      max-width: 600px;
     }
     .preview-header h1 {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 800;
       letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
+      margin-bottom: 6px;
     }
     .preview-header p {
-      font-size: 12px;
-      color: var(--text-dim);
-      margin-top: 4px;
+      font-size: 13px;
+      color: #94a3b8;
       font-weight: 500;
     }
 
-    /* Hardware Shell (Flagship Smartphone Pro) */
+    /* Android Physical Device Chassis */
     .phone-chassis {
-      width: 412px;
-      height: 874px;
-      background: var(--bg-chassis);
-      border-radius: 54px;
-      padding: 12px;
-      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8),
-                  0 0 0 1px rgba(255, 255, 255, 0.12),
-                  inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+      width: var(--phone-w);
+      height: var(--phone-h);
+      background: #000000;
+      border-radius: 46px;
+      padding: 10px;
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 24px 70px -12px rgba(0, 0, 0, 0.85),
+        0 12px 30px -8px rgba(2, 132, 199, 0.25);
       position: relative;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .phone-screen {
       width: 100%;
       height: 100%;
       background: var(--bg-screen);
-      border-radius: 44px;
+      border-radius: 38px;
       overflow: hidden;
+      position: relative;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
-    /* Hole Punch Camera */
+    /* Front Camera Notch / Punch Hole */
     .camera-punch {
       position: absolute;
-      top: 11px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       width: 12px;
       height: 12px;
-      background: #000;
+      background: #000000;
       border-radius: 50%;
       z-index: 100;
       box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2);
     }
 
-    /* System Status Bar */
+    /* Native Android Status Bar */
     .status-bar {
       height: 38px;
-      padding: 10px 24px 0 24px;
+      padding: 8px 24px 0 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -125,18 +131,19 @@
       align-items: center;
       gap: 6px;
       font-size: 11px;
-      font-weight: 600;
+      color: var(--text-muted);
     }
 
-    /* App Main Scrollable Container */
+    /* App Main Scroll Area */
     .app-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 10px 16px 24px 16px;
+      overflow-x: hidden;
+      padding: 4px 16px 24px 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      scrollbar-width: none;
+      gap: 14px;
+      scroll-behavior: smooth;
     }
     .app-scroll::-webkit-scrollbar {
       display: none;
@@ -147,7 +154,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 2px 4px 6px 4px;
+      padding: 2px 2px 4px 2px;
     }
     .brand-cluster {
       display: flex;
@@ -212,7 +219,7 @@
     .hero-storage-card {
       background: var(--card-bg);
       border-radius: 24px;
-      padding: 20px 18px 18px 18px;
+      padding: 18px 16px 16px 16px;
       border: 1px solid var(--border-light);
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 6px 16px -4px rgba(15, 23, 42, 0.03);
     }
@@ -220,16 +227,16 @@
     /* Donut Visualization */
     .donut-container {
       position: relative;
-      width: 210px;
-      height: 210px;
-      margin: 4px auto 14px auto;
+      width: 200px;
+      height: 200px;
+      margin: 2px auto 12px auto;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     canvas {
-      width: 210px;
-      height: 210px;
+      width: 200px;
+      height: 200px;
       cursor: pointer;
     }
     .donut-telemetry {
@@ -249,7 +256,7 @@
       margin-bottom: 2px;
     }
     .tele-val {
-      font-size: 26px;
+      font-size: 25px;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       color: var(--text-main);
@@ -277,7 +284,7 @@
       border-radius: 3px;
       display: flex;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       gap: 1.5px;
     }
     .spectrum-segment {
@@ -285,21 +292,27 @@
       transition: width 0.4s ease;
     }
 
-    /* Executive Reclaim Banner (Clean, Confident, Single Action) */
+    /* Executive Reclaim Hub (2-Tier Balanced Architecture) */
     .reclaim-card {
-      background: linear-gradient(135deg, rgba(236, 253, 245, 0.9) 0%, rgba(240, 253, 250, 0.9) 100%);
+      background: linear-gradient(135deg, rgba(236, 253, 245, 0.95) 0%, rgba(240, 253, 250, 0.95) 100%);
       border: 1px solid rgba(16, 185, 129, 0.28);
       border-radius: 18px;
-      padding: 14px 16px;
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .reclaim-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
     .reclaim-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
       min-width: 0;
       flex: 1;
     }
@@ -345,6 +358,7 @@
       align-items: baseline;
       gap: 6px;
       margin-top: 1px;
+      flex-wrap: wrap;
     }
     .reclaim-size {
       font-size: 16px;
@@ -362,61 +376,253 @@
       text-overflow: ellipsis;
     }
 
-    /* Master Clean Button */
-    .btn-clean-hero {
-      background: var(--accent-emerald);
-      color: #ffffff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 12.5px;
+    /* Executive Reclaim Action Row (Side-by-Side Pill Actions) */
+    .reclaim-action-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    /* Hero Action Button: Clear Cache */
+    .btn-action-cache {
+      flex: 1;
+      background: #ffffff;
+      color: var(--accent-emerald-dark);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
+      padding: 8px 10px;
+      border-radius: 11px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1);
       transition: all 0.15s ease;
-      flex-shrink: 0;
       white-space: nowrap;
     }
-    .btn-clean-hero:hover {
-      background: var(--accent-emerald-dark);
+    .btn-action-cache:hover {
+      background: #ecfdf5;
+      border-color: var(--accent-emerald);
       transform: translateY(-1px);
     }
-    .btn-clean-hero:active {
-      transform: scale(0.96);
+    .btn-action-cache:active {
+      transform: scale(0.97);
     }
-    .btn-clean-hero.cleaned {
+    .btn-action-cache svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.2;
+    }
+    .btn-action-cache.cleaned {
+      background: #f1f5f9;
+      color: var(--text-dim);
+      border-color: var(--border-light);
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Hero Action Button: Clean All */
+    .btn-action-all {
+      flex: 1;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 2px 7px rgba(16, 185, 129, 0.28);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-action-all:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-1px);
+    }
+    .btn-action-all:active {
+      transform: scale(0.97);
+    }
+    .btn-action-all svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.2;
+    }
+    .btn-action-all.cleaned {
       background: #e2e8f0;
       color: var(--text-muted);
       cursor: default;
       box-shadow: none;
+      transform: none;
     }
 
-    /* Section Subheader */
+    /* Section Subheaders */
     .section-header-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 4px 4px 0 4px;
+      padding: 4px 2px 2px 2px;
+    }
+    .section-title-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .section-title {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 800;
       color: var(--text-muted);
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
-    .section-action-link {
+    .section-badge-counter {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-emerald-dark);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+    .section-action-btn {
+      background: transparent;
+      border: none;
       font-size: 11px;
       font-weight: 700;
-      color: var(--accent-primary);
+      color: var(--accent-emerald-dark);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       transition: opacity 0.15s ease;
+      padding: 2px 4px;
     }
-    .section-action-link:hover {
+    .section-action-btn:hover {
       opacity: 0.8;
+    }
+    .section-action-btn svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2.2;
+    }
+
+    /* Directly Visible Application Cache Manager Section */
+    .app-cache-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .app-row-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+      transition: all 0.15s ease;
+    }
+    .app-row-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+    .app-row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .app-avatar-pod {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .app-row-meta {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .app-name-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-cache-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cache-highlight {
+      font-weight: 700;
+      color: var(--accent-emerald-dark);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .app-total-dim {
+      color: var(--text-dim);
+    }
+
+    /* Distinct Clear Cache Button on EVERY SINGLE APP */
+    .btn-clear-cache-pill {
+      background: rgba(16, 185, 129, 0.10);
+      color: var(--accent-emerald-dark);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      padding: 6px 12px;
+      border-radius: 9px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-clear-cache-pill:hover {
+      background: var(--accent-emerald);
+      color: #ffffff;
+      border-color: var(--accent-emerald);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    }
+    .btn-clear-cache-pill:active {
+      transform: scale(0.95);
+    }
+    .btn-clear-cache-pill svg {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2.2;
+    }
+    .btn-clear-cache-pill.cleaned {
+      background: #f1f5f9;
+      color: var(--text-dim);
+      border-color: var(--border-light);
+      cursor: default;
+      box-shadow: none;
+      transform: none;
     }
 
     /* Category List Cards */
@@ -448,6 +654,7 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 8px;
+      gap: 8px;
     }
     .cat-row-left {
       display: flex;
@@ -510,11 +717,11 @@
       color: var(--text-muted);
     }
 
-    /* Fixed Metrics Column (ALWAYS strictly aligned) */
+    /* Fixed Metrics Column */
     .cat-row-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-shrink: 0;
     }
     .cat-stat-column {
@@ -553,235 +760,9 @@
       transition: width 0.4s ease;
     }
 
-    /* App Cache Bottom Sheet (Sculpted Material 3) */
-    .sheet-scrim {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(4px);
-      z-index: 150;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .sheet-scrim.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .app-cache-sheet {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #ffffff;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      padding: 16px 18px 24px 18px;
-      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.22);
-      z-index: 160;
-      transform: translateY(105%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      max-height: 82%;
-      display: flex;
-      flex-direction: column;
-    }
-    .app-cache-sheet.active {
-      transform: translateY(0);
-    }
-    .sheet-handle {
-      width: 36px;
-      height: 4px;
-      background: #cbd5e1;
-      border-radius: 2px;
-      margin: 0 auto 14px auto;
-    }
-    .sheet-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .sheet-top-row h3 {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-    }
-    .sheet-top-row p {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .btn-close-sheet {
-      background: #f1f5f9;
-      border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: bold;
-    }
-    .btn-close-sheet:hover {
-      background: #e2e8f0;
-      color: var(--text-main);
-    }
-
-    /* Master Clean All Card inside Sheet */
-    .sheet-summary-box {
-      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-      border: 1px solid #d1fae5;
-      border-radius: 14px;
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .summary-left {
-      display: flex;
-      flex-direction: column;
-    }
-    .summary-label {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: var(--accent-emerald-dark);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .summary-number {
-      font-size: 16px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-main);
-    }
-    .btn-sheet-clear-all {
-      background: var(--accent-emerald);
-      color: #ffffff;
-      border: none;
-      padding: 7px 14px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
-      transition: all 0.15s ease;
-    }
-    .btn-sheet-clear-all:hover {
-      background: var(--accent-emerald-dark);
-    }
-    .btn-sheet-clear-all.cleaned {
-      background: #e2e8f0;
-      color: var(--text-muted);
-      cursor: default;
-      box-shadow: none;
-    }
-
-    /* App Items List */
-    .app-cache-items-scroll {
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 400px;
-      padding-right: 2px;
-    }
-    .app-item-card {
-      background: #f8fafc;
-      border: 1px solid var(--border-light);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.15s ease;
-    }
-    .app-item-card:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-    }
-    .app-item-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
-    .app-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: #ffffff;
-      border: 1px solid var(--border-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: #ffffff;
-      flex-shrink: 0;
-    }
-    .app-info-stack {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .app-name-text {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .app-metrics-text {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-    .app-metrics-text span.cache-highlight {
-      font-weight: 700;
-      color: var(--accent-primary);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* Individual "Clear Cache" Button on Every App */
-    .btn-clear-single-app {
-      background: #ffffff;
-      color: var(--text-main);
-      border: 1px solid #cbd5e1;
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-    }
-    .btn-clear-single-app:hover {
-      background: #ecfdf5;
-      color: var(--accent-emerald-dark);
-      border-color: var(--accent-emerald);
-    }
-    .btn-clear-single-app.cleaned {
-      background: #f1f5f9;
-      color: var(--text-dim);
-      border-color: var(--border-light);
-      cursor: default;
-      box-shadow: none;
-    }
-
     /* Navigation Pill Bar */
     .home-indicator-bar {
-      height: 24px;
+      height: 22px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -796,10 +777,10 @@
       opacity: 0.6;
     }
 
-    /* Toast */
+    /* Toast Alert */
     .android-toast {
       position: absolute;
-      bottom: 40px;
+      bottom: 36px;
       left: 50%;
       transform: translateX(-50%);
       background: #1e293b;
@@ -824,7 +805,7 @@
 
   <div class="preview-header">
     <h1>DiskWarren Android — Executive Storage Suite</h1>
-    <p>Material 3 Jetpack Compose • Pure Geometric Typography • Per-App Cache Scrub</p>
+    <p>Chief Design Officer Grade • Dual Action Pill • Per-App Cache Cleaners</p>
   </div>
 
   <div class="phone-chassis">
@@ -832,7 +813,7 @@
       <!-- Camera Punch -->
       <div class="camera-punch"></div>
 
-      <!-- Status Bar -->
+      <!-- Native Status Bar -->
       <div class="status-bar">
         <span id="statusBarTime">9:41</span>
         <div class="status-icons">
@@ -865,7 +846,7 @@
         <div class="hero-storage-card">
           <!-- Donut Visualization -->
           <div class="donut-container">
-            <canvas id="androidDonutCanvas" width="420" height="420"></canvas>
+            <canvas id="androidDonutCanvas" width="400" height="400"></canvas>
             <div class="donut-telemetry" id="donutTelemetry">
               <span class="tele-tag" id="teleLabel">USED CAPACITY</span>
               <div class="tele-val"><span id="teleSize">128.4</span><span class="tele-unit">GB</span></div>
@@ -876,39 +857,69 @@
           <!-- Multi-Stop Spectrum Bar -->
           <div class="spectrum-track" id="spectrumTrack"></div>
 
-          <!-- Reclaimable Space Master Action Tile -->
+          <!-- Reclaimable Space Master Action Tile (2-Tier Architecture) -->
           <div class="reclaim-card" id="reclaimCard">
-            <div class="reclaim-left">
-              <div class="spark-icon-pod" id="sparkIconPod">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                </svg>
-              </div>
-              <div class="reclaim-details">
-                <div class="reclaim-status-pill">
-                  <span class="status-dot"></span>
-                  <span id="reclaimStatusText">RECLAIMABLE STORAGE</span>
+            <div class="reclaim-top-row">
+              <div class="reclaim-left">
+                <div class="spark-icon-pod" id="sparkIconPod">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
                 </div>
-                <div class="reclaim-metric-row">
-                  <span class="reclaim-size" id="reclaimSizeText">21.5 GB</span>
-                  <span class="reclaim-desc" id="reclaimDescText">Downloads &amp; App Caches</span>
+                <div class="reclaim-details">
+                  <div class="reclaim-status-pill">
+                    <span class="status-dot"></span>
+                    <span id="reclaimStatusText">RECLAIMABLE STORAGE</span>
+                  </div>
+                  <div class="reclaim-metric-row">
+                    <span class="reclaim-size" id="reclaimSizeText">21.5 GB</span>
+                    <span class="reclaim-desc" id="reclaimDescText">7.3 GB App Caches • 14.2 GB Downloads</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <button class="btn-clean-hero" id="btnCleanHero" onclick="executeClearSpace()">
-              Clean 21.5 GB
-            </button>
+            <!-- Balanced Dual Action Pill Row -->
+            <div class="reclaim-action-row">
+              <button class="btn-action-cache" id="btnHeroClearCache" onclick="clearAllAppCaches()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                <span id="heroCacheBtnText">Clear Cache (7.3 GB)</span>
+              </button>
+              <button class="btn-action-all" id="btnHeroCleanAll" onclick="executeClearSpace()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span id="heroAllBtnText">Clean All (21.5 GB)</span>
+              </button>
+            </div>
           </div>
         </div>
 
+        <!-- Directly Visible Application Caches Section -->
+        <div class="section-header-bar">
+          <div class="section-title-cluster">
+            <span class="section-title">Application Caches</span>
+            <span class="section-badge-counter" id="mainAppCacheBadge">6 Apps • 7.3 GB</span>
+          </div>
+          <button class="section-action-btn" onclick="clearAllAppCaches()" id="btnSectionClearAll">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>Clear All Caches</span>
+          </button>
+        </div>
+
+        <!-- App Caches List with Prominent [Clear Cache] Button on Every App -->
+        <div class="app-cache-stack" id="mainAppCacheList"></div>
+
         <!-- Storage Allocation Categories -->
         <div class="section-header-bar">
-          <span class="section-title">Storage Allocation</span>
-          <span class="section-action-link" onclick="openAppCacheSheet()">
-            <span>Scrub Caches (7.3 GB)</span>
-            <span>›</span>
-          </span>
+          <div class="section-title-cluster">
+            <span class="section-title">Storage Breakdown</span>
+          </div>
+          <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">6 Categories</span>
         </div>
 
         <div class="category-list" id="categoryCardsContainer"></div>
@@ -917,35 +928,6 @@
       <!-- Bottom Gesture Navigation Pill -->
       <div class="home-indicator-bar">
         <div class="home-pill"></div>
-      </div>
-
-      <!-- Scrim Backdrop -->
-      <div class="sheet-scrim" id="sheetScrim" onclick="closeAppCacheSheet()"></div>
-
-      <!-- App Cache Management Sheet -->
-      <div class="app-cache-sheet" id="appCacheSheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-top-row">
-          <div>
-            <h3>Application Cache Manager</h3>
-            <p>Temporary media buffers and shader caches safe to clean.</p>
-          </div>
-          <button class="btn-close-sheet" onclick="closeAppCacheSheet()">✕</button>
-        </div>
-
-        <!-- Master Sheet Summary -->
-        <div class="sheet-summary-box">
-          <div class="summary-left">
-            <span class="summary-label">TOTAL APP CACHES</span>
-            <span class="summary-number" id="sheetTotalCacheText">7.3 GB</span>
-          </div>
-          <button class="btn-sheet-clear-all" id="btnSheetClearAll" onclick="clearAllAppCaches()">
-            Clear All Caches
-          </button>
-        </div>
-
-        <!-- Individual App Cards -->
-        <div class="app-cache-items-scroll" id="appCacheListContainer"></div>
       </div>
 
       <!-- Toast Alert -->
@@ -1000,7 +982,7 @@
       { id: 'documents', title: 'Documents & Archives', count: 593, sizeBytes: 6442450944, color: '#d97706', iconSvg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' }
     ];
 
-    // Installed Apps List (Every single app has an explicit Clear Cache action)
+    // Installed Apps List (Every single app has a direct, visible Clear Cache button)
     let appList = [
       { id: 'spotify', name: 'Spotify Music', initial: 'S', color: '#1db954', totalBytes: 3435973836, cacheBytes: 1932735283, cleared: false },
       { id: 'youtube', name: 'YouTube', initial: 'Y', color: '#ff0000', totalBytes: 3113851289, cacheBytes: 1610612736, cleared: false },
@@ -1040,12 +1022,12 @@
     let slicesMeta = [];
 
     function drawDonut() {
-      const w = 420;
-      const h = 420;
+      const w = 400;
+      const h = 400;
       const cx = w / 2;
       const cy = h / 2;
-      const outerR = 168;
-      const strokeW = 36;
+      const outerR = 158;
+      const strokeW = 34;
       const innerR = outerR - strokeW;
       const total = getTotalUsed();
 
@@ -1097,7 +1079,7 @@
       ctx.fill();
     }
 
-    // Update Telemetry Hub & Spectrum Bar
+    // Update Telemetry Hub & Reclaim Indicators
     function updateTelemetry() {
       const teleLabel = document.getElementById('teleLabel');
       const teleSize = document.getElementById('teleSize');
@@ -1118,7 +1100,9 @@
       }
 
       const drivePct = ((total / totalDriveBytes) * 100).toFixed(1);
-      const totalReclaim = getReclaimableDownloads() + getTotalAppCache();
+      const totalCache = getTotalAppCache();
+      const totalDownloads = getReclaimableDownloads();
+      const totalReclaim = totalDownloads + totalCache;
 
       teleLabel.innerText = totalReclaim === 0 ? 'PROTECTED & OPTIMIZED' : 'USED CAPACITY';
       teleLabel.style.color = totalReclaim === 0 ? '#10b981' : '#94a3b8';
@@ -1126,43 +1110,49 @@
       teleSize.innerText = formatted[0];
       teleSub.innerText = `${drivePct}% of 256 GB`;
 
-      // Update Reclaim Card
+      // Update Reclaim Card Texts & Buttons
       const reclaimSizeText = document.getElementById('reclaimSizeText');
       const reclaimDescText = document.getElementById('reclaimDescText');
-      const btnCleanHero = document.getElementById('btnCleanHero');
-      const sparkIconPod = document.getElementById('sparkIconPod');
       const reclaimStatusText = document.getElementById('reclaimStatusText');
+      const btnHeroClearCache = document.getElementById('btnHeroClearCache');
+      const heroCacheBtnText = document.getElementById('heroCacheBtnText');
+      const btnHeroCleanAll = document.getElementById('btnHeroCleanAll');
+      const heroAllBtnText = document.getElementById('heroAllBtnText');
+      const mainAppCacheBadge = document.getElementById('mainAppCacheBadge');
 
       if (totalReclaim > 0) {
         reclaimStatusText.innerText = 'RECLAIMABLE STORAGE';
         reclaimStatusText.style.color = '#059669';
         reclaimSizeText.innerText = formatBytes(totalReclaim);
-        reclaimDescText.innerText = `${formatBytes(getReclaimableDownloads())} Downloads • ${formatBytes(getTotalAppCache())} Caches`;
-        btnCleanHero.classList.remove('cleaned');
-        btnCleanHero.innerText = `Clean ${formatBytes(totalReclaim)}`;
-        sparkIconPod.style.background = 'rgba(16, 185, 129, 0.16)';
-        sparkIconPod.style.color = '#059669';
+        reclaimDescText.innerText = `${formatBytes(totalCache)} App Caches • ${formatBytes(totalDownloads)} Downloads`;
       } else {
         reclaimStatusText.innerText = 'STORAGE OPTIMIZED';
         reclaimStatusText.style.color = '#059669';
         reclaimSizeText.innerText = 'All Clean';
         reclaimDescText.innerText = 'Downloads & App Caches protected';
-        btnCleanHero.classList.add('cleaned');
-        btnCleanHero.innerText = 'Cleaned ✓';
-        sparkIconPod.style.background = 'rgba(16, 185, 129, 0.25)';
-        sparkIconPod.style.color = '#059669';
       }
 
-      // Update Sheet Summary
-      document.getElementById('sheetTotalCacheText').innerText = formatBytes(getTotalAppCache());
-      const btnSheetAll = document.getElementById('btnSheetClearAll');
-      if (getTotalAppCache() === 0) {
-        btnSheetAll.classList.add('cleaned');
-        btnSheetAll.innerText = 'All Caches Cleaned ✓';
+      // Update Hero Cache Button
+      if (totalCache > 0) {
+        btnHeroClearCache.classList.remove('cleaned');
+        heroCacheBtnText.innerText = `Clear Cache (${formatBytes(totalCache)})`;
       } else {
-        btnSheetAll.classList.remove('cleaned');
-        btnSheetAll.innerText = `Clear All (${formatBytes(getTotalAppCache())})`;
+        btnHeroClearCache.classList.add('cleaned');
+        heroCacheBtnText.innerText = 'Caches Cleaned ✓';
       }
+
+      // Update Hero Clean All Button
+      if (totalReclaim > 0) {
+        btnHeroCleanAll.classList.remove('cleaned');
+        heroAllBtnText.innerText = `Clean All (${formatBytes(totalReclaim)})`;
+      } else {
+        btnHeroCleanAll.classList.add('cleaned');
+        heroAllBtnText.innerText = 'Cleaned ✓';
+      }
+
+      // Update Badge
+      const uncleanedAppsCount = appList.filter(a => !a.cleared).length;
+      mainAppCacheBadge.innerText = totalCache > 0 ? `${uncleanedAppsCount} Apps • ${formatBytes(totalCache)}` : 'All Clean ✓';
 
       // Update Spectrum Track
       const track = document.getElementById('spectrumTrack');
@@ -1171,7 +1161,42 @@
       `).join('');
     }
 
-    // Render Category Cards
+    // Render Direct Visible Application Caches Section (Every app has its own Clear Cache button)
+    function renderMainAppCaches() {
+      const container = document.getElementById('mainAppCacheList');
+      let html = '';
+
+      appList.forEach(app => {
+        html += `
+          <div class="app-row-card">
+            <div class="app-row-left">
+              <div class="app-avatar-pod" style="background:${app.color};">
+                ${app.initial}
+              </div>
+              <div class="app-row-meta">
+                <span class="app-name-title">${app.name}</span>
+                <span class="app-cache-sub">
+                  Cache: <span class="cache-highlight">${app.cleared ? '0 B' : formatBytes(app.cacheBytes)}</span>
+                  <span class="app-total-dim">• Total ${formatBytes(app.totalBytes)}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Prominent Clear Cache Button -->
+            <button class="btn-clear-cache-pill ${app.cleared ? 'cleaned' : ''}" onclick="clearSingleAppCache('${app.id}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                ${app.cleared ? '<polyline points="20 6 9 17 4 12"/>' : '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'}
+              </svg>
+              <span>${app.cleared ? 'Cleaned ✓' : 'Clear Cache'}</span>
+            </button>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Render Category Breakdown Cards
     function renderCategoryCards() {
       const container = document.getElementById('categoryCardsContainer');
       const total = getTotalUsed();
@@ -1183,7 +1208,7 @@
         const isActive = selectedCategoryId === cat.id;
 
         html += `
-          <div class="cat-item-card ${isActive ? 'active' : ''}" onclick="${cat.isAppCache ? 'openAppCacheSheet()' : `selectCategory('${cat.id}')`}">
+          <div class="cat-item-card ${isActive ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
             <div class="cat-row-main">
               <div class="cat-row-left">
                 <div class="cat-icon-container" style="background:${cat.color}14; color:${cat.color}">
@@ -1195,7 +1220,7 @@
                     ${cat.id === 'downloads' && cat.sizeBytes > 0 ? `<span class="micro-chip chip-reclaim">Cleanable</span>` : ''}
                     ${cat.isAppCache && totalCache > 0 ? `<span class="micro-chip chip-cache">${formatBytes(totalCache)} Cache</span>` : ''}
                   </div>
-                  <span class="cat-count-sub">${cat.isAppCache ? `${cat.count} apps • Tap to scrub cache` : `${cat.count.toLocaleString()} items`}</span>
+                  <span class="cat-count-sub">${cat.isAppCache ? `${cat.count} apps installed` : `${cat.count.toLocaleString()} items`}</span>
                 </div>
               </div>
 
@@ -1217,33 +1242,6 @@
       container.innerHTML = html;
     }
 
-    // Render App Cache Management List
-    function renderAppCacheList() {
-      const container = document.getElementById('appCacheListContainer');
-      let html = '';
-
-      appList.forEach(app => {
-        html += `
-          <div class="app-item-card">
-            <div class="app-item-left">
-              <div class="app-avatar" style="background:${app.color};">
-                ${app.initial}
-              </div>
-              <div class="app-info-stack">
-                <span class="app-name-text">${app.name}</span>
-                <span class="app-metrics-text">Total: ${formatBytes(app.totalBytes)} • Cache: <span class="cache-highlight">${app.cleared ? '0 B' : formatBytes(app.cacheBytes)}</span></span>
-              </div>
-            </div>
-            <button class="btn-clear-single-app ${app.cleared ? 'cleaned' : ''}" onclick="clearSingleAppCache('${app.id}')">
-              ${app.cleared ? 'Cleaned ✓' : 'Clear Cache'}
-            </button>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
     function selectCategory(id) {
       playSound('tap');
       selectedCategoryId = (selectedCategoryId === id) ? null : id;
@@ -1252,21 +1250,7 @@
       renderCategoryCards();
     }
 
-    // Bottom Sheet Controls
-    function openAppCacheSheet() {
-      playSound('tap');
-      renderAppCacheList();
-      document.getElementById('sheetScrim').classList.add('active');
-      document.getElementById('appCacheSheet').classList.add('active');
-    }
-
-    function closeAppCacheSheet() {
-      playSound('tap');
-      document.getElementById('sheetScrim').classList.remove('active');
-      document.getElementById('appCacheSheet').classList.remove('active');
-    }
-
-    // Clear Single App Cache
+    // Clear Single App Cache (Immediate real-time feedback)
     function clearSingleAppCache(appId) {
       const app = appList.find(a => a.id === appId);
       if (!app || app.cleared) return;
@@ -1281,18 +1265,18 @@
         appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - freed);
       }
 
-      renderAppCacheList();
+      renderMainAppCaches();
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
       showToast(`Cleared ${formatBytes(freed)} cache from ${app.name}`);
     }
 
-    // Clear All App Caches
+    // Clear All App Caches (Master Cache Scrub)
     function clearAllAppCaches() {
       const totalCache = getTotalAppCache();
       if (totalCache === 0) {
-        showToast('All app caches already clean!');
+        showToast('All app caches are already clean!');
         return;
       }
 
@@ -1309,14 +1293,14 @@
         appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
       }
 
-      renderAppCacheList();
+      renderMainAppCaches();
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
       showToast(`Cleared ${formatBytes(totalCache)} across all installed apps`);
     }
 
-    // Global Clear Space
+    // Global Clear Space (Clean All: Downloads + App Caches)
     function executeClearSpace() {
       const totalReclaim = getReclaimableDownloads() + getTotalAppCache();
       if (totalReclaim === 0) {
@@ -1349,7 +1333,7 @@
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
-      renderAppCacheList();
+      renderMainAppCaches();
       showToast(`✨ ${formatBytes(totalReclaim)} cleared (Downloads & App Caches)`);
     }
 
@@ -1366,11 +1350,7 @@
 
       const hit = slicesMeta.find(s => dist >= s.r1 - 10 && dist <= s.r2 + 10 && angle >= s.a1 && angle <= s.a2);
       if (hit) {
-        if (hit.id === 'apps') {
-          openAppCacheSheet();
-        } else {
-          selectCategory(hit.id);
-        }
+        selectCategory(hit.id);
       } else {
         selectedCategoryId = null;
         drawDonut();
@@ -1411,7 +1391,7 @@
     drawDonut();
     updateTelemetry();
     renderCategoryCards();
-    renderAppCacheList();
+    renderMainAppCaches();
   </script>
 </body>
 </html>

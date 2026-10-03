@@ -150,96 +150,84 @@ fun StorageOverviewHeader(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Reclaimable Space Banner (Downloads & App Caches)
+            // Reclaimable Space Banner (Downloads & App Caches) - 2-Tier Architecture
             if (totalReclaimableBytes > 0) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(ColorEmeraldSafe.copy(alpha = 0.10f))
-                        .padding(horizontal = 14.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(14.dp)
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(34.dp)
+                                .size(36.dp)
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(ColorEmeraldSafe.copy(alpha = 0.20f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "✨",
-                                fontSize = 15.sp
+                                fontSize = 16.sp
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "RECLAIMABLE SPACE",
+                                text = "RECLAIMABLE STORAGE",
                                 fontSize = 9.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = ColorEmeraldSafe,
                                 letterSpacing = 0.5.sp
                             )
-                            Row(verticalAlignment = Alignment.Baseline) {
-                                Text(
-                                    text = MediaItem.formatBytes(totalReclaimableBytes),
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    fontFamily = FontFamily.Monospace,
-                                    color = ColorTextPrimary
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                val desc = if (appCacheBytes > 0) "Downloads & App Caches" else "Downloads"
-                                Text(
-                                    text = "safe to clean ($desc)",
-                                    fontSize = 11.5.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = ColorTextSecondary,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
+                            val desc = if (appCacheBytes > 0) "${MediaItem.formatBytes(appCacheBytes)} Caches • ${MediaItem.formatBytes(totalReclaimableBytes - appCacheBytes)} Downloads" else "Downloads"
+                            Text(
+                                text = "${MediaItem.formatBytes(totalReclaimableBytes)} • $desc",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ColorTextPrimary
+                            )
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (appCacheBytes > 0 && onManageCachesClicked != null) {
                             OutlinedButton(
                                 onClick = onManageCachesClicked,
+                                modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(10.dp),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorBrandCyan),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, ColorBrandCyan.copy(alpha = 0.4f))
+                                contentPadding = PaddingValues(vertical = 8.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorEmeraldSafe),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.4f))
                             ) {
                                 Text(
-                                    text = "⚡ Caches",
+                                    text = "Clear Cache (${MediaItem.formatBytes(appCacheBytes)})",
                                     fontSize = 11.5.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = ColorBrandCyan
+                                    color = ColorEmeraldSafe
                                 )
                             }
                         }
 
                         Button(
                             onClick = { onClearClicked?.invoke() },
+                            modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
                             shape = RoundedCornerShape(10.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                            contentPadding = PaddingValues(vertical = 8.dp)
                         ) {
                             Text(
-                                text = "Clean All",
-                                fontSize = 12.sp,
+                                text = "Clean All (${MediaItem.formatBytes(totalReclaimableBytes)})",
+                                fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
@@ -521,8 +509,24 @@ fun CategorySummaryList(
                         // Right Cluster: Metrics strictly right-aligned with uniform accessory slot
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
+                            if (isAppCategory && appCacheBytes > 0 && onManageCachesClicked != null) {
+                                OutlinedButton(
+                                    onClick = onManageCachesClicked,
+                                    shape = RoundedCornerShape(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorEmeraldSafe),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.5f))
+                                ) {
+                                    Text(
+                                        text = "Clear Cache",
+                                        fontSize = 10.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = ColorEmeraldSafe
+                                    )
+                                }
+                            }
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
                                     text = cat.formattedSize,
