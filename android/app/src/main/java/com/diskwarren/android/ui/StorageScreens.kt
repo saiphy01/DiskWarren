@@ -210,7 +210,7 @@ fun StorageOverviewHeader(
                                 border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.4f))
                             ) {
                                 Text(
-                                    text = "Clear Cache (${MediaItem.formatBytes(appCacheBytes)})",
+                                    text = "Clear Cache",
                                     fontSize = 11.5.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = ColorEmeraldSafe
@@ -226,7 +226,7 @@ fun StorageOverviewHeader(
                             contentPadding = PaddingValues(vertical = 8.dp)
                         ) {
                             Text(
-                                text = "Clean All (${MediaItem.formatBytes(totalReclaimableBytes)})",
+                                text = "Clean All",
                                 fontSize = 11.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
@@ -509,24 +509,8 @@ fun CategorySummaryList(
                         // Right Cluster: Metrics strictly right-aligned with uniform accessory slot
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            if (isAppCategory && appCacheBytes > 0 && onManageCachesClicked != null) {
-                                OutlinedButton(
-                                    onClick = onManageCachesClicked,
-                                    shape = RoundedCornerShape(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorEmeraldSafe),
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, ColorEmeraldSafe.copy(alpha = 0.5f))
-                                ) {
-                                    Text(
-                                        text = "Clear Cache",
-                                        fontSize = 10.5.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = ColorEmeraldSafe
-                                    )
-                                }
-                            }
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
                                     text = cat.formattedSize,
