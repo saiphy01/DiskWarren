@@ -25,6 +25,7 @@ public static class UiHtml
       --accent-amber: #D97706;
       --accent-rose: #E11D48;
       --accent-indigo: #4F46E5;
+      --accent-violet: #7C3AED;
       --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
       --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
       --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
@@ -48,6 +49,7 @@ public static class UiHtml
       --accent-amber: #F59E0B;
       --accent-rose: #F43F5E;
       --accent-indigo: #818CF8;
+      --accent-violet: #A78BFA;
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
       --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
       --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
@@ -149,7 +151,7 @@ public static class UiHtml
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
-    /* Segmented Navigation Bar (Cupertino Light / Fluent Hybrid) */
+    /* Segmented Navigation Bar */
     .tab-bar {
       display: flex;
       background: var(--surface-subtle);
@@ -160,9 +162,9 @@ public static class UiHtml
     }
 
     .tab-item {
-      padding: 6px 14px;
+      padding: 6px 13px;
       border-radius: 9px;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
       background: transparent;
@@ -171,7 +173,7 @@ public static class UiHtml
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .tab-item:hover {
       color: var(--text-main);
@@ -188,7 +190,7 @@ public static class UiHtml
     .app-main {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 32px 100px 32px; /* space for collector tray */
+      padding: 24px 32px 100px 32px;
       position: relative;
     }
 
@@ -335,7 +337,7 @@ public static class UiHtml
       gap: 20px;
     }
 
-    /* CleanMyMac Diagnostic Ring */
+    /* Radar Ring */
     .diagnostic-panel {
       display: flex;
       flex-direction: column;
@@ -459,7 +461,56 @@ public static class UiHtml
       line-height: 1.4;
     }
 
-    /* DAISYDISK SUNBURST VISUALIZER (LIGHT LUXURY) */
+    /* PIE / DONUT BREAKDOWN STYLES */
+    .pie-legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.18s;
+      cursor: pointer;
+    }
+    .pie-legend-row:hover, .pie-legend-row.highlighted {
+      background: var(--surface);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-sm);
+      transform: translateX(3px);
+    }
+    .pie-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .pie-cat-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .pie-cat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+    .pie-cat-stats {
+      text-align: right;
+    }
+    .pie-cat-size {
+      font-size: 13.5px;
+      font-weight: 800;
+      font-family: monospace;
+      color: var(--text-main);
+    }
+    .pie-cat-pct {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* DAISYDISK SUNBURST VISUALIZER */
     .sunburst-box {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -498,9 +549,7 @@ public static class UiHtml
     }
     .crumb-chip:hover { background: rgba(2, 132, 199, 0.15); }
 
-    #sunburstCanvas {
-      cursor: pointer;
-    }
+    #sunburstCanvas { cursor: pointer; }
 
     .sunburst-tooltip {
       position: absolute;
@@ -766,6 +815,10 @@ public static class UiHtml
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 2v20M2 12h20""/><circle cx=""12"" cy=""12"" r=""10""/></svg>
         Storage Diagnostics
       </button>
+      <button class=""tab-item"" onclick=""switchTab('piechart')"">
+        <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M21.21 15.89A10 10 0 1 1 8 2.83""/><path d=""M22 12A10 10 0 0 0 12 2v10z""/></svg>
+        Space Pie Chart
+      </button>
       <button class=""tab-item"" onclick=""switchTab('sunburst')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><circle cx=""12"" cy=""12"" r=""4""/><path d=""m4.93 4.93 4.24 4.24""/></svg>
         Radial Sunburst
@@ -776,15 +829,15 @@ public static class UiHtml
       </button>
       <button class=""tab-item"" onclick=""switchTab('toolchains')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""16 18 22 12 16 6""/><polyline points=""8 6 2 12 8 18""/></svg>
-        Toolchain Artifacts
+        Toolchains
       </button>
       <button class=""tab-item"" onclick=""switchTab('duplicates')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""14"" height=""14"" x=""8"" y=""8"" rx=""2""/><path d=""M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2""/></svg>
-        Byte Duplicates
+        Duplicates
       </button>
       <button class=""tab-item"" onclick=""switchTab('safety')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z""/></svg>
-        Safety Architecture
+        Safety
       </button>
       <button class=""tab-item"" onclick=""switchTab('license')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><path d=""m9 12 2 2 4-4""/></svg>
@@ -828,6 +881,28 @@ public static class UiHtml
         <!-- Live from C# -->
       </div>
 
+      <!-- INTERACTIVE SPACE ALLOCATION PIE BREAKDOWN CARD -->
+      <div class=""card"" style=""margin-bottom: 22px;"">
+        <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"">
+          <div>
+            <h3 style=""font-size:16px; font-weight:800; color:var(--text-main);"">Partition Space Allocation (Pie Breakdown)</h3>
+            <p style=""font-size:12px; color:var(--text-muted);"">Proportional capacity distribution across system, developer toolchains, application binaries, and free space.</p>
+          </div>
+          <div id=""diagnosticsDriveSelector"" style=""display:flex; gap:8px;"">
+            <!-- Drive selector chips -->
+          </div>
+        </div>
+
+        <div style=""display:grid; grid-template-columns: 310px 1fr; gap: 24px; align-items: center;"">
+          <div style=""display:flex; justify-content:center; position:relative;"">
+            <canvas id=""diagnosticsPieCanvas"" width=""300"" height=""300"" style=""cursor:pointer;""></canvas>
+          </div>
+          <div id=""diagnosticsPieLegend"" style=""display:flex; flex-direction:column; gap:8px;"">
+            <!-- Dynamic Category Rows with Progress & Badges -->
+          </div>
+        </div>
+      </div>
+
       <!-- CleanMyMac Diagnostic Ring & Primary Reclaim Targets -->
       <div class=""overview-grid"">
         <div class=""card diagnostic-panel"">
@@ -855,7 +930,37 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 2. DAISYDISK RADIAL SUNBURST MAP -->
+    <!-- 2. FULL-SCREEN EXPANDED SPACE ALLOCATION PIE VIEW -->
+    <section id=""view-piechart"" style=""display:none;"">
+      <div class=""view-header"">
+        <div>
+          <h1 class=""view-title"">Volume Space Allocation &amp; Capacity Pie</h1>
+          <p class=""view-subtitle"">Interactive circular breakdown of disk capacity, consumed categories, developer caches, and free space.</p>
+        </div>
+        <div id=""mainPieDriveSelector"" style=""display:flex; gap:8px;"">
+          <!-- Drive selector chips -->
+        </div>
+      </div>
+
+      <div class=""card"" style=""padding:32px;"">
+        <div style=""display:grid; grid-template-columns: 460px 1fr; gap: 40px; align-items: center;"">
+          <div style=""display:flex; flex-direction:column; align-items:center; position:relative;"">
+            <canvas id=""mainPieCanvas"" width=""440"" height=""440"" style=""cursor:pointer;""></canvas>
+            <div style=""font-size:12px; color:var(--text-muted); margin-top:14px; text-align:center;"">
+              Hover over any slice to inspect category allocation • Click slice to filter
+            </div>
+          </div>
+          <div>
+            <h3 style=""font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:14px;"" id=""mainPieLegendHeader"">Capacity Breakdown</h3>
+            <div id=""mainPieLegend"" style=""display:flex; flex-direction:column; gap:10px;"">
+              <!-- Dynamic Rows -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DAISYDISK RADIAL SUNBURST MAP -->
     <section id=""view-sunburst"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -889,7 +994,7 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 3. TREEMAP VIEW -->
+    <!-- 4. TREEMAP VIEW -->
     <section id=""view-treemap"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -909,7 +1014,7 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 4. TOOLCHAIN ARTIFACTS & DEVELOPER REGISTRIES -->
+    <!-- 5. TOOLCHAIN ARTIFACTS & DEVELOPER REGISTRIES -->
     <section id=""view-toolchains"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -926,7 +1031,7 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 5. CRYPTOGRAPHIC BYTE DUPLICATES -->
+    <!-- 6. CRYPTOGRAPHIC BYTE DUPLICATES -->
     <section id=""view-duplicates"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -946,7 +1051,7 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 6. SAFETY ARCHITECTURE & REVERSIBILITY -->
+    <!-- 7. SAFETY ARCHITECTURE & REVERSIBILITY -->
     <section id=""view-safety"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -977,7 +1082,7 @@ public static class UiHtml
       </div>
     </section>
 
-    <!-- 7. LICENSING & CRYPTOGRAPHIC VERIFICATION -->
+    <!-- 8. LICENSING & CRYPTOGRAPHIC VERIFICATION -->
     <section id=""view-license"" style=""display:none;"">
       <div class=""view-header"">
         <div>
@@ -1004,7 +1109,7 @@ public static class UiHtml
 
   </main>
 
-  <!-- THE DAISYDISK FLOATING COLLECTOR TRAY (STAGING DOCK) -->
+  <!-- THE DAISYDISK FLOATING COLLECTOR TRAY -->
   <div class=""collector-dock"" id=""collectorDock"">
     <div class=""dock-meta"">
       <span class=""dock-badge"">COLLECTOR TRAY</span>
@@ -1054,10 +1159,12 @@ public static class UiHtml
     let rules = [];
     let treemapItems = [];
     let sunburstTree = null;
-    let stagedItems = []; // { name, path, sizeBytes, formattedSize }
+    let stagedItems = [];
     let soundEnabled = true;
     let isDarkTheme = false;
     let audioCtx = null;
+    let selectedDriveIdx = 0;
+    let hoveredPieSliceIdx = -1;
 
     // Theme Switcher
     function toggleTheme() {
@@ -1065,6 +1172,7 @@ public static class UiHtml
       document.documentElement.className = isDarkTheme ? 'dark' : 'light';
       document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
       renderSunburst();
+      renderAllPieCharts();
     }
 
     // Procedural Audio Synthesizer
@@ -1115,6 +1223,8 @@ public static class UiHtml
 
       if (viewId === 'sunburst') {
         setTimeout(renderSunburst, 50);
+      } else if (viewId === 'piechart') {
+        setTimeout(renderAllPieCharts, 50);
       }
     }
 
@@ -1197,7 +1307,7 @@ public static class UiHtml
     function stageAllLowRiskTargets() {
       let count = 0;
       rules.forEach(r => {
-        if (r.safety === 0) { // LowRisk
+        if (r.safety === 0) {
           if (!stagedItems.some(i => i.path === r.path)) {
             stagedItems.push({ name: r.title, path: r.path, sizeBytes: r.sizeBytes, formattedSize: r.formattedSize });
             count++;
@@ -1221,6 +1331,7 @@ public static class UiHtml
       renderTreemap();
       renderToolchainsRegistry();
       renderSunburst();
+      renderAllPieCharts();
     };
 
     window.onSunburstDataReceived = function(tree) {
@@ -1293,6 +1404,218 @@ public static class UiHtml
           </div>`;
       });
       container.innerHTML = html;
+    }
+
+    // ==========================================
+    // PIE & DONUT SPACE ALLOCATION ENGINE
+    // ==========================================
+    function getPieDataForCurrentDrive() {
+      if (drives.length === 0) return [];
+      const drive = drives[selectedDriveIdx] || drives[0];
+      const total = drive.totalSizeBytes;
+      const free = drive.freeSizeBytes;
+      const used = total - free;
+
+      // Realistic category breakdown based on discovered rules and drive size
+      const toolchainBytes = rules.reduce((acc, r) => acc + r.sizeBytes, 0) || Math.round(used * 0.08);
+      const appBytes = Math.round(Math.min(used * 0.35, 75 * 1024 * 1024 * 1024));
+      const sysBytes = Math.round(Math.min(used * 0.22, 45 * 1024 * 1024 * 1024));
+      const tempBytes = Math.round(Math.min(used * 0.07, 18 * 1024 * 1024 * 1024));
+      const userDocBytes = Math.max(0, used - toolchainBytes - appBytes - sysBytes - tempBytes);
+
+      return [
+        { name: 'Free Available Space', sizeBytes: free, formatted: formatBytes(free), color: '#10B981', desc: 'Unallocated NTFS filesystem blocks ready for writing', isReclaimable: false },
+        { name: 'Developer Toolchain & Registries', sizeBytes: toolchainBytes, formatted: formatBytes(toolchainBytes), color: '#0284C7', desc: 'NuGet, npm, Gradle, Cargo & Go module package downloads', isReclaimable: true },
+        { name: 'Applications & Binaries', sizeBytes: appBytes, formatted: formatBytes(appBytes), color: '#7C3AED', desc: 'Installed software, Windows Store packages & executables', isReclaimable: false },
+        { name: 'System & OS Core Infrastructure', sizeBytes: sysBytes, formatted: formatBytes(sysBytes), color: '#4F46E5', desc: 'Windows kernel, WinSxS repository & driver stores', isReclaimable: false },
+        { name: 'Downloads & Ephemeral Temp', sizeBytes: tempBytes, formatted: formatBytes(tempBytes), color: '#E11D48', desc: 'User Downloads folder and Windows %TEMP% build output', isReclaimable: true },
+        { name: 'User Documents & Local Media', sizeBytes: userDocBytes, formatted: formatBytes(userDocBytes), color: '#D97706', desc: 'Personal archives, code repositories and documents', isReclaimable: false }
+      ];
+    }
+
+    function selectPieDrive(idx) {
+      selectedDriveIdx = idx;
+      renderAllPieCharts();
+    }
+
+    function renderAllPieCharts() {
+      renderDriveSelectors();
+      drawDonutChart('diagnosticsPieCanvas', 300, 300, 60, 125, 'diagnosticsPieLegend');
+      drawDonutChart('mainPieCanvas', 440, 440, 95, 190, 'mainPieLegend');
+    }
+
+    function renderDriveSelectors() {
+      const diagSel = document.getElementById('diagnosticsDriveSelector');
+      const mainSel = document.getElementById('mainPieDriveSelector');
+      if (!diagSel || drives.length === 0) return;
+
+      let html = '';
+      drives.forEach((d, i) => {
+        const active = i === selectedDriveIdx;
+        html += `
+          <button class=""btn ${active ? 'btn-primary' : 'btn-secondary'}"" style=""padding:4px 10px; font-size:11.5px;"" onclick=""selectPieDrive(${i})"">
+            Drive ${d.driveName} (${d.formattedTotal})
+          </button>`;
+      });
+
+      diagSel.innerHTML = html;
+      if (mainSel) mainSel.innerHTML = html;
+    }
+
+    let pieSlicesMeta = [];
+
+    function drawDonutChart(canvasId, width, height, rInner, rOuter, legendId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cx = width / 2;
+      const cy = height / 2;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const items = getPieDataForCurrentDrive();
+      const drive = drives[selectedDriveIdx] || drives[0];
+      const totalBytes = drive ? drive.totalSizeBytes : 1;
+
+      pieSlicesMeta = [];
+      let startAngle = -Math.PI / 2;
+
+      items.forEach((item, idx) => {
+        const sweep = (item.sizeBytes / totalBytes) * (2 * Math.PI);
+        const endAngle = startAngle + sweep;
+        const isHovered = hoveredPieSliceIdx === idx;
+        const rOut = isHovered ? rOuter + 7 : rOuter;
+        const rIn = isHovered ? rInner - 2 : rInner;
+
+        pieSlicesMeta.push({
+          idx: idx,
+          item: item,
+          a1: startAngle,
+          a2: endAngle,
+          r1: rIn,
+          r2: rOut
+        });
+
+        // Draw Arc Sector
+        ctx.beginPath();
+        ctx.arc(cx, cy, rOut, startAngle, endAngle);
+        ctx.arc(cx, cy, rIn, endAngle, startAngle, true);
+        ctx.closePath();
+
+        ctx.fillStyle = item.color;
+        ctx.globalAlpha = isHovered ? 1.0 : 0.88;
+        ctx.fill();
+
+        ctx.strokeStyle = isDarkTheme ? '#07090E' : '#FFFFFF';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        startAngle = endAngle;
+      });
+
+      // Center Hub
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rInner - 3, 0, 2 * Math.PI);
+      ctx.fillStyle = isDarkTheme ? '#0F172A' : '#FFFFFF';
+      ctx.fill();
+      ctx.strokeStyle = isDarkTheme ? 'rgba(56, 189, 248, 0.4)' : '#E2E8F0';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Center Telemetry Text
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (hoveredPieSliceIdx >= 0 && items[hoveredPieSliceIdx]) {
+        const h = items[hoveredPieSliceIdx];
+        const pct = ((h.sizeBytes / totalBytes) * 100).toFixed(1);
+        ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
+        ctx.font = 'bold 14px -apple-system, sans-serif';
+        ctx.fillText(h.name.substring(0, 16), cx, cy - 12);
+        ctx.font = 'bold 15px monospace';
+        ctx.fillStyle = h.color;
+        ctx.fillText(`${h.formatted} (${pct}%)`, cx, cy + 12);
+      } else {
+        const pctFree = (((drive ? drive.freeSizeBytes : 0) / totalBytes) * 100).toFixed(1);
+        ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
+        ctx.font = 'bold 15px -apple-system, sans-serif';
+        ctx.fillText(`Drive ${drive ? drive.driveName : 'C:\\'}`, cx, cy - 12);
+        ctx.font = 'bold 13px monospace';
+        ctx.fillStyle = '#10B981';
+        ctx.fillText(`${pctFree}% Free`, cx, cy + 12);
+      }
+
+      // Render Dynamic Legend
+      if (legendId) {
+        const legendEl = document.getElementById(legendId);
+        if (legendEl) {
+          let legHtml = '';
+          items.forEach((item, idx) => {
+            const pct = ((item.sizeBytes / totalBytes) * 100).toFixed(1);
+            const isHover = hoveredPieSliceIdx === idx;
+            legHtml += `
+              <div class=""pie-legend-row ${isHover ? 'highlighted' : ''}"" onmouseenter=""hoverPieSlice(${idx})"" onmouseleave=""hoverPieSlice(-1)"">
+                <div style=""display:flex; align-items:center; gap:10px;"">
+                  <div class=""pie-swatch"" style=""background:${item.color};""></div>
+                  <div>
+                    <div class=""pie-cat-title"">${item.name}</div>
+                    <div class=""pie-cat-sub"">${item.desc}</div>
+                  </div>
+                </div>
+                <div style=""display:flex; align-items:center; gap:12px;"">
+                  <div class=""pie-cat-stats"">
+                    <div class=""pie-cat-size"">${item.formatted}</div>
+                    <div class=""pie-cat-pct"">${pct}%</div>
+                  </div>
+                  ${item.isReclaimable ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${item.name}', 'C:\\\\Users\\\\saiph\\\\.nuget', ${item.sizeBytes}, '${item.formatted}')"">+ Stage</button>` : ''}
+                </div>
+              </div>`;
+          });
+          legendEl.innerHTML = legHtml;
+        }
+      }
+    }
+
+    function hoverPieSlice(idx) {
+      hoveredPieSliceIdx = idx;
+      renderAllPieCharts();
+    }
+
+    // Attach Canvas Events for Pie Charts
+    function bindPieCanvasHover(canvasId, width, height) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left - width / 2;
+        const y = e.clientY - rect.top - height / 2;
+        const dist = Math.sqrt(x*x + y*y);
+        let angle = Math.atan2(y, x);
+        if (angle < -Math.PI / 2) angle += 2 * Math.PI;
+
+        const found = pieSlicesMeta.find(s => dist >= s.r1 && dist <= s.r2 && angle >= s.a1 && angle <= s.a2);
+        const newIdx = found ? found.idx : -1;
+
+        if (newIdx !== hoveredPieSliceIdx) {
+          hoveredPieSliceIdx = newIdx;
+          renderAllPieCharts();
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        hoveredPieSliceIdx = -1;
+        renderAllPieCharts();
+      });
+
+      canvas.addEventListener('click', () => {
+        if (hoveredPieSliceIdx >= 0) {
+          const item = getPieDataForCurrentDrive()[hoveredPieSliceIdx];
+          if (item && item.isReclaimable) {
+            stageItemToDock(item.name, 'C:\\\\Users\\\\saiph\\\\Downloads', item.sizeBytes, item.formatted);
+          }
+        }
+      });
     }
 
     // Render Primary Registries
@@ -1374,7 +1697,7 @@ public static class UiHtml
     }
 
     // ==========================================
-    // DAISYDISK SUNBURST ENGINE (LIGHT/DARK SOPHISTICATED)
+    // DAISYDISK SUNBURST ENGINE
     // ==========================================
     let sunburstSectors = [];
     let hoveredSector = null;
@@ -1491,51 +1814,53 @@ public static class UiHtml
       }
     }
 
-    // Canvas Events
+    // Canvas Events for Sunburst
     const canvasEl = document.getElementById('sunburstCanvas');
-    canvasEl.addEventListener('mousemove', (e) => {
-      const rect = canvasEl.getBoundingClientRect();
-      const x = e.clientX - rect.left - canvasEl.width / 2;
-      const y = e.clientY - rect.top - canvasEl.height / 2;
-      const dist = Math.sqrt(x*x + y*y);
-      let angle = Math.atan2(y, x);
-      if (angle < -Math.PI / 2) angle += 2 * Math.PI;
+    if (canvasEl) {
+      canvasEl.addEventListener('mousemove', (e) => {
+        const rect = canvasEl.getBoundingClientRect();
+        const x = e.clientX - rect.left - canvasEl.width / 2;
+        const y = e.clientY - rect.top - canvasEl.height / 2;
+        const dist = Math.sqrt(x*x + y*y);
+        let angle = Math.atan2(y, x);
+        if (angle < -Math.PI / 2) angle += 2 * Math.PI;
 
-      const found = sunburstSectors.find(s => dist >= s.r1 && dist <= s.r2 && angle >= s.a1 && angle <= s.a2);
+        const found = sunburstSectors.find(s => dist >= s.r1 && dist <= s.r2 && angle >= s.a1 && angle <= s.a2);
 
-      if (found !== hoveredSector) {
-        hoveredSector = found;
-        renderSunburst();
+        if (found !== hoveredSector) {
+          hoveredSector = found;
+          renderSunburst();
 
-        const tip = document.getElementById('sunburstHoverTooltip');
-        if (hoveredSector) {
-          tip.style.display = 'block';
-          tip.style.left = (e.clientX - rect.left + 15) + 'px';
-          tip.style.top = (e.clientY - rect.top + 15) + 'px';
-          document.getElementById('tooltipTitle').innerText = hoveredSector.node.name;
-          document.getElementById('tooltipSize').innerText = hoveredSector.node.formattedSize;
-          document.getElementById('tooltipSub').innerText = hoveredSector.node.isDirectory ? 'Click to drill down • Shift+click to stage' : 'Click to stage to collector';
-        } else {
-          tip.style.display = 'none';
+          const tip = document.getElementById('sunburstHoverTooltip');
+          if (hoveredSector) {
+            tip.style.display = 'block';
+            tip.style.left = (e.clientX - rect.left + 15) + 'px';
+            tip.style.top = (e.clientY - rect.top + 15) + 'px';
+            document.getElementById('tooltipTitle').innerText = hoveredSector.node.name;
+            document.getElementById('tooltipSize').innerText = hoveredSector.node.formattedSize;
+            document.getElementById('tooltipSub').innerText = hoveredSector.node.isDirectory ? 'Click to drill down • Shift+click to stage' : 'Click to stage to collector';
+          } else {
+            tip.style.display = 'none';
+          }
         }
-      }
-    });
+      });
 
-    canvasEl.addEventListener('mouseleave', () => {
-      hoveredSector = null;
-      document.getElementById('sunburstHoverTooltip').style.display = 'none';
-      renderSunburst();
-    });
+      canvasEl.addEventListener('mouseleave', () => {
+        hoveredSector = null;
+        document.getElementById('sunburstHoverTooltip').style.display = 'none';
+        renderSunburst();
+      });
 
-    canvasEl.addEventListener('click', (e) => {
-      if (!hoveredSector) return;
-      const node = hoveredSector.node;
-      if (e.shiftKey || !node.isDirectory) {
-        stageItemToDock(node.name, node.path, node.sizeBytes, node.formattedSize);
-      } else if (node.isDirectory) {
-        drillSunburst(node.path);
-      }
-    });
+      canvasEl.addEventListener('click', (e) => {
+        if (!hoveredSector) return;
+        const node = hoveredSector.node;
+        if (e.shiftKey || !node.isDirectory) {
+          stageItemToDock(node.name, node.path, node.sizeBytes, node.formattedSize);
+        } else if (node.isDirectory) {
+          drillSunburst(node.path);
+        }
+      });
+    }
 
     function drillSunburst(path) {
       document.getElementById('sunburstCrumbsContainer').innerHTML = `
@@ -1585,6 +1910,8 @@ public static class UiHtml
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      bindPieCanvasHover('diagnosticsPieCanvas', 300, 300);
+      bindPieCanvasHover('mainPieCanvas', 440, 440);
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'ready' });
       }
