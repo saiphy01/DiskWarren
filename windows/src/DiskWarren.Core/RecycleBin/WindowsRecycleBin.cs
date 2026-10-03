@@ -133,12 +133,24 @@ public static class WindowsRecycleBin
         long total = 0;
         try
         {
-            foreach (var file in dir.EnumerateFiles("*", SearchOption.AllDirectories))
+            var options = new EnumerationOptions
             {
-                total += file.Length;
+                RecurseSubdirectories = true,
+                IgnoreInaccessible = true,
+                AttributesToSkip = FileAttributes.ReparsePoint
+            };
+
+            foreach (var file in dir.EnumerateFiles("*", options))
+            {
+                try
+                {
+                    total += file.Length;
+                }
+                catch (FileNotFoundException) { }
+                catch (UnauthorizedAccessException) { }
             }
         }
-        catch (UnauthorizedAccessException) { }
+        catch (Exception) { }
         return total;
     }
 }

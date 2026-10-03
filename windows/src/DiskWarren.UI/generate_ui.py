@@ -1,7 +1,8 @@
 import os
 
-template_path = r"C:\Users\saiph\DiskWarren\windows\src\DiskWarren.UI\ui_template.html"
-target_cs_path = r"C:\Users\saiph\DiskWarren\windows\src\DiskWarren.UI\UiHtml.cs"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+template_path = os.path.join(script_dir, "ui_template.html")
+target_cs_path = os.path.join(script_dir, "UiHtml.cs")
 
 with open(template_path, "r", encoding="utf-8") as f:
     html = f.read()

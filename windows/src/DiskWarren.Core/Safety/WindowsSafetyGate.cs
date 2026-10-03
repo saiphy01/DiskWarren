@@ -32,8 +32,61 @@ public static class WindowsSafetyGate
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(fullPath);
 
+        string trimmedInput = fullPath.Trim();
+
+        // Check bare drive specifier (e.g. "C:", "D:") before relative path expansion
+        if (trimmedInput.Length == 2 && char.IsLetter(trimmedInput[0]) && trimmedInput[1] == ':')
+        {
+            return SafetyClassification.Restricted;
+        }
+
         string normalized = Path.GetFullPath(fullPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         string fileName = Path.GetFileName(normalized);
+
+        // Check drive root (e.g. "C:\", "D:\", or normalized root)
+        string root = Path.GetPathRoot(normalized) ?? string.Empty;
+        string rootTrimmed = root.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        if (string.Equals(normalized, rootTrimmed, StringComparison.OrdinalIgnoreCase) ||
+            (normalized.Length <= 3 && normalized.EndsWith(':')))
+        {
+            return SafetyClassification.Restricted;
+        }
+
+        // Check critical OS roots (Windows, Program Files)
+        string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        if (!string.IsNullOrEmpty(winDir) && string.Equals(normalized, winDir.TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase))
+        {
+            return SafetyClassification.Restricted;
+        }
+
+        string progFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        if (!string.IsNullOrEmpty(progFiles) && string.Equals(normalized, progFiles.TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase))
+        {
+            return SafetyClassification.Restricted;
+        }
+
+        string progFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        if (!string.IsNullOrEmpty(progFilesX86) && string.Equals(normalized, progFilesX86.TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase))
+        {
+            return SafetyClassification.Restricted;
+        }
+
+        // Check user profile root (e.g. "C:\Users\username" and "C:\Users")
+        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrEmpty(userProfile))
+        {
+            string userProfileNorm = userProfile.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (string.Equals(normalized, userProfileNorm, StringComparison.OrdinalIgnoreCase))
+            {
+                return SafetyClassification.Restricted;
+            }
+
+            string? usersDir = Path.GetDirectoryName(userProfileNorm);
+            if (!string.IsNullOrEmpty(usersDir) && string.Equals(normalized, usersDir.TrimEnd('\\', '/'), StringComparison.OrdinalIgnoreCase))
+            {
+                return SafetyClassification.Restricted;
+            }
+        }
 
         // Check restricted root system files
         if (RestrictedRootNames.Contains(fileName))

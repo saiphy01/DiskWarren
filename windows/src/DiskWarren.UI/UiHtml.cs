@@ -958,8 +958,8 @@ public static class UiHtml
             <button class=""tab-item active"" id=""btnVizSunburst"" onclick=""switchVizMode('sunburst')"">Radial Sunburst</button>
             <button class=""tab-item"" id=""btnVizTreemap"" onclick=""switchVizMode('treemap')"">Squarified Treemap</button>
           </div>
-          <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</button>
-          <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph')"">User Profile</button>
+          <button class=""btn btn-secondary"" onclick=""drillSunburst(downloadsPath)"">Downloads</button>
+          <button class=""btn btn-secondary"" onclick=""drillSunburst(userProfilePath)"">User Profile</button>
         </div>
       </div>
 
@@ -969,7 +969,7 @@ public static class UiHtml
           <div class=""sunburst-toolbar"">
             <div class=""sunburst-crumbs"" id=""sunburstCrumbsContainer"">
               <span style=""color:var(--text-dim);"">Root:</span>
-              <span class=""crumb-chip"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</span>
+              <span class=""crumb-chip"" onclick=""drillSunburst(downloadsPath)"">Downloads</span>
             </div>
             <div style=""font-size:12px; color:var(--text-muted);"">
               Click sector to zoom in • Shift+click to stage to dock
@@ -1084,7 +1084,7 @@ public static class UiHtml
           Enter your license key to unlock unlimited family machines, continuous background monitoring, and scheduled duplicate scrubbing.
         </p>
         <div style=""margin-bottom:14px;"">
-          <input type=""text"" id=""licenseKeyInput"" placeholder=""DW-PRO-XXXX-XXXX-XXXX"" style=""width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--text-main); font-family:monospace; font-size:13px; outline:none;"" />
+          <input type=""text"" id=""licenseKeyInput"" placeholder=""DW1-WIN-PRO-LIFETIME-XXXX"" style=""width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--text-main); font-family:monospace; font-size:13px; outline:none;"" />
         </div>
         <div style=""font-size:11.5px; color:var(--text-muted);"">
           Current Status: <span id=""licenseStatusBadge"" style=""color:var(--accent-emerald); font-weight:700;"">Active &amp; Verified</span>
@@ -1128,6 +1128,8 @@ public static class UiHtml
     let vizMode = 'sunburst';
     let isDarkTheme = false;
     let soundEnabled = true;
+    let userProfilePath = 'C:\\Users';
+    let downloadsPath = 'C:\\Users';
 
     // Web Audio Synthesizer
     let audioCtx = null;
@@ -1497,7 +1499,7 @@ public static class UiHtml
                   <div class=""pie-mini-bar-fill"" style=""width:${pct}%; background:${item.color};""></div>
                 </div>
               </div>
-              ${item.isReclaimable ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${item.name}', 'C:\\\\Users\\\\saiph\\\\.nuget', ${item.sizeBytes}, '${item.formatted}')"">+ Stage</button>` : ''}
+              ${item.isReclaimable ? `<button class=""btn btn-stage"" onclick=""stageDonutCategory('${item.name}')"">+ Stage</button>` : ''}
             </div>
           </div>`;
       });
@@ -1541,10 +1543,24 @@ public static class UiHtml
         if (hoveredDonutIdx >= 0) {
           const item = getDonutData()[hoveredDonutIdx];
           if (item && item.isReclaimable) {
-            stageItemToDock(item.name, 'C:\\\\Users\\\\saiph\\\\Downloads', item.sizeBytes, item.formatted);
+            stageDonutCategory(item.name);
           }
         }
       });
+    }
+
+    function stageDonutCategory(catName) {
+      if (catName.includes('Developer') || catName.includes('Toolchains')) {
+        const reclaimableRules = rules.filter(r => r.sizeBytes > 0);
+        if (reclaimableRules.length > 0) {
+          reclaimableRules.forEach(r => stageItemToDock(r.title, r.path, r.sizeBytes, r.formattedSize));
+          showToast(`Staged ${reclaimableRules.length} developer cache target(s).`);
+        } else {
+          showToast('No active developer caches found.');
+        }
+      } else if (catName.includes('Downloads') || catName.includes('Temp')) {
+        stageItemToDock('Downloads & Ephemeral Temp', downloadsPath, 0, 'Folder');
+      }
     }
 
     function renderAllDashboardCharts() {
@@ -1932,6 +1948,8 @@ public static class UiHtml
       drives = data.drives || [];
       rules = data.rules || [];
       treemapItems = data.treemap || [];
+      if (data.userProfile) userProfilePath = data.userProfile;
+      if (data.downloads) downloadsPath = data.downloads;
       if (data.sunburst) sunburstTree = data.sunburst;
 
       renderVolumes();

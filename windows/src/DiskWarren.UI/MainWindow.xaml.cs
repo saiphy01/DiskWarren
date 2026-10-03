@@ -218,11 +218,12 @@ public partial class MainWindow : Window
         // 1. Get live drives
         var drives = WindowsStorageScanner.GetAvailableDrives();
 
-        // 2. Discover developer cache candidates
-        var rules = WindowsDeveloperRules.DiscoverDeveloperAndAICandidates();
+        // 2. Discover developer cache candidates asynchronously to avoid UI thread stutter
+        var rules = await Task.Run(() => WindowsDeveloperRules.DiscoverDeveloperAndAICandidates());
 
         // 3. Scan Downloads folder for initial treemap and sunburst
-        string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        string downloadsPath = Path.Combine(userProfile, "Downloads");
         var treemapItems = await GetTreemapItemsAsync(downloadsPath);
         var sunburstRoot = await GetSunburstTreeAsync(downloadsPath);
 
@@ -231,7 +232,9 @@ public partial class MainWindow : Window
             drives,
             rules,
             treemap = treemapItems,
-            sunburst = sunburstRoot
+            sunburst = sunburstRoot,
+            userProfile,
+            downloads = downloadsPath
         };
 
         string json = JsonSerializer.Serialize(payload, JsonOpts);
@@ -377,13 +380,14 @@ public partial class MainWindow : Window
         ext = ext.TrimStart('.').ToLowerInvariant();
         return ext switch
         {
-            "zip" or "tar" or "gz" or "7z" or "rar" or "iso" => "Archive",
+            "zip" or "tar" or "gz" or "7z" or "rar" or "iso" or "vhdx" or "vmdk" => "Archive",
             "mp4" or "mkv" or "mov" or "avi" or "wmv" or "webm" => "Video",
             "mp3" or "wav" or "flac" or "aac" => "Audio",
             "png" or "jpg" or "jpeg" or "webp" or "svg" or "psd" => "Image",
             "exe" or "msi" or "dll" or "sys" => "Binary",
             "pdf" or "doc" or "docx" or "xlsx" or "pptx" => "Document",
             "js" or "ts" or "cs" or "py" or "rs" or "go" or "json" => "Code",
+            "safetensors" or "gguf" or "onnx" or "pth" or "bin" => "AI Model",
             _ => "Other"
         };
     }

@@ -46,6 +46,43 @@ public class DiskWarrenUnitTests : IDisposable
     }
 
     [Fact]
+    public void SafetyGate_ProtectsDriveAndUserProfileRoots()
+    {
+        // Drive roots
+        Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(@"C:\", true));
+        Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(@"C:", true));
+        Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(@"D:\", true));
+
+        // OS roots
+        string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        if (!string.IsNullOrEmpty(winDir))
+        {
+            Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(winDir, true));
+        }
+
+        string progFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        if (!string.IsNullOrEmpty(progFiles))
+        {
+            Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(progFiles, true));
+        }
+
+        // User profile roots
+        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrEmpty(userProfile))
+        {
+            Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(userProfile, true));
+            string? usersDir = Path.GetDirectoryName(userProfile);
+            if (!string.IsNullOrEmpty(usersDir))
+            {
+                Assert.Equal(SafetyClassification.Restricted, WindowsSafetyGate.ClassifyPath(usersDir, true));
+            }
+        }
+
+        Assert.False(WindowsSafetyGate.CanSafelyRecycle(@"C:\", out var denialReason));
+        Assert.NotEmpty(denialReason);
+    }
+
+    [Fact]
     public void SafetyGate_AllowsSafeUserCaches()
     {
         string userTemp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp", "sample.tmp");

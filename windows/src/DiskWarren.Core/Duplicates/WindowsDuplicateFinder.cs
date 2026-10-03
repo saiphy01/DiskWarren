@@ -31,7 +31,14 @@ public sealed class WindowsDuplicateFinder
 
             try
             {
-                foreach (var file in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
+                var enumOptions = new EnumerationOptions
+                {
+                    RecurseSubdirectories = true,
+                    IgnoreInaccessible = true,
+                    AttributesToSkip = FileAttributes.ReparsePoint
+                };
+
+                foreach (var file in dirInfo.EnumerateFiles("*", enumOptions))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -52,6 +59,7 @@ public sealed class WindowsDuplicateFinder
                 }
             }
             catch (UnauthorizedAccessException) { }
+            catch (DirectoryNotFoundException) { }
 
             // Filter to sizes with at least 2 files
             var potentialDuplicates = sizeGroups
@@ -59,7 +67,6 @@ public sealed class WindowsDuplicateFinder
                 .ToList();
 
             // Phase 2: Compute header chunk SHA-256
-            using var sha256 = SHA256.Create();
             var headerBuffer = new byte[HeaderChunkBytes];
 
             foreach (var (size, candidatePaths) in potentialDuplicates)
@@ -76,7 +83,7 @@ public sealed class WindowsDuplicateFinder
                     {
                         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                         int bytesRead = stream.Read(headerBuffer, 0, HeaderChunkBytes);
-                        string headerHash = Convert.ToHexString(sha256.ComputeHash(headerBuffer, 0, bytesRead));
+                        string headerHash = Convert.ToHexString(SHA256.HashData(headerBuffer.AsSpan(0, bytesRead)));
 
                         if (!headerGroups.TryGetValue(headerHash, out var list))
                         {
@@ -102,7 +109,7 @@ public sealed class WindowsDuplicateFinder
                         try
                         {
                             using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                            string fullHash = Convert.ToHexString(sha256.ComputeHash(stream));
+                            string fullHash = Convert.ToHexString(SHA256.HashData(stream));
 
                             if (!fullHashGroups.TryGetValue(fullHash, out var list))
                             {
