@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/windows/safety', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/windows/features', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/windows/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/windows/privacy', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/windows/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
 
     // Android Standalone Website
@@ -28,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/android/safety', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/android/features', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/android/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/android/privacy', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/android/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
 
     // iOS Standalone Website
@@ -37,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ios/safety', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/ios/features', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/ios/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/ios/privacy', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/ios/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
 
     // Primary SEO Capabilities (Mac)

@@ -198,7 +198,7 @@ export default function Footer() {
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Trust &amp; Legal</h4>
             <ul className="space-y-2 text-xs">
               <li><Link href="/security" className="hover:text-slate-900 transition-colors">Security Architecture</Link></li>
-              <li><Link href="/privacy" className="hover:text-slate-900 transition-colors">Zero-Telemetry Privacy</Link></li>
+              <li><Link href={getUrl('privacy')} className="hover:text-slate-900 transition-colors">Zero-Telemetry Privacy</Link></li>
               <li><Link href="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link></li>
               <li><Link href="/refund-policy" className="hover:text-slate-900 transition-colors">30-Day Refund Policy</Link></li>
               <li><Link href="/release-notes" className="hover:text-slate-900 transition-colors">Release Notes (v1.0.0)</Link></li>
