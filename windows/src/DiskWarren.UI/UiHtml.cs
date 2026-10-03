@@ -3,62 +3,88 @@ namespace DiskWarren.UI;
 public static class UiHtml
 {
     public const string Content = @"<!DOCTYPE html>
-<html lang=""en"" class=""dark"">
+<html lang=""en"" class=""light"">
 <head>
   <meta charset=""UTF-8"">
   <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
   <title>DiskWarren — Storage Intelligence &amp; Safe Cleanup</title>
   <style>
     :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F5F9;
+      --border: rgba(226, 232, 240, 0.9);
+      --border-hover: rgba(2, 132, 199, 0.35);
+      --text-main: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --text-dim: #94A3B8;
+      --accent-primary: #0284C7;
+      --accent-primary-hover: #0369A1;
+      --accent-emerald: #059669;
+      --accent-amber: #D97706;
+      --accent-rose: #E11D48;
+      --accent-indigo: #4F46E5;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+      --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+      --tray-bg: rgba(255, 255, 255, 0.94);
+      --tray-border: rgba(2, 132, 199, 0.3);
+    }
+
+    html.dark {
       --bg: #07090E;
-      --card-bg: rgba(15, 21, 36, 0.72);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(56, 189, 248, 0.35);
-      --accent-cyan: #00F2FE;
-      --accent-blue: #4FACFE;
-      --accent-emerald: #10B981;
-      --accent-violet: #8B5CF6;
-      --accent-pink: #EC4899;
-      --accent-amber: #F59E0B;
+      --surface: rgba(15, 21, 36, 0.72);
+      --surface-subtle: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(56, 189, 248, 0.35);
       --text-main: #F8FAFC;
+      --text-body: #CBD5E1;
       --text-muted: #8E9BAE;
       --text-dim: #546274;
+      --accent-primary: #38BDF8;
+      --accent-primary-hover: #0284C7;
+      --accent-emerald: #10B981;
+      --accent-amber: #F59E0B;
+      --accent-rose: #F43F5E;
+      --accent-indigo: #818CF8;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
+      --tray-bg: rgba(15, 21, 37, 0.94);
+      --tray-border: rgba(56, 189, 248, 0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI', Inter, system-ui, sans-serif; }
     
     body {
       background: var(--bg);
-      background-image: 
-        radial-gradient(ellipse 90% 60% at 50% -25%, rgba(0, 242, 254, 0.12), transparent 70%),
-        radial-gradient(ellipse 70% 50% at 100% 100%, rgba(139, 92, 246, 0.08), transparent 60%),
-        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(16, 185, 129, 0.06), transparent 50%);
       color: var(--text-main);
       overflow-x: hidden;
       height: 100vh;
       display: flex;
       flex-direction: column;
       user-select: none;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Custom Luxury Scrollbar */
+    /* Scrollbars */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.3); }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(2, 132, 199, 0.45); }
 
-    /* Header Chrome */
+    /* Header Bar */
     .app-header {
-      height: 60px;
-      background: rgba(10, 14, 24, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--card-border);
+      height: 62px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
       z-index: 100;
+      box-shadow: var(--shadow-sm);
     }
 
     .brand-group {
@@ -68,61 +94,54 @@ public static class UiHtml
     }
 
     .brand-logo {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 50%, #8B5CF6 100%);
+      background: linear-gradient(135deg, #0284C7 0%, #2563EB 50%, #4F46E5 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-      animation: logoPulse 4s ease-in-out infinite;
-    }
-    @keyframes logoPulse {
-      0%, 100% { box-shadow: 0 0 16px rgba(0, 242, 254, 0.35); }
-      50% { box-shadow: 0 0 26px rgba(139, 92, 246, 0.5); }
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.3);
     }
 
     .brand-name {
       font-size: 17px;
       font-weight: 800;
-      letter-spacing: -0.6px;
-      background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
     }
 
-    .badge-pro {
+    .badge-enterprise {
       font-size: 10px;
       padding: 2px 7px;
       border-radius: 5px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      background: rgba(56, 189, 248, 0.12);
-      color: #38BDF8;
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: rgba(2, 132, 199, 0.08);
+      color: var(--accent-primary);
+      border: 1px solid rgba(2, 132, 199, 0.2);
     }
 
-    .airgap-pill {
+    .airgap-indicator {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       font-size: 11px;
       font-weight: 600;
-      color: #94A3B8;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 4px 10px;
+      color: var(--text-muted);
+      background: var(--surface-subtle);
+      padding: 5px 12px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
     }
 
     .pulse-dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 8px #10B981;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 6px var(--accent-emerald);
       animation: pulseAnim 2s infinite;
     }
     @keyframes pulseAnim {
@@ -130,63 +149,61 @@ public static class UiHtml
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
-    /* Segmented Tab Navigation */
+    /* Segmented Navigation Bar (Cupertino Light / Fluent Hybrid) */
     .tab-bar {
       display: flex;
-      background: rgba(13, 18, 30, 0.85);
-      border: 1px solid var(--card-border);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 4px;
+      padding: 3px;
       gap: 2px;
     }
 
     .tab-item {
-      padding: 7px 15px;
-      border-radius: 8px;
+      padding: 6px 14px;
+      border-radius: 9px;
       font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
       background: transparent;
       border: none;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 7px;
-      position: relative;
+      gap: 6px;
     }
     .tab-item:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.04);
     }
     .tab-item.active {
-      color: #F8FAFC;
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--text-main);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      font-weight: 700;
     }
 
-    /* Layout Body */
+    /* Viewport Area */
     .app-main {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 28px 100px 28px; /* bottom padding accounts for collector tray */
+      padding: 24px 32px 100px 32px; /* space for collector tray */
       position: relative;
     }
 
-    /* Typography & Titles */
     .view-header {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
     }
     .view-title {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
-      letter-spacing: -0.6px;
-      color: #FFFFFF;
-      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      margin-bottom: 3px;
     }
     .view-subtitle {
       font-size: 13px;
@@ -194,271 +211,266 @@ public static class UiHtml
       line-height: 1.5;
     }
 
-    /* Glass Cards */
-    .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .glass-card:hover {
-      border-color: var(--card-border-hover);
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
     }
 
-    /* Primary & Danger Action Buttons */
+    /* Action Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 9px 16px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       border: none;
       outline: none;
     }
-    .btn-glow {
-      background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-      color: #07090E;
-      box-shadow: 0 2px 14px rgba(0, 242, 254, 0.35);
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
     }
-    .btn-glow:hover {
+    .btn-primary:hover {
+      background: var(--accent-primary-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.55);
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
     }
-    .btn-glow:active { transform: translateY(0); scale: 0.98; }
+    .btn-primary:active { transform: translateY(0); }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      color: #F8FAFC;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--surface);
+      color: var(--text-body);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
     }
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-danger-pill {
-      background: rgba(239, 68, 68, 0.12);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 11.5px;
-    }
-    .btn-danger-pill:hover {
-      background: #EF4444;
-      color: white;
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+      background: var(--surface-subtle);
+      border-color: rgba(148, 163, 184, 0.5);
     }
 
     .btn-stage {
-      background: rgba(56, 189, 248, 0.1);
-      color: #38BDF8;
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      background: rgba(2, 132, 199, 0.08);
+      color: var(--accent-primary);
+      border: 1px solid rgba(2, 132, 199, 0.22);
       padding: 5px 12px;
-      border-radius: 8px;
+      border-radius: 7px;
       font-size: 11.5px;
       font-weight: 700;
     }
     .btn-stage:hover {
-      background: #38BDF8;
-      color: #07090E;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-    }
-
-    /* Radar Overview View */
-    .overview-grid {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .radar-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .radar-ring {
-      width: 190px;
-      height: 190px;
-      border-radius: 50%;
-      border: 1px dashed rgba(56, 189, 248, 0.3);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .radar-ring::before {
-      content: '';
-      position: absolute;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 1px solid rgba(139, 92, 246, 0.25);
-    }
-    .radar-ring::after {
-      content: '';
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-
-    .radar-beam {
-      position: absolute;
-      width: 95px;
-      height: 95px;
-      top: 0;
-      right: 0;
-      transform-origin: bottom left;
-      background: conic-gradient(from 0deg, rgba(0, 242, 254, 0.4) 0deg, transparent 60deg);
-      border-radius: 100% 0 0 0;
-      animation: rotateRadar 3s linear infinite;
-    }
-    @keyframes rotateRadar {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .radar-center-stat {
-      position: absolute;
-      z-index: 2;
-      text-align: center;
-    }
-    .radar-stat-number {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      background: var(--accent-primary);
       color: #FFFFFF;
-      text-shadow: 0 0 16px rgba(0, 242, 254, 0.6);
-    }
-    .radar-stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
     }
 
-    .quick-tiles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-    .quick-tile {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s;
-    }
-    .quick-tile:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(56, 189, 248, 0.3);
-      transform: translateY(-2px);
-    }
-    .quick-tile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .quick-tile-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .quick-tile-size {
-      font-size: 18px;
-      font-weight: 800;
-      color: #FFFFFF;
-      font-family: monospace;
-    }
-    .quick-tile-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 2px;
-    }
-    .quick-tile-desc {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    /* Drive Gauge Cards */
+    /* Diagnostics Overview */
     .drive-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
-    .drive-card-header {
+    .drive-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
     }
-    .drive-title {
+    .drive-name {
       font-size: 15px;
       font-weight: 700;
-      color: #FFFFFF;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    .drive-format-tag {
+      font-size: 11px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
     .drive-bar-bg {
-      height: 8px;
-      background: rgba(255, 255, 255, 0.06);
+      height: 7px;
+      background: var(--surface-subtle);
       border-radius: 4px;
       overflow: hidden;
       margin-bottom: 8px;
+      border: 1px solid var(--border);
     }
     .drive-bar-fill {
       height: 100%;
       border-radius: 4px;
-      background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%);
+      background: linear-gradient(90deg, #0284C7 0%, #2563EB 100%);
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .drive-stats-row {
+    .drive-stats {
       display: flex;
       justify-content: space-between;
       font-size: 12px;
       color: var(--text-muted);
     }
 
-    /* Sunburst Visualizer Canvas */
-    .sunburst-container {
-      background: rgba(12, 16, 28, 0.85);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+    }
+
+    /* CleanMyMac Diagnostic Ring */
+    .diagnostic-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px 20px;
+    }
+    .radar-circle {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 1px dashed rgba(2, 132, 199, 0.35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .radar-circle::before {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+    .radar-circle::after {
+      content: '';
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 1px solid rgba(5, 150, 105, 0.25);
+    }
+    .radar-sweep-hand {
+      position: absolute;
+      width: 85px;
+      height: 85px;
+      top: 0;
+      right: 0;
+      transform-origin: bottom left;
+      background: conic-gradient(from 0deg, rgba(2, 132, 199, 0.3) 0deg, transparent 50deg);
+      border-radius: 100% 0 0 0;
+      animation: sweepAnim 3s linear infinite;
+    }
+    @keyframes sweepAnim {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .diagnostic-stat-box {
+      position: absolute;
+      z-index: 2;
+      text-align: center;
+    }
+    .diagnostic-number {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.6px;
+    }
+    .diagnostic-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .diagnostic-tile {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.18s;
+    }
+    .diagnostic-tile:hover {
+      background: var(--surface);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .tile-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tile-size {
+      font-size: 16.5px;
+      font-weight: 800;
+      font-family: monospace;
+      color: var(--accent-primary);
+    }
+    .tile-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+    .tile-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* DAISYDISK SUNBURST VISUALIZER (LIGHT LUXURY) */
+    .sunburst-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
       padding: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
       min-height: 580px;
+      box-shadow: var(--shadow-sm);
     }
     .sunburst-toolbar {
       width: 100%;
@@ -467,7 +479,7 @@ public static class UiHtml
       align-items: center;
       margin-bottom: 16px;
     }
-    .sunburst-breadcrumbs {
+    .sunburst-crumbs {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -476,49 +488,48 @@ public static class UiHtml
       color: var(--text-muted);
       font-family: monospace;
     }
-    .crumb-btn {
-      color: #38BDF8;
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+    .crumb-chip {
+      color: var(--accent-primary);
+      background: rgba(2, 132, 199, 0.08);
+      border: 1px solid rgba(2, 132, 199, 0.2);
       padding: 3px 8px;
       border-radius: 6px;
       cursor: pointer;
     }
-    .crumb-btn:hover { background: rgba(56, 189, 248, 0.2); }
+    .crumb-chip:hover { background: rgba(2, 132, 199, 0.15); }
 
     #sunburstCanvas {
       cursor: pointer;
-      transition: transform 0.2s ease;
     }
 
     .sunburst-tooltip {
       position: absolute;
       pointer-events: none;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: var(--surface);
+      border: 1px solid var(--border);
       padding: 10px 14px;
       border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      box-shadow: var(--shadow-lg);
       display: none;
       z-index: 10;
     }
-    .tooltip-name { font-size: 13px; font-weight: 700; color: #FFFFFF; }
-    .tooltip-size { font-size: 12px; font-weight: 700; color: #38BDF8; font-family: monospace; margin-top: 2px; }
-    .tooltip-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .tip-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
+    .tip-size { font-size: 12px; font-weight: 700; color: var(--accent-primary); font-family: monospace; margin-top: 2px; }
+    .tip-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Treemap Visualizer */
-    .treemap-box {
-      background: rgba(10, 14, 25, 0.9);
-      border: 1px solid var(--card-border);
+    /* Treemap Explorer */
+    .treemap-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
       min-height: 480px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: var(--shadow-sm);
     }
-    .treemap-grid {
+    .treemap-tiles {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
@@ -534,106 +545,105 @@ public static class UiHtml
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      color: white;
+      color: #FFFFFF;
       cursor: pointer;
       transition: transform 0.15s ease, filter 0.15s ease;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     .treemap-tile:hover {
-      filter: brightness(1.25);
+      filter: brightness(1.15);
       transform: scale(1.015);
       z-index: 2;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-      border-color: #38BDF8;
+      box-shadow: var(--shadow-md);
     }
-    .treemap-tile-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .treemap-tile-size { font-size: 11px; opacity: 0.9; font-family: monospace; font-weight: 600; }
+    .tile-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile-val { font-size: 11px; opacity: 0.95; font-family: monospace; font-weight: 600; }
 
-    /* Developer Rules & Caches */
-    .rule-card {
+    /* Toolchain & Developer Registry Rules */
+    .registry-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       margin-bottom: 10px;
-      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.18s;
     }
-    .rule-card:hover {
-      border-color: rgba(56, 189, 248, 0.3);
-      background: rgba(20, 29, 50, 0.7);
+    .registry-item:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
     }
-    .rule-title-text {
+    .reg-title {
       font-size: 14.5px;
       font-weight: 700;
-      color: #FFFFFF;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .rule-path-text {
+    .reg-path {
       font-size: 11.5px;
       font-family: monospace;
-      color: var(--text-dim);
+      color: var(--text-muted);
       margin-top: 2px;
     }
-    .rule-badge {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-weight: 700;
-      text-transform: uppercase;
+    .reg-desc {
+      font-size: 12px;
+      color: var(--text-body);
+      margin-top: 4px;
+      line-height: 1.4;
     }
-    .badge-safe { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-review { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-safe { background: rgba(5, 150, 105, 0.08); color: var(--accent-emerald); border: 1px solid rgba(5, 150, 105, 0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+    .badge-review { background: rgba(217, 119, 6, 0.08); color: var(--accent-amber); border: 1px solid rgba(217, 119, 6, 0.25); font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
 
-    /* Duplicates List */
-    .dup-card {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+    /* Duplicate Clusters */
+    .dup-cluster {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
     }
-    .dup-header {
+    .cluster-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 13px;
       font-weight: 700;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
       margin-bottom: 8px;
     }
-    .dup-row {
+    .cluster-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 6px 0;
       font-size: 12px;
       font-family: monospace;
-      color: var(--text-muted);
+      color: var(--text-body);
     }
 
-    /* THE DAISYDISK SIGNATURE: FLOATING COLLECTOR TRAY */
-    .collector-tray {
+    /* THE DAISYDISK FLOATING COLLECTOR TRAY */
+    .collector-dock {
       position: fixed;
       bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      transform: translateX(-50%) translateY(120px);
       width: 92%;
       max-width: 1100px;
-      background: rgba(15, 21, 37, 0.94);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border: 1px solid rgba(0, 242, 254, 0.4);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 242, 254, 0.15);
+      background: var(--tray-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--tray-border);
+      box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.05);
       border-radius: 18px;
-      padding: 12px 20px;
+      padding: 12px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -642,235 +652,239 @@ public static class UiHtml
       opacity: 0;
       pointer-events: none;
     }
-    .collector-tray.visible {
+    .collector-dock.active {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
       pointer-events: auto;
     }
-    .collector-info {
+    .dock-meta {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-    .collector-badge {
-      background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-      color: #07090E;
-      font-size: 11.5px;
+    .dock-badge {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      font-size: 11px;
       font-weight: 800;
       padding: 4px 10px;
       border-radius: 20px;
       letter-spacing: 0.3px;
     }
-    .collector-stat {
+    .dock-headline {
       font-size: 15px;
       font-weight: 800;
-      color: #FFFFFF;
+      color: var(--text-main);
       letter-spacing: -0.3px;
     }
-    .collector-items-scroll {
+    .dock-scroll {
       display: flex;
       gap: 8px;
       overflow-x: auto;
       max-width: 480px;
       padding: 2px;
     }
-    .collector-chip {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .dock-chip {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 4px 10px;
-      font-size: 11px;
+      font-size: 11.5px;
       display: flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
     }
-    .chip-remove {
-      color: var(--text-dim);
+    .chip-del {
+      color: var(--text-muted);
       cursor: pointer;
       font-weight: 800;
       font-size: 13px;
     }
-    .chip-remove:hover { color: #EF4444; }
+    .chip-del:hover { color: var(--accent-rose); }
 
-    /* Modal */
-    .modal-backdrop {
+    /* Modal Backdrop */
+    .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(8px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 2000;
     }
-    .modal-box {
-      background: #0E1424;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 18px;
+    .modal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       width: 90%;
       max-width: 480px;
       padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      box-shadow: var(--shadow-lg);
     }
 
-    /* Toast */
-    .toast-pill {
+    /* Toast Notification */
+    .toast-box {
       position: fixed;
       top: 75px;
       right: 28px;
-      background: rgba(16, 24, 40, 0.95);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #FFFFFF;
+      background: var(--surface);
+      border: 1px solid var(--accent-primary);
+      color: var(--text-main);
       padding: 10px 18px;
       border-radius: 30px;
       font-size: 12.5px;
       font-weight: 600;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow-lg);
       display: none;
       z-index: 3000;
-      animation: fadeIn 0.2s ease;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
-  <!-- Top Chrome Header -->
+  <!-- Top Header Navigation -->
   <header class=""app-header"">
     <div class=""brand-group"">
       <div class=""brand-logo"">
-        <svg width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#07090E"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
+        <svg width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#FFFFFF"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
           <circle cx=""12"" cy=""12"" r=""10""/><path d=""m4.93 4.93 4.24 4.24""/><path d=""m14.83 9.17 4.24-4.24""/><path d=""m14.83 14.83 4.24 4.24""/><path d=""m9.17 14.83-4.24 4.24""/><circle cx=""12"" cy=""12"" r=""4""/>
         </svg>
       </div>
       <div>
         <div style=""display:flex; align-items:center; gap:8px;"">
           <span class=""brand-name"">DiskWarren</span>
-          <span class=""badge-pro"">Pro Edition</span>
+          <span class=""badge-enterprise"">Professional Edition</span>
         </div>
       </div>
     </div>
 
-    <!-- Segmented Navigation Bar -->
+    <!-- Cupertino / Fluent Segmented Tabs -->
     <nav class=""tab-bar"">
-      <button class=""tab-item active"" onclick=""switchTab('radar')"">
+      <button class=""tab-item active"" onclick=""switchTab('diagnostics')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 2v20M2 12h20""/><circle cx=""12"" cy=""12"" r=""10""/></svg>
-        Smart Radar
+        Storage Diagnostics
       </button>
       <button class=""tab-item"" onclick=""switchTab('sunburst')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><circle cx=""12"" cy=""12"" r=""4""/><path d=""m4.93 4.93 4.24 4.24""/></svg>
-        Sunburst Map
+        Radial Sunburst
       </button>
       <button class=""tab-item"" onclick=""switchTab('treemap')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""18"" height=""18"" x=""3"" y=""3"" rx=""2""/><path d=""M3 9h18M9 21V9""/></svg>
         Treemap
       </button>
-      <button class=""tab-item"" onclick=""switchTab('cleaners')"">
+      <button class=""tab-item"" onclick=""switchTab('toolchains')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""16 18 22 12 16 6""/><polyline points=""8 6 2 12 8 18""/></svg>
-        Toolchains
+        Toolchain Artifacts
       </button>
       <button class=""tab-item"" onclick=""switchTab('duplicates')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""14"" height=""14"" x=""8"" y=""8"" rx=""2""/><path d=""M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2""/></svg>
-        Duplicates
+        Byte Duplicates
       </button>
       <button class=""tab-item"" onclick=""switchTab('safety')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z""/></svg>
-        Safety Gate
+        Safety Architecture
       </button>
       <button class=""tab-item"" onclick=""switchTab('license')"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><path d=""m9 12 2 2 4-4""/></svg>
-        License
+        Licensing
       </button>
     </nav>
 
-    <!-- Airgap Badge & Sound -->
-    <div style=""display:flex; align-items:center; gap:12px;"">
-      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px; border-radius:8px;"" onclick=""toggleSound()"" id=""soundBtn"">
-        🔊 Sound On
+    <!-- Controls: Theme Toggle & Airgap -->
+    <div style=""display:flex; align-items:center; gap:10px;"">
+      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
+        ☀️ Light
       </button>
-      <div class=""airgap-pill"">
+      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
+        🔊 Audio On
+      </button>
+      <div class=""airgap-indicator"">
         <div class=""pulse-dot""></div>
-        <span>Air-Gapped Indexing</span>
+        <span>Air-Gapped Engine</span>
       </div>
     </div>
   </header>
 
-  <!-- Main Viewports -->
+  <!-- Viewports Content -->
   <main class=""app-main"">
 
-    <!-- 1. SMART RADAR OVERVIEW VIEW -->
-    <section id=""view-radar"">
+    <!-- 1. STORAGE DIAGNOSTICS & VOLUME ALLOCATION -->
+    <section id=""view-diagnostics"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Storage Intelligence Radar</h1>
-          <p class=""view-subtitle"">Instant system-wide analysis of developer artifacts, duplicate files, and disposable caches.</p>
+          <h1 class=""view-title"">System Volume Allocation &amp; Storage Health</h1>
+          <p class=""view-subtitle"">Deterministic filesystem analysis of partition structures, cluster allocations, and disposable toolchain registries.</p>
         </div>
-        <button class=""btn btn-glow"" onclick=""triggerSmartScan()"">
-          <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""23 4 23 10 17 10""/><polyline points=""1 20 1 14 7 14""/><path d=""M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15""/></svg>
-          Run Smart Radar Scan
+        <button class=""btn btn-primary"" onclick=""triggerStorageRefresh()"">
+          <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""23 4 23 10 17 10""/><polyline points=""1 20 1 14 7 14""/><path d=""M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15""/></svg>
+          Run Diagnostic Scan
         </button>
       </div>
 
-      <!-- Live NTFS Partitions -->
-      <div class=""drive-grid"" id=""driveGridContainer"">
-        <!-- Rendered from C# -->
+      <!-- NTFS Volume Partitions -->
+      <div class=""drive-grid"" id=""volumeDrivesContainer"">
+        <!-- Live from C# -->
       </div>
 
-      <!-- Radar & Quick Target Grid -->
+      <!-- CleanMyMac Diagnostic Ring & Primary Reclaim Targets -->
       <div class=""overview-grid"">
-        <div class=""glass-card radar-card"">
-          <div class=""radar-ring"">
-            <div class=""radar-beam""></div>
-            <div class=""radar-center-stat"">
-              <div class=""radar-stat-number"" id=""radarReclaimableText"">10.4 GB</div>
-              <div class=""radar-stat-label"">Reclaimable</div>
+        <div class=""card diagnostic-panel"">
+          <div class=""radar-circle"">
+            <div class=""radar-sweep-hand""></div>
+            <div class=""diagnostic-stat-box"">
+              <div class=""diagnostic-number"" id=""reclaimableHeadlineSize"">10.4 GB</div>
+              <div class=""diagnostic-label"">Reclaimable</div>
             </div>
           </div>
-          <button class=""btn btn-glow"" style=""width:100%;"" onclick=""stageAllLowRisk()"">
-            Stage All Low Risk to Collector
+          <p style=""font-size:12px; color:var(--text-muted); margin-bottom:14px; max-width:240px;"">
+            Safely disposable package archives and compiler caches ready for collector staging.
+          </p>
+          <button class=""btn btn-primary"" style=""width:100%;"" onclick=""stageAllLowRiskTargets()"">
+            Stage All Verified Safe Targets
           </button>
         </div>
 
-        <div class=""glass-card"">
-          <h3 style=""font-size:15px; font-weight:700; color:#FFFFFF; margin-bottom:14px;"">Primary Reclamation Targets</h3>
-          <div class=""quick-tiles-grid"" id=""quickTargetsGrid"">
+        <div class=""card"">
+          <h3 style=""font-size:15px; font-weight:700; color:var(--text-main); margin-bottom:14px;"">Primary Storage Reclaim Registries</h3>
+          <div class=""tiles-grid"" id=""primaryRegistriesGrid"">
             <!-- Dynamic -->
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. DAISYDISK SIGNATURE SUNBURST MAP -->
+    <!-- 2. DAISYDISK RADIAL SUNBURST MAP -->
     <section id=""view-sunburst"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Interactive Sunburst Visualizer</h1>
-          <p class=""view-subtitle"">Concentric multi-ring radial map. Click any sector to dive into that folder; hover to reveal footprint.</p>
+          <h1 class=""view-title"">Hierarchical Radial Sunburst Visualizer</h1>
+          <p class=""view-subtitle"">Concentric multi-ring disk layout. Click any sector to drill into subdirectories; hover to inspect exact allocation.</p>
         </div>
-        <div style=""display:flex; gap:10px;"">
-          <button class=""btn btn-secondary"" onclick=""navigateSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</button>
-          <button class=""btn btn-secondary"" onclick=""navigateSunburst('C:\\Users\\saiph')"">User Profile</button>
+        <div style=""display:flex; gap:8px;"">
+          <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</button>
+          <button class=""btn btn-secondary"" onclick=""drillSunburst('C:\\Users\\saiph')"">User Profile</button>
         </div>
       </div>
 
-      <div class=""sunburst-container"">
+      <div class=""sunburst-box"">
         <div class=""sunburst-toolbar"">
-          <div class=""sunburst-breadcrumbs"" id=""sunburstCrumbs"">
-            <span style=""color:var(--text-dim);"">Location:</span>
-            <span class=""crumb-btn"" onclick=""navigateSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</span>
+          <div class=""sunburst-crumbs"" id=""sunburstCrumbsContainer"">
+            <span style=""color:var(--text-dim);"">Root:</span>
+            <span class=""crumb-chip"" onclick=""drillSunburst('C:\\Users\\saiph\\Downloads')"">Downloads</span>
           </div>
-          <div style=""font-size:12px; color:var(--text-muted);"" id=""sunburstStats"">
-            Showing top storage consumers
+          <div style=""font-size:12px; color:var(--text-muted);"">
+            Double-click or click sector to zoom in • Shift+click to stage
           </div>
         </div>
 
         <canvas id=""sunburstCanvas"" width=""520"" height=""520""></canvas>
 
-        <div class=""sunburst-tooltip"" id=""sunburstTooltip"">
-          <div class=""tooltip-name"" id=""tipName"">Folder</div>
-          <div class=""tooltip-size"" id=""tipSize"">0 MB</div>
-          <div class=""tooltip-meta"" id=""tipMeta"">Click to drill down</div>
+        <div class=""sunburst-tooltip"" id=""sunburstHoverTooltip"">
+          <div class=""tip-title"" id=""tooltipTitle"">Directory</div>
+          <div class=""tip-size"" id=""tooltipSize"">0 MB</div>
+          <div class=""tip-sub"" id=""tooltipSub"">Click to drill down • Shift+click to stage</div>
         </div>
       </div>
     </section>
@@ -879,160 +893,160 @@ public static class UiHtml
     <section id=""view-treemap"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Squarified Treemap Blocks</h1>
-          <p class=""view-subtitle"">Volume-proportioned rectangular tiles. Click any tile to inspect or stage to collector.</p>
+          <h1 class=""view-title"">Proportional Squarified Treemap</h1>
+          <p class=""view-subtitle"">Capacity blocks scaled to filesystem cluster consumption. Click any block to add to collector tray.</p>
         </div>
         <div style=""display:flex; gap:8px;"">
-          <button class=""btn btn-secondary"" onclick=""refreshTreemap('C:\\Users\\saiph\\Downloads')"">Downloads</button>
-          <button class=""btn btn-secondary"" onclick=""refreshTreemap('C:\\Users\\saiph')"">User Profile</button>
+          <button class=""btn btn-secondary"" onclick=""drillTreemap('C:\\Users\\saiph\\Downloads')"">Downloads</button>
+          <button class=""btn btn-secondary"" onclick=""drillTreemap('C:\\Users\\saiph')"">User Profile</button>
         </div>
       </div>
 
-      <div class=""treemap-box"">
-        <div class=""treemap-grid"" id=""treemapTilesGrid"">
-          <!-- Rendered dynamically -->
+      <div class=""treemap-wrapper"">
+        <div class=""treemap-tiles"" id=""treemapTilesContainer"">
+          <!-- Dynamic -->
         </div>
       </div>
     </section>
 
-    <!-- 4. DEVELOPER & TOOLCHAIN CLEANERS -->
-    <section id=""view-cleaners"" style=""display:none;"">
+    <!-- 4. TOOLCHAIN ARTIFACTS & DEVELOPER REGISTRIES -->
+    <section id=""view-toolchains"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Developer Toolchain &amp; AI Cache Cleaner</h1>
-          <p class=""view-subtitle"">Reclaim gigabytes from NuGet packages, npm global tarballs, Gradle caches, Cargo crates, and temp build artifacts.</p>
+          <h1 class=""view-title"">Developer Toolchain &amp; Build Artifact Sanitizer</h1>
+          <p class=""view-subtitle"">Reclaim gigabytes from global package tarballs, intermediate compilation caches, and daemon outputs without breaking active builds.</p>
         </div>
-        <button class=""btn btn-glow"" onclick=""stageAllLowRisk()"">
+        <button class=""btn btn-primary"" onclick=""stageAllLowRiskTargets()"">
           Stage All Low Risk
         </button>
       </div>
 
-      <div id=""toolchainsList"">
+      <div id=""toolchainsRegistryList"">
         <!-- Dynamic Rules -->
       </div>
     </section>
 
-    <!-- 5. DUPLICATE FINDER -->
+    <!-- 5. CRYPTOGRAPHIC BYTE DUPLICATES -->
     <section id=""view-duplicates"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Two-Phase SHA-256 Duplicate Finder</h1>
-          <p class=""view-subtitle"">Cryptographic byte-for-byte exact matches. Preserves original copy while staging duplicates.</p>
+          <h1 class=""view-title"">Two-Phase SHA-256 Duplicate Analysis</h1>
+          <p class=""view-subtitle"">Deterministic byte-for-byte verification. Phase 1 groups matching lengths; Phase 2 computes full SHA-256 cryptographic signatures.</p>
         </div>
-        <button class=""btn btn-glow"" onclick=""scanForDuplicates()"">
+        <button class=""btn btn-primary"" onclick=""executeDuplicateScan()"">
           <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><circle cx=""11"" cy=""11"" r=""8""/><line x1=""21"" y1=""21"" x2=""16.65"" y2=""16.65""/></svg>
           Scan Downloads for Duplicates
         </button>
       </div>
 
-      <div id=""duplicatesListContainer"">
-        <div class=""glass-card"" style=""text-align:center; padding:40px; color:var(--text-muted);"">
-          Click 'Scan Downloads for Duplicates' to discover identical files.
+      <div id=""duplicatesResultsContainer"">
+        <div class=""card"" style=""text-align:center; padding:48px; color:var(--text-muted);"">
+          Click 'Scan Downloads for Duplicates' to discover identical file copies.
         </div>
       </div>
     </section>
 
-    <!-- 6. SAFETY GATE -->
+    <!-- 6. SAFETY ARCHITECTURE & REVERSIBILITY -->
     <section id=""view-safety"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">Safety by Design Architecture</h1>
-          <p class=""view-subtitle"">Engineered to make data loss impossible on Windows 10 &amp; 11.</p>
+          <h1 class=""view-title"">Safety by Design &amp; Win32 Reversibility</h1>
+          <p class=""view-subtitle"">Enterprise safeguard protocols preventing destructive accidental deletion.</p>
         </div>
       </div>
 
-      <div class=""glass-card"" style=""margin-bottom:16px;"">
-        <h3 style=""font-size:16px; font-weight:700; color:#34D399; margin-bottom:8px;"">✓ 1. Win32 Recycle Bin Reversibility</h3>
-        <p style=""font-size:13.5px; color:var(--text-muted); line-height:1.6;"">
-          DiskWarren never performs raw permanent unlinks by default. All file deletions route through the native Windows Shell API (<code style=""color:#38BDF8;"">SHFileOperation</code>) with <code style=""color:#38BDF8;"">FOF_ALLOWUNDO</code>. Any cleaned item can be restored from your desktop Recycle Bin at any time with 1 click.
+      <div class=""card"" style=""margin-bottom:16px;"">
+        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-emerald); margin-bottom:6px;"">✓ 1. Native Win32 Recycle Bin Reversibility</h3>
+        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
+          DiskWarren dispatches all deletion operations exclusively through the official Windows Shell API (<code style=""color:var(--accent-primary);"">SHFileOperation</code>) with the <code style=""color:var(--accent-primary);"">FOF_ALLOWUNDO</code> flag. Cleaned files reside in your desktop Recycle Bin and can be restored immediately at any time.
         </p>
       </div>
 
-      <div class=""glass-card"" style=""margin-bottom:16px;"">
-        <h3 style=""font-size:16px; font-weight:700; color:#38BDF8; margin-bottom:8px;"">✓ 2. Kernel &amp; System Path Immunity</h3>
-        <p style=""font-size:13.5px; color:var(--text-muted); line-height:1.6;"">
-          Critical system paths (<code style=""color:#38BDF8;"">C:\Windows</code>, <code style=""color:#38BDF8;"">System32</code>, <code style=""color:#38BDF8;"">Program Files</code>, EFI partitions, and Boot configuration data) are strictly read-only and immutably blocked by the kernel safety gate.
+      <div class=""card"" style=""margin-bottom:16px;"">
+        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-primary); margin-bottom:6px;"">✓ 2. Kernel-Enforced System Directory Immunity</h3>
+        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
+          Critical Windows infrastructure (<code style=""color:var(--accent-primary);"">C:\Windows</code>, <code style=""color:var(--accent-primary);"">System32</code>, <code style=""color:var(--accent-primary);"">Program Files</code>, EFI boot partitions, and registry hives) are hardcoded as immutable and protected from modification or indexing by the safety barrier.
         </p>
       </div>
 
-      <div class=""glass-card"">
-        <h3 style=""font-size:16px; font-weight:700; color:#F59E0B; margin-bottom:8px;"">✓ 3. Explicit Human Review Staging</h3>
-        <p style=""font-size:13.5px; color:var(--text-muted); line-height:1.6;"">
-          Items must first be placed into the DaisyDisk-style <strong>Collector Tray</strong> for inspection. Nothing is ever purged automatically in the background.
+      <div class=""card"">
+        <h3 style=""font-size:15px; font-weight:700; color:var(--accent-amber); margin-bottom:6px;"">✓ 3. Explicit Collector Staging Verification</h3>
+        <p style=""font-size:13.5px; color:var(--text-body); line-height:1.6;"">
+          No automated background tasks or silent purges occur. Candidate files must be explicitly placed into the <strong>Collector Tray</strong>, reviewed by the user, and confirmed before execution.
         </p>
       </div>
     </section>
 
-    <!-- 7. LICENSE & PRO ACTIVATION -->
+    <!-- 7. LICENSING & CRYPTOGRAPHIC VERIFICATION -->
     <section id=""view-license"" style=""display:none;"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">License &amp; Perpetual Activation</h1>
-          <p class=""view-subtitle"">Offline cryptographic SHA-256 signature verification. No subscription, no internet required.</p>
+          <h1 class=""view-title"">Cryptographic License &amp; Enterprise Activation</h1>
+          <p class=""view-subtitle"">Offline signature verification for secure, air-gapped environments. Perpetual lifetime ownership.</p>
         </div>
       </div>
 
-      <div class=""glass-card"" style=""margin-bottom:20px; border-color:rgba(56, 189, 248, 0.35);"">
+      <div class=""card"" style=""margin-bottom:20px; border-color:rgba(2, 132, 199, 0.4);"">
         <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"">
           <div>
-            <span style=""font-size:11px; text-transform:uppercase; font-weight:700; color:#38BDF8;"">License Tier</span>
-            <h2 id=""activeTierHeading"" style=""font-size:22px; font-weight:800; color:#FFFFFF;"">Pro Lifetime (Single PC)</h2>
+            <span style=""font-size:11px; text-transform:uppercase; font-weight:700; color:var(--accent-primary);"">License Authentication Status</span>
+            <h2 id=""licenseTierHeader"" style=""font-size:22px; font-weight:800; color:var(--text-main);"">Pro Lifetime (Single PC)</h2>
           </div>
-          <span id=""licenseActiveBadge"" style=""background:rgba(16,185,129,0.2); color:#34D399; border:1px solid #10B981; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700;"">Active &amp; Verified</span>
+          <span id=""licenseStatusBadge"" style=""background:rgba(5, 150, 105, 0.1); color:var(--accent-emerald); border:1px solid rgba(5, 150, 105, 0.3); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700;"">Active &amp; Verified</span>
         </div>
 
         <div style=""display:flex; gap:10px;"">
-          <input type=""text"" id=""keyInput"" style=""flex:1; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 14px; color:#FFFFFF; font-family:monospace; font-size:13px;"" value=""DW1-WIN-PRO-LIFETIME-3151DBDA"" />
-          <button class=""btn btn-glow"" onclick=""activateLicenseKey()"">Verify &amp; Activate</button>
+          <input type=""text"" id=""licenseKeyInput"" style=""flex:1; background:var(--surface-subtle); border:1px solid var(--border); border-radius:9px; padding:10px 14px; color:var(--text-main); font-family:monospace; font-size:13px;"" value=""DW1-WIN-PRO-LIFETIME-3151DBDA"" />
+          <button class=""btn btn-primary"" onclick=""authenticateLicense()"">Verify Cryptographic Key</button>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- THE DAISYDISK FLOATING COLLECTOR TRAY (STAGING CART) -->
-  <div class=""collector-tray"" id=""collectorTray"">
-    <div class=""collector-info"">
-      <span class=""collector-badge"">COLLECTOR TRAY</span>
+  <!-- THE DAISYDISK FLOATING COLLECTOR TRAY (STAGING DOCK) -->
+  <div class=""collector-dock"" id=""collectorDock"">
+    <div class=""dock-meta"">
+      <span class=""dock-badge"">COLLECTOR TRAY</span>
       <div>
-        <div class=""collector-stat"" id=""collectorStatText"">0 Items • 0 MB Staged</div>
-        <div style=""font-size:11px; color:var(--text-dim);"">Safe Win32 Recycle Bin Deletion</div>
+        <div class=""dock-headline"" id=""dockHeadlineText"">0 Items • 0 MB Staged</div>
+        <div style=""font-size:11px; color:var(--text-muted);"">Reversible Win32 Recycle Bin Execution</div>
       </div>
     </div>
 
-    <div class=""collector-items-scroll"" id=""collectorItemsScroll"">
-      <!-- Chips -->
+    <div class=""dock-scroll"" id=""dockScrollContainer"">
+      <!-- Staged Chips -->
     </div>
 
     <div style=""display:flex; align-items:center; gap:10px;"">
-      <button class=""btn btn-secondary"" style=""padding:7px 12px; font-size:12px;"" onclick=""clearCollector()"">
+      <button class=""btn btn-secondary"" style=""padding:7px 12px; font-size:12px;"" onclick=""clearCollectorTray()"">
         Clear
       </button>
-      <button class=""btn btn-glow"" style=""background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; box-shadow:0 0 16px rgba(16,185,129,0.4);"" onclick=""confirmRecycle()"">
+      <button class=""btn btn-primary"" style=""background:#059669; box-shadow:0 2px 10px rgba(5,150,105,0.3);"" onclick=""openConfirmationModal()"">
         <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""3 6 5 6 21 6""/><path d=""M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2""/></svg>
-        Recycle Staged
+        Recycle Staged Items
       </button>
     </div>
   </div>
 
-  <!-- Confirmation Modal -->
-  <div class=""modal-backdrop"" id=""recycleModal"">
-    <div class=""modal-box"">
-      <h3 style=""font-size:17px; font-weight:800; color:#FFFFFF; margin-bottom:8px;"">Confirm Safe Recycling</h3>
-      <p style=""font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;"" id=""modalMessage"">
+  <!-- Reversible Deletion Modal -->
+  <div class=""modal-overlay"" id=""confirmModal"">
+    <div class=""modal-card"">
+      <h3 style=""font-size:17px; font-weight:800; color:var(--text-main); margin-bottom:8px;"">Confirm Safe Recycling</h3>
+      <p style=""font-size:13.5px; color:var(--text-muted); line-height:1.5; margin-bottom:18px;"" id=""modalMessageText"">
         The selected items will be safely moved to your Windows Recycle Bin. You can restore them at any time.
       </p>
       <div style=""display:flex; justify-content:flex-end; gap:10px;"">
-        <button class=""btn btn-secondary"" onclick=""closeModal()"">Cancel</button>
-        <button class=""btn btn-glow"" style=""background:#10B981; color:white;"" onclick=""executeBatchRecycle()"">
+        <button class=""btn btn-secondary"" onclick=""closeConfirmationModal()"">Cancel</button>
+        <button class=""btn btn-primary"" style=""background:#059669;"" onclick=""dispatchBatchRecycle()"">
           Move to Recycle Bin
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
-  <div class=""toast-pill"" id=""appToast"">Notification</div>
+  <!-- Toast Box -->
+  <div class=""toast-box"" id=""toastPill"">Notification</div>
 
   <script>
     // State
@@ -1042,9 +1056,18 @@ public static class UiHtml
     let sunburstTree = null;
     let stagedItems = []; // { name, path, sizeBytes, formattedSize }
     let soundEnabled = true;
+    let isDarkTheme = false;
     let audioCtx = null;
 
-    // Procedural Web Audio Sound Synthesizer
+    // Theme Switcher
+    function toggleTheme() {
+      isDarkTheme = !isDarkTheme;
+      document.documentElement.className = isDarkTheme ? 'dark' : 'light';
+      document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
+      renderSunburst();
+    }
+
+    // Procedural Audio Synthesizer
     function playChime(type) {
       if (!soundEnabled) return;
       try {
@@ -1058,22 +1081,20 @@ public static class UiHtml
 
         const now = audioCtx.currentTime;
         if (type === 'stage') {
-          // Subtle high-tech tick
           osc.type = 'sine';
           osc.frequency.setValueAtTime(580, now);
           osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.setValueAtTime(0.1, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
           osc.start(now);
           osc.stop(now + 0.09);
         } else if (type === 'clean') {
-          // Lush completion chord
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(523.25, now); // C5
-          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
-          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
-          osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
-          gain.gain.setValueAtTime(0.15, now);
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          osc.frequency.setValueAtTime(1046.50, now + 0.24);
+          gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
           osc.start(now);
           osc.stop(now + 0.55);
@@ -1083,7 +1104,7 @@ public static class UiHtml
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('soundBtn').innerText = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Audio On' : '🔇 Audio Off';
     }
 
     function switchTab(viewId) {
@@ -1098,83 +1119,82 @@ public static class UiHtml
     }
 
     function showToast(msg) {
-      const t = document.getElementById('appToast');
+      const t = document.getElementById('toastPill');
       t.innerText = msg;
       t.style.display = 'block';
       setTimeout(() => { t.style.display = 'none'; }, 3000);
     }
 
     // Collector Operations
-    function stageItem(name, path, sizeBytes, formattedSize) {
+    function stageItemToDock(name, path, sizeBytes, formattedSize) {
       if (stagedItems.some(i => i.path === path)) {
         showToast('Already in Collector Tray: ' + name);
         return;
       }
       stagedItems.push({ name, path, sizeBytes, formattedSize });
-      updateCollectorUI();
+      updateDockUI();
       playChime('stage');
-      showToast('Staged to Collector: ' + name);
+      showToast('Staged to Collector Tray: ' + name);
     }
 
-    function unstageItem(path) {
+    function removeStagedItem(path) {
       stagedItems = stagedItems.filter(i => i.path !== path);
-      updateCollectorUI();
+      updateDockUI();
     }
 
-    function clearCollector() {
+    function clearCollectorTray() {
       stagedItems = [];
-      updateCollectorUI();
+      updateDockUI();
     }
 
-    function updateCollectorUI() {
-      const tray = document.getElementById('collectorTray');
+    function updateDockUI() {
+      const dock = document.getElementById('collectorDock');
       const count = stagedItems.length;
       if (count === 0) {
-        tray.classList.remove('visible');
+        dock.classList.remove('active');
         return;
       }
-      tray.classList.add('visible');
+      dock.classList.add('active');
 
       const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
-      const formattedTotal = formatBytes(totalBytes);
-      document.getElementById('collectorStatText').innerText = `${count} ${count === 1 ? 'Item' : 'Items'} • ${formattedTotal} Staged`;
+      document.getElementById('dockHeadlineText').innerText = `${count} ${count === 1 ? 'Item' : 'Items'} • ${formatBytes(totalBytes)} Staged`;
 
-      let chipsHtml = '';
+      let chips = '';
       stagedItems.forEach(i => {
-        chipsHtml += `
-          <div class=""collector-chip"">
+        chips += `
+          <div class=""dock-chip"">
             <span>${i.name}</span>
-            <strong style=""color:#38BDF8;"">${i.formattedSize}</strong>
-            <span class=""chip-remove"" onclick=""unstageItem('${i.path.replace(/\\/g, '\\\\')}')"">&times;</span>
+            <strong style=""color:var(--accent-primary);"">${i.formattedSize}</strong>
+            <span class=""chip-del"" onclick=""removeStagedItem('${i.path.replace(/\\/g, '\\\\')}')"">&times;</span>
           </div>`;
       });
-      document.getElementById('collectorItemsScroll').innerHTML = chipsHtml;
+      document.getElementById('dockScrollContainer').innerHTML = chips;
     }
 
-    function confirmRecycle() {
+    function openConfirmationModal() {
       if (stagedItems.length === 0) return;
       const count = stagedItems.length;
       const totalBytes = stagedItems.reduce((acc, i) => acc + i.sizeBytes, 0);
-      document.getElementById('modalMessage').innerText = `Are you sure you want to move ${count} staged ${count === 1 ? 'item' : 'items'} (${formatBytes(totalBytes)}) to the Windows Recycle Bin?`;
-      document.getElementById('recycleModal').style.display = 'flex';
+      document.getElementById('modalMessageText').innerText = `Are you sure you want to move ${count} staged ${count === 1 ? 'item' : 'items'} (${formatBytes(totalBytes)}) to the Windows Recycle Bin?`;
+      document.getElementById('confirmModal').style.display = 'flex';
     }
 
-    function closeModal() {
-      document.getElementById('recycleModal').style.display = 'none';
+    function closeConfirmationModal() {
+      document.getElementById('confirmModal').style.display = 'none';
     }
 
-    function executeBatchRecycle() {
-      closeModal();
+    function dispatchBatchRecycle() {
+      closeConfirmationModal();
       const paths = stagedItems.map(i => i.path);
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'batchRecycle', paths: paths });
       }
       playChime('clean');
       showToast(`Cleaned ${stagedItems.length} items to Windows Recycle Bin!`);
-      clearCollector();
+      clearCollectorTray();
     }
 
-    function stageAllLowRisk() {
+    function stageAllLowRiskTargets() {
       let count = 0;
       rules.forEach(r => {
         if (r.safety === 0) { // LowRisk
@@ -1184,9 +1204,9 @@ public static class UiHtml
           }
         }
       });
-      updateCollectorUI();
+      updateDockUI();
       playChime('stage');
-      showToast(`Staged ${count} low-risk targets to Collector Tray!`);
+      showToast(`Staged ${count} verified low-risk targets to Collector Tray.`);
     }
 
     // Callbacks from C# Bridge
@@ -1196,10 +1216,10 @@ public static class UiHtml
       treemapItems = data.treemap || [];
       if (data.sunburst) sunburstTree = data.sunburst;
 
-      renderDrives();
-      renderRadarQuickTargets();
+      renderVolumes();
+      renderPrimaryRegistries();
       renderTreemap();
-      renderToolchainRules();
+      renderToolchainsRegistry();
       renderSunburst();
     };
 
@@ -1209,45 +1229,45 @@ public static class UiHtml
     };
 
     window.onDuplicatesReceived = function(dups) {
-      const container = document.getElementById('duplicatesListContainer');
+      const container = document.getElementById('duplicatesResultsContainer');
       if (!dups || dups.length === 0) {
-        container.innerHTML = '<div class=""glass-card"" style=""text-align:center; padding:40px; color:var(--text-muted);"">No duplicate files detected in Downloads.</div>';
+        container.innerHTML = '<div class=""card"" style=""text-align:center; padding:48px; color:var(--text-muted);"">No identical duplicate files found in selected scope.</div>';
         return;
       }
       let html = '';
       dups.forEach(g => {
         html += `
-          <div class=""dup-card"">
-            <div class=""dup-header"">
-              <span style=""color:#38BDF8;"">${g.fileSizeFormatted} each (SHA-256: ${g.hashSha256.substring(0, 12)}...)</span>
+          <div class=""dup-cluster"">
+            <div class=""cluster-head"">
+              <span style=""color:var(--accent-primary);"">${g.fileSizeFormatted} each (SHA-256: ${g.hashSha256.substring(0, 12)}...)</span>
               <span style=""color:var(--text-muted);"">${g.filePaths.length} identical copies</span>
             </div>`;
         g.filePaths.forEach((fp, idx) => {
           const fn = fp.split('\\').pop();
           html += `
-            <div class=""dup-row"">
-              <span style=""overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;"">${fp}</span>
-              ${idx > 0 ? `<button class=""btn btn-stage"" onclick=""stageItem('${fn}', '${fp.replace(/\\/g, '\\\\')}', ${g.fileSizeBytes}, '${g.fileSizeFormatted}')"">+ Stage Copy</button>` : '<span style=""font-size:11px; color:#34D399; font-weight:700;"">Original (Preserved)</span>'}
+            <div class=""cluster-row"">
+              <span style=""overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:72%;"">${fp}</span>
+              ${idx > 0 ? `<button class=""btn btn-stage"" onclick=""stageItemToDock('${fn}', '${fp.replace(/\\/g, '\\\\')}', ${g.fileSizeBytes}, '${g.fileSizeFormatted}')"">+ Stage Duplicate</button>` : '<span style=""font-size:11px; color:var(--accent-emerald); font-weight:700;"">Original (Preserved)</span>'}
             </div>`;
         });
         html += `</div>`;
       });
       container.innerHTML = html;
-      showToast(`Discovered ${dups.length} duplicate clusters!`);
+      showToast(`Discovered ${dups.length} duplicate clusters.`);
     };
 
     window.onLicenseUpdated = function(status) {
       if (status && status.isActive && status.tier !== 0) {
         const tierName = status.tier === 1 ? 'Pro Lifetime (Single PC)' : 'PowerPack Lifetime (Family)';
-        document.getElementById('activeTierHeading').innerText = tierName;
-        document.getElementById('licenseActiveBadge').innerText = 'Active & Verified';
-        showToast('License Key Validated: ' + status.statusMessage);
+        document.getElementById('licenseTierHeader').innerText = tierName;
+        document.getElementById('licenseStatusBadge').innerText = 'Active & Verified';
+        showToast('License Key Authenticated: ' + status.statusMessage);
       }
     };
 
-    // Render Drive Partitions
-    function renderDrives() {
-      const container = document.getElementById('driveGridContainer');
+    // Render NTFS Volume Partitions
+    function renderVolumes() {
+      const container = document.getElementById('volumeDrivesContainer');
       if (drives.length === 0) return;
       let html = '';
       drives.forEach(d => {
@@ -1255,18 +1275,18 @@ public static class UiHtml
         const totalGb = d.totalSizeBytes / (1024*1024*1024);
         const pct = d.usedPercent.toFixed(1);
         html += `
-          <div class=""glass-card"">
-            <div class=""drive-card-header"">
-              <span class=""drive-title"">
-                <svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#38BDF8"" stroke-width=""2""><rect width=""20"" height=""8"" x=""2"" y=""14"" rx=""2""/><path d=""M6 18h.01M10 18h.01""/><path d=""M4 14V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8""/></svg>
-                Drive ${d.driveName} [${d.volumeLabel || 'Local Disk'}]
+          <div class=""card"">
+            <div class=""drive-header"">
+              <span class=""drive-name"">
+                <svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#0284C7"" stroke-width=""2""><rect width=""20"" height=""8"" x=""2"" y=""14"" rx=""2""/><path d=""M6 18h.01M10 18h.01""/><path d=""M4 14V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8""/></svg>
+                Drive ${d.driveName} [${d.volumeLabel || 'Local Volume'}]
               </span>
-              <span style=""font-size:11px; background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:4px; color:var(--text-muted);"">${d.driveFormat}</span>
+              <span class=""drive-format-tag"">${d.driveFormat}</span>
             </div>
             <div class=""drive-bar-bg"">
               <div class=""drive-bar-fill"" style=""width: ${pct}%;""></div>
             </div>
-            <div class=""drive-stats-row"">
+            <div class=""drive-stats"">
               <span>Used: ${usedGb.toFixed(1)} GB (${pct}%)</span>
               <span>Free: ${d.formattedFree} of ${totalGb.toFixed(1)} GB</span>
             </div>
@@ -1275,61 +1295,56 @@ public static class UiHtml
       container.innerHTML = html;
     }
 
-    // Render Radar Quick Targets
-    function renderRadarQuickTargets() {
-      const grid = document.getElementById('quickTargetsGrid');
+    // Render Primary Registries
+    function renderPrimaryRegistries() {
+      const grid = document.getElementById('primaryRegistriesGrid');
       let totalReclaimable = 0;
       let html = '';
 
       rules.slice(0, 4).forEach((r, idx) => {
         totalReclaimable += r.sizeBytes;
-        const colors = [
-          'rgba(56, 189, 248, 0.15)',
-          'rgba(139, 92, 246, 0.15)',
-          'rgba(236, 72, 153, 0.15)',
-          'rgba(16, 185, 129, 0.15)'
-        ];
+        const iconBg = isDarkTheme ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.1)';
         html += `
-          <div class=""quick-tile"">
-            <div class=""quick-tile-header"">
-              <div class=""quick-tile-icon"" style=""background: ${colors[idx % colors.length]};"">
-                <svg width=""18"" height=""18"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#38BDF8"" stroke-width=""2""><polyline points=""22 12 18 12 15 21 9 3 6 12 2 12""/></svg>
+          <div class=""diagnostic-tile"">
+            <div class=""tile-header"">
+              <div class=""tile-icon"" style=""background: ${iconBg};"">
+                <svg width=""17"" height=""17"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#0284C7"" stroke-width=""2""><polyline points=""22 12 18 12 15 21 9 3 6 12 2 12""/></svg>
               </div>
-              <span class=""quick-tile-size"">${r.formattedSize}</span>
+              <span class=""tile-size"">${r.formattedSize}</span>
             </div>
             <div>
-              <div class=""quick-tile-name"">${r.title}</div>
-              <div class=""quick-tile-desc"">${r.path}</div>
+              <div class=""tile-title"">${r.title}</div>
+              <div class=""tile-desc"">${r.description}</div>
             </div>
             <div style=""margin-top:12px; display:flex; justify-content:flex-end;"">
-              <button class=""btn btn-stage"" onclick=""stageItem('${r.title}', '${r.path.replace(/\\/g, '\\\\')}', ${r.sizeBytes}, '${r.formattedSize}')"">+ Stage</button>
+              <button class=""btn btn-stage"" onclick=""stageItemToDock('${r.title}', '${r.path.replace(/\\/g, '\\\\')}', ${r.sizeBytes}, '${r.formattedSize}')"">+ Stage</button>
             </div>
           </div>`;
       });
 
       grid.innerHTML = html;
-      document.getElementById('radarReclaimableText').innerText = formatBytes(totalReclaimable);
+      document.getElementById('reclaimableHeadlineSize').innerText = formatBytes(totalReclaimable);
     }
 
-    // Render Toolchain Rules
-    function renderToolchainRules() {
-      const container = document.getElementById('toolchainsList');
+    // Render Toolchain Registries
+    function renderToolchainsRegistry() {
+      const container = document.getElementById('toolchainsRegistryList');
       let html = '';
       rules.forEach(r => {
         const isSafe = r.safety === 0;
         html += `
-          <div class=""rule-card"">
+          <div class=""registry-item"">
             <div>
-              <div class=""rule-title-text"">
+              <div class=""reg-title"">
                 ${r.title}
-                <span class=""rule-badge ${isSafe ? 'badge-safe' : 'badge-review'}"">${isSafe ? 'Safe to Clean' : 'Review Required'}</span>
+                <span class=""${isSafe ? 'badge-safe' : 'badge-review'}"">${isSafe ? 'Verified Safe' : 'Review Required'}</span>
               </div>
-              <div class=""rule-path-text"">${r.path}</div>
-              <div style=""font-size:12px; color:var(--text-dim); margin-top:4px;"">${r.description}</div>
+              <div class=""reg-path"">${r.path}</div>
+              <div class=""reg-desc"">${r.description}</div>
             </div>
             <div style=""display:flex; align-items:center; gap:14px;"">
-              <span style=""font-size:15px; font-weight:800; color:#38BDF8; font-family:monospace;"">${r.formattedSize}</span>
-              <button class=""btn btn-stage"" onclick=""stageItem('${r.title}', '${r.path.replace(/\\/g, '\\\\')}', ${r.sizeBytes}, '${r.formattedSize}')"">+ Stage</button>
+              <span style=""font-size:15px; font-weight:800; color:var(--accent-primary); font-family:monospace;"">${r.formattedSize}</span>
+              <button class=""btn btn-stage"" onclick=""stageItemToDock('${r.title}', '${r.path.replace(/\\/g, '\\\\')}', ${r.sizeBytes}, '${r.formattedSize}')"">+ Stage</button>
             </div>
           </div>`;
       });
@@ -1338,8 +1353,8 @@ public static class UiHtml
 
     // Render Treemap
     function renderTreemap() {
-      const container = document.getElementById('treemapTilesGrid');
-      const colors = ['#0284C7', '#0EA5E9', '#38BDF8', '#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#14B8A6'];
+      const container = document.getElementById('treemapTilesContainer');
+      const colors = ['#0284C7', '#2563EB', '#4F46E5', '#7C3AED', '#DB2777', '#E11D48', '#059669', '#0891B2'];
       const total = treemapItems.reduce((acc, i) => acc + i.sizeBytes, 0) || 1;
       let html = '';
 
@@ -1347,11 +1362,11 @@ public static class UiHtml
         const pct = Math.max(7, (item.sizeBytes / total) * 94);
         const bg = colors[idx % colors.length];
         html += `
-          <div class=""treemap-tile"" style=""width: ${pct}%; min-width: 140px; height: 95px; background: ${bg};"" onclick=""stageItem('${item.name}', '${item.path.replace(/\\/g, '\\\\')}', ${item.sizeBytes}, '${item.formattedSize}')"">
-            <span class=""treemap-tile-name"">${item.name}</span>
+          <div class=""treemap-tile"" style=""width: ${pct}%; min-width: 140px; height: 95px; background: ${bg};"" onclick=""stageItemToDock('${item.name}', '${item.path.replace(/\\/g, '\\\\')}', ${item.sizeBytes}, '${item.formattedSize}')"">
+            <span class=""tile-name"">${item.name}</span>
             <div style=""display:flex; justify-content:space-between; align-items:flex-end;"">
-              <span class=""treemap-tile-size"">${item.formattedSize}</span>
-              <span style=""font-size:10px; opacity:0.75; font-weight:700;"">+ Stage</span>
+              <span class=""tile-val"">${item.formattedSize}</span>
+              <span style=""font-size:10px; opacity:0.85; font-weight:700;"">+ Stage</span>
             </div>
           </div>`;
       });
@@ -1359,7 +1374,7 @@ public static class UiHtml
     }
 
     // ==========================================
-    // DAISYDISK CANVAS SUNBURST ENGINE (60 FPS)
+    // DAISYDISK SUNBURST ENGINE (LIGHT/DARK SOPHISTICATED)
     // ==========================================
     let sunburstSectors = [];
     let hoveredSector = null;
@@ -1376,16 +1391,16 @@ public static class UiHtml
       ctx.clearRect(0, 0, width, height);
 
       if (!sunburstTree || !sunburstTree.children || sunburstTree.children.length === 0) {
-        ctx.fillStyle = '#64748B';
+        ctx.fillStyle = isDarkTheme ? '#64748B' : '#94A3B8';
         ctx.font = '14px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('No storage sectors to display', cx, cy);
+        ctx.fillText('No volume sectors available for visualization', cx, cy);
         return;
       }
 
       sunburstSectors = [];
       const totalBytes = sunburstTree.children.reduce((acc, c) => acc + c.sizeBytes, 0) || 1;
-      const colors = ['#00F2FE', '#4FACFE', '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', '#10B981', '#F59E0B'];
+      const colors = ['#0284C7', '#2563EB', '#4F46E5', '#7C3AED', '#DB2777', '#E11D48', '#059669', '#D97706'];
 
       // Ring 1 (Inner Ring)
       const rInner = 75;
@@ -1438,50 +1453,50 @@ public static class UiHtml
         ctx.arc(cx, cy, sec.r1, sec.a2, sec.a1, true);
         ctx.closePath();
 
-        ctx.fillStyle = isHovered ? '#FFFFFF' : sec.color;
-        ctx.globalAlpha = isHovered ? 0.95 : (sec.level === 1 ? 0.8 : 0.6);
+        ctx.fillStyle = sec.color;
+        ctx.globalAlpha = isHovered ? 1.0 : (sec.level === 1 ? 0.88 : 0.65);
         ctx.fill();
 
-        ctx.strokeStyle = '#07090E';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = isDarkTheme ? '#07090E' : '#FFFFFF';
+        ctx.lineWidth = isHovered ? 3 : 2;
         ctx.stroke();
       });
 
-      // Center Circle Hub (DaisyDisk Navigation)
+      // Center Hub
       ctx.globalAlpha = 1;
       ctx.beginPath();
       ctx.arc(cx, cy, rInner - 4, 0, 2 * Math.PI);
-      ctx.fillStyle = '#0F172A';
+      ctx.fillStyle = isDarkTheme ? '#0F172A' : '#FFFFFF';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.strokeStyle = isDarkTheme ? 'rgba(56, 189, 248, 0.4)' : '#E2E8F0';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Center Text
+      // Center Hub Text
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = isDarkTheme ? '#FFFFFF' : '#0F172A';
       ctx.font = 'bold 15px -apple-system, sans-serif';
 
       if (hoveredSector) {
         ctx.fillText(hoveredSector.node.name.substring(0, 14), cx, cy - 10);
         ctx.font = '12px monospace';
-        ctx.fillStyle = '#38BDF8';
+        ctx.fillStyle = '#0284C7';
         ctx.fillText(hoveredSector.node.formattedSize, cx, cy + 12);
       } else {
         ctx.fillText(sunburstTree.name.substring(0, 14), cx, cy - 10);
         ctx.font = '12px monospace';
-        ctx.fillStyle = '#38BDF8';
+        ctx.fillStyle = '#0284C7';
         ctx.fillText(sunburstTree.formattedSize, cx, cy + 12);
       }
     }
 
-    // Canvas Mouse Interaction
-    const sCanvas = document.getElementById('sunburstCanvas');
-    sCanvas.addEventListener('mousemove', (e) => {
-      const rect = sCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left - sCanvas.width / 2;
-      const y = e.clientY - rect.top - sCanvas.height / 2;
+    // Canvas Events
+    const canvasEl = document.getElementById('sunburstCanvas');
+    canvasEl.addEventListener('mousemove', (e) => {
+      const rect = canvasEl.getBoundingClientRect();
+      const x = e.clientX - rect.left - canvasEl.width / 2;
+      const y = e.clientY - rect.top - canvasEl.height / 2;
       const dist = Math.sqrt(x*x + y*y);
       let angle = Math.atan2(y, x);
       if (angle < -Math.PI / 2) angle += 2 * Math.PI;
@@ -1492,74 +1507,70 @@ public static class UiHtml
         hoveredSector = found;
         renderSunburst();
 
-        const tip = document.getElementById('sunburstTooltip');
+        const tip = document.getElementById('sunburstHoverTooltip');
         if (hoveredSector) {
           tip.style.display = 'block';
           tip.style.left = (e.clientX - rect.left + 15) + 'px';
           tip.style.top = (e.clientY - rect.top + 15) + 'px';
-          document.getElementById('tipName').innerText = hoveredSector.node.name;
-          document.getElementById('tipSize').innerText = hoveredSector.node.formattedSize;
-          document.getElementById('tipMeta').innerText = hoveredSector.node.isDirectory ? 'Click to drill down • Shift+Click to stage' : 'Click to stage to collector';
+          document.getElementById('tooltipTitle').innerText = hoveredSector.node.name;
+          document.getElementById('tooltipSize').innerText = hoveredSector.node.formattedSize;
+          document.getElementById('tooltipSub').innerText = hoveredSector.node.isDirectory ? 'Click to drill down • Shift+click to stage' : 'Click to stage to collector';
         } else {
           tip.style.display = 'none';
         }
       }
     });
 
-    sCanvas.addEventListener('mouseleave', () => {
+    canvasEl.addEventListener('mouseleave', () => {
       hoveredSector = null;
-      document.getElementById('sunburstTooltip').style.display = 'none';
+      document.getElementById('sunburstHoverTooltip').style.display = 'none';
       renderSunburst();
     });
 
-    sCanvas.addEventListener('click', (e) => {
-      if (!hoveredSector) {
-        // Clicked center circle: navigate up
-        return;
-      }
+    canvasEl.addEventListener('click', (e) => {
+      if (!hoveredSector) return;
       const node = hoveredSector.node;
       if (e.shiftKey || !node.isDirectory) {
-        stageItem(node.name, node.path, node.sizeBytes, node.formattedSize);
+        stageItemToDock(node.name, node.path, node.sizeBytes, node.formattedSize);
       } else if (node.isDirectory) {
-        // Zoom into folder as new sunburst root
-        navigateSunburst(node.path);
+        drillSunburst(node.path);
       }
     });
 
-    function navigateSunburst(path) {
-      document.getElementById('sunburstCrumbs').innerHTML = `
-        <span style=""color:var(--text-dim);"">Location:</span>
-        <span class=""crumb-btn"" onclick=""navigateSunburst('${path.replace(/\\/g, '\\\\')}')"">${path.split('\\').pop() || path}</span>
+    function drillSunburst(path) {
+      document.getElementById('sunburstCrumbsContainer').innerHTML = `
+        <span style=""color:var(--text-dim);"">Root:</span>
+        <span class=""crumb-chip"" onclick=""drillSunburst('${path.replace(/\\/g, '\\\\')}')"">${path.split('\\').pop() || path}</span>
       `;
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'getSunburst', path: path });
       }
-      showToast('Analyzing ' + path + '...');
+      showToast('Indexing ' + path + '...');
     }
 
-    function refreshTreemap(path) {
+    function drillTreemap(path) {
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'scanDir', path: path });
       }
-      showToast('Scanning ' + path + '...');
+      showToast('Analyzing ' + path + '...');
     }
 
-    function scanForDuplicates() {
+    function executeDuplicateScan() {
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'findDuplicates' });
       }
-      showToast('Scanning Downloads for exact SHA-256 duplicate files...');
+      showToast('Scanning Downloads for exact SHA-256 byte duplicates...');
     }
 
-    function triggerSmartScan() {
-      showToast('Refreshing storage volumes and scanning system caches...');
+    function triggerStorageRefresh() {
+      showToast('Scanning volume partitions and developer registries...');
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'refresh' });
       }
     }
 
-    function activateLicenseKey() {
-      const key = document.getElementById('keyInput').value.trim();
+    function authenticateLicense() {
+      const key = document.getElementById('licenseKeyInput').value.trim();
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'activateLicense', key: key });
       }
@@ -1573,7 +1584,6 @@ public static class UiHtml
       return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
-    // Inform C# that webview is ready
     window.addEventListener('DOMContentLoaded', () => {
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'ready' });

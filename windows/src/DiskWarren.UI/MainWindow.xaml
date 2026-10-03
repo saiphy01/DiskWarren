@@ -9,8 +9,8 @@
         Height="820" Width="1200"
         MinHeight="680" MinWidth="980"
         WindowStartupLocation="CenterScreen"
-        Background="#0B0F19">
-    <Grid Background="#0B0F19">
-        <wv2:WebView2 x:Name="WebViewControl" DefaultBackgroundColor="#0B0F19" />
+        Background="#F8FAFC">
+    <Grid Background="#F8FAFC">
+        <wv2:WebView2 x:Name="WebViewControl" DefaultBackgroundColor="#F8FAFC" />
     </Grid>
 </Window>
