@@ -1,13 +1,13 @@
 import React from 'react';
 
 export default function StructuredData() {
-  const softwareSchema = {
+  const macSoftwareSchema = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'DiskWarren',
+    name: 'DiskWarren for Mac',
     operatingSystem: 'macOS 14.0 or later (Sonoma, Sequoia)',
     applicationCategory: 'UtilitiesApplication',
-    description: 'Native macOS storage intelligence and safe cleanup application. Analyzes storage, finds hidden space hogs, and reclaims space safely across developer files, Xcode data, Docker, Node modules, local AI models, duplicates, and application leftovers.',
+    description: 'Native macOS storage intelligence and safe cleanup application. Analyzes APFS storage, squarified treemaps, Xcode DerivedData, Docker, Node modules, and local AI models.',
     offers: [
       {
         '@type': 'Offer',
@@ -26,6 +26,99 @@ export default function StructuredData() {
     ],
     softwareRequirements: 'macOS 14.0 or higher. Compatible with Apple Silicon (M1/M2/M3/M4) and 64-bit Intel processors.',
     downloadUrl: 'https://diskwarren.com/download',
+  };
+
+  const windowsSoftwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'DiskWarren for Windows',
+    operatingSystem: 'Windows 10 (20H2+) & Windows 11',
+    applicationCategory: 'UtilitiesApplication',
+    description: 'Native Windows storage analyzer and disk cleaner. Instant NTFS Master File Table traversal, Visual Studio .vs, NuGet, WSL2 compaction, and Recycle Bin-first safety.',
+    offers: [
+      {
+        '@type': 'Offer',
+        price: '0.00',
+        priceCurrency: 'USD',
+        name: 'Free Community Edition',
+        description: 'Free NTFS partition exploration and drive treemap scanner.'
+      },
+      {
+        '@type': 'Offer',
+        price: '9.99',
+        priceCurrency: 'USD',
+        name: 'DiskWarren Windows Pro Lifetime',
+        description: 'Perpetual Single PC license for developer cleanup and deep duplicate detection.'
+      }
+    ],
+    softwareRequirements: 'Windows 10 20H2+ or Windows 11 (x64 and ARM64 Copilot+ PCs).',
+    downloadUrl: 'https://windows.diskwarren.com/download',
+  };
+
+  const androidSoftwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'DiskWarren for Android',
+    operatingSystem: 'Android 10.0 to Android 15.0',
+    applicationCategory: 'UtilitiesApplication',
+    description: 'Smart Android storage cleanup and duplicate photo cleaner. Root-free, Google Play Scoped Storage compliant, and 30-day native OS Gallery Trash recovery.',
+    offers: [
+      {
+        '@type': 'Offer',
+        price: '0.00',
+        priceCurrency: 'USD',
+        name: 'Free Edition',
+        description: 'Storage categorization and large file finder.'
+      },
+      {
+        '@type': 'Offer',
+        price: '4.99',
+        priceCurrency: 'USD',
+        name: 'Pro Lifetime',
+        description: 'One-time in-app purchase with Google Play Family Library support.'
+      }
+    ],
+    softwareRequirements: 'Android 10.0 (API 29) or higher.',
+    downloadUrl: 'https://android.diskwarren.com/download',
+  };
+
+  const iosSoftwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'DiskWarren for iPhone',
+    operatingSystem: 'iOS 17.0+ & iPadOS 17.0+',
+    applicationCategory: 'UtilitiesApplication',
+    description: 'Private iPhone storage intelligence. On-device Apple Neural Engine photo duplicate clustering, burst photo picker, 4K ProRes video inspector, and iCloud optimization.',
+    offers: [
+      {
+        '@type': 'Offer',
+        price: '0.00',
+        priceCurrency: 'USD',
+        name: 'Free Edition',
+        description: 'PhotoKit storage breakdown and large media analysis.'
+      },
+      {
+        '@type': 'Offer',
+        price: '4.99',
+        priceCurrency: 'USD',
+        name: 'Pro Lifetime',
+        description: 'One-time StoreKit 2 in-app purchase with Apple Family Sharing.'
+      }
+    ],
+    softwareRequirements: 'iOS 17.0+ or iPadOS 17.0+ (Apple Silicon A12 through M4).',
+    downloadUrl: 'https://ios.diskwarren.com/download',
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'DiskWarren',
+    url: 'https://diskwarren.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://diskwarren.com/support?q={search_term_string}',
+      'query-input': 'required name=search_term_string'
+    }
   };
 
   const organizationSchema = {
@@ -95,7 +188,23 @@ export default function StructuredData() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(macSoftwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(windowsSoftwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(androidSoftwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(iosSoftwareSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
       <script
         type="application/ld+json"
