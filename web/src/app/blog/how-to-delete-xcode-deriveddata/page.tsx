@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, AlertTriangle, Download, HardDrive } from 'lucide-react';
+import CodeBlock from '@/components/CodeBlock';
 
 export const metadata = {
   title: 'How to Safely Delete Xcode DerivedData (And Reclaim 30+ GB) — DiskWarren',
@@ -35,9 +36,10 @@ export default function XcodeDerivedDataGuide() {
             <p>
               Whenever you build, test, or index a project in Xcode, macOS stores intermediate compilation objects, precompiled headers, Swift module caches, and index stores in:
             </p>
-            <pre className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-cyan-400 font-mono text-xs overflow-x-auto shadow-inner">
-              ~/Library/Developer/Xcode/DerivedData
-            </pre>
+            <CodeBlock 
+              code="~/Library/Developer/Xcode/DerivedData" 
+              title="DerivedData Path" 
+            />
             <p>
               For active developers working on multiple branches or dependencies (Swift Packages, CocoaPods), this single directory frequently explodes to <strong className="text-slate-900">30 GB to 100 GB</strong>.
             </p>
@@ -75,9 +77,10 @@ export default function XcodeDerivedDataGuide() {
             <p>
               If you prefer manual deletion, close Xcode first, then run:
             </p>
-            <pre className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs overflow-x-auto shadow-inner">
-              rm -rf ~/Library/Developer/Xcode/DerivedData/*
-            </pre>
+            <CodeBlock 
+              code="rm -rf ~/Library/Developer/Xcode/DerivedData/*" 
+              title="Terminal Command" 
+            />
             <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <span className="text-xs text-amber-950">

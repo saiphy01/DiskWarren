@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   HardDrive, 
@@ -6,7 +8,6 @@ import {
   Cpu, 
   Hammer, 
   Lock, 
-  Trash2, 
   Sparkles, 
   CheckCircle2, 
   ArrowRight, 
@@ -15,11 +16,38 @@ import {
   Search, 
   Zap, 
   FileCheck, 
-  HelpCircle
+  HelpCircle,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import SimulatedStorageAnalyzer from '@/components/SimulatedStorageAnalyzer';
 
 export default function HomePage() {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
+
+  const faqs = [
+    {
+      q: "Does DiskWarren upload any of my files or directory names?",
+      a: "Never. DiskWarren operates on a strict zero-knowledge architecture. All scanning, metadata parsing, size calculation, and duplicate matching run 100% locally on your Mac's CPU. No filenames, folder names, or file contents are ever sent to any remote server or analytics provider."
+    },
+    {
+      q: "Why does DiskWarren request Full Disk Access?",
+      a: "macOS Transparency, Consent, and Control (TCC) restricts utilities from reading specific system directories, application caches, and Time Machine snapshots. Full Disk Access allows DiskWarren to accurately calculate your true storage footprint and reveal hidden System Data bloat. DiskWarren remains fully functional with limited access if you choose not to grant it."
+    },
+    {
+      q: "Can DiskWarren accidentally delete important system files?",
+      a: "No. DiskWarren permanently protects critical operating system directories (/System, /usr, /bin, keychains, active databases) through hardcoded engine safeguards. Furthermore, all user-approved cleanup operations route through the macOS Trash, allowing you to restore files instantly with native Put Back."
+    },
+    {
+      q: "Which Mac models and macOS versions are supported?",
+      a: "DiskWarren is compiled as a native Universal 2 binary supporting all Apple Silicon chips (M1, M2, M3, M4) and modern Intel Macs running macOS 14 Sonoma or macOS 15 Sequoia."
+    }
+  ];
+
   return (
     <div className="space-y-24 pb-20">
       {/* Hero Section */}
@@ -49,7 +77,7 @@ export default function HomePage() {
 
           <a
             href="#simulator"
-            className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-xs"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
           >
             <span>Try Interactive Demo</span>
             <ArrowRight className="w-4 h-4 text-cyan-600" />
@@ -66,7 +94,7 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Simulation Section */}
-      <section className="px-6 max-w-7xl mx-auto space-y-6">
+      <section id="simulator" className="px-6 max-w-7xl mx-auto space-y-6 scroll-mt-24">
         <div className="text-center space-y-2">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Experience DiskWarren Live</h2>
           <p className="text-sm text-slate-600">Interact with a simulated macOS volume to see how intelligence categorization works.</p>
@@ -75,7 +103,7 @@ export default function HomePage() {
       </section>
 
       {/* Core Differentiator Grid */}
-      <section id="features" className="px-6 max-w-6xl mx-auto space-y-16">
+      <section id="features" className="px-6 max-w-6xl mx-auto space-y-16 scroll-mt-24">
         <div className="text-center space-y-3">
           <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Why DiskWarren</span>
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Engineered for the Modern Mac</h2>
@@ -84,7 +112,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Developer Cleanup */}
-          <div id="developer" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-cyan-300 hover:shadow-md transition-all">
+          <div id="developer" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-cyan-300 hover:shadow-md transition-all scroll-mt-24">
             <div className="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
               <Hammer className="w-6 h-6" />
             </div>
@@ -100,7 +128,7 @@ export default function HomePage() {
           </div>
 
           {/* Card 2: AI Storage */}
-          <div id="ai" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-purple-300 hover:shadow-md transition-all">
+          <div id="ai" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-purple-300 hover:shadow-md transition-all scroll-mt-24">
             <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
               <Cpu className="w-6 h-6" />
             </div>
@@ -116,7 +144,7 @@ export default function HomePage() {
           </div>
 
           {/* Card 3: Safety Architecture */}
-          <div id="safety" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-emerald-300 hover:shadow-md transition-all">
+          <div id="safety" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-emerald-300 hover:shadow-md transition-all scroll-mt-24">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
               <ShieldCheck className="w-6 h-6" />
             </div>
@@ -134,17 +162,17 @@ export default function HomePage() {
       </section>
 
       {/* Visual Treemap & Uninstaller Showcase */}
-      <section className="px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section id="uninstaller" className="px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center scroll-mt-24">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-mono font-semibold">
             <Layers className="w-3.5 h-3.5 text-cyan-600" />
-            <span>Interactive Treemap</span>
+            <span>Interactive Treemap &amp; Uninstaller</span>
           </div>
           <h2 className="text-3xl font-bold text-slate-900 leading-tight">
             See your filesystem as physical space. Zoom, inspect, and drill down.
           </h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            Our high-speed squarified treemap visualizes millions of files in real time. Click into any directory to reveal exact storage density, locate runaway log files, or inspect media folders.
+            Our high-speed squarified treemap visualizes millions of files in real time. Click into any directory to reveal exact storage density, locate runaway log files, or sweep away uninstalled application leftovers.
           </p>
           <div className="space-y-3 pt-2">
             <div className="flex items-start gap-3">
@@ -154,7 +182,7 @@ export default function HomePage() {
                 <p className="text-xs text-slate-500">Search by filename, extension, or category with sub-10ms response time.</p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
+            <div id="duplicates" className="flex items-start gap-3 scroll-mt-24">
               <div className="p-1.5 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 mt-0.5"><FileCheck className="w-4 h-4" /></div>
               <div>
                 <h4 className="text-sm font-semibold text-slate-900">Duplicate Finder (SHA-256)</h4>
@@ -202,7 +230,7 @@ export default function HomePage() {
       </section>
 
       {/* Transparent Pricing Section */}
-      <section id="pricing" className="px-6 max-w-4xl mx-auto space-y-12">
+      <section id="pricing" className="px-6 max-w-4xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center space-y-3">
           <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Pricing</span>
           <h2 className="text-3xl font-bold text-slate-900">Simple, Honest Pricing. No Subscriptions.</h2>
@@ -261,8 +289,8 @@ export default function HomePage() {
             </ul>
 
             <Link
-              href="/download"
-              className="w-full py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-600/25 block text-center"
+              href="/pricing"
+              className="w-full py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-600/25 block text-center cursor-pointer"
             >
               Get Pro License ($29)
             </Link>
@@ -270,7 +298,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Section with Interactive Accordions */}
       <section className="px-6 max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
@@ -280,30 +308,31 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-slate-900">Questions &amp; Answers</h2>
         </div>
 
-        <div className="space-y-4">
-          {[
-            {
-              q: "Does DiskWarren upload any of my files or directory names?",
-              a: "Never. DiskWarren operates on a strict zero-knowledge architecture. All scanning, metadata parsing, size calculation, and duplicate matching run 100% locally on your Mac's CPU. No filenames, folder names, or file contents are ever sent to any remote server or analytics provider."
-            },
-            {
-              q: "Why does DiskWarren request Full Disk Access?",
-              a: "macOS Transparency, Consent, and Control (TCC) restricts utilities from reading specific system directories, application caches, and Time Machine snapshots. Full Disk Access allows DiskWarren to accurately calculate your true storage footprint and reveal hidden System Data bloat. DiskWarren remains fully functional with limited access if you choose not to grant it."
-            },
-            {
-              q: "Can DiskWarren accidentally delete important system files?",
-              a: "No. DiskWarren permanently protects critical operating system directories (/System, /usr, /bin, keychains, active databases) through hardcoded engine safeguards. Furthermore, all user-approved cleanup operations route through the macOS Trash, allowing you to restore files instantly with native Put Back."
-            },
-            {
-              q: "Which Mac models and macOS versions are supported?",
-              a: "DiskWarren is compiled as a native Universal 2 binary supporting all Apple Silicon chips (M1, M2, M3, M4) and modern Intel Macs running macOS 14 Sonoma or macOS 15 Sequoia."
-            }
-          ].map((faq, i) => (
-            <div key={i} className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
-              <h4 className="text-base font-semibold text-slate-900">{faq.q}</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">{faq.a}</p>
-            </div>
-          ))}
+        <div className="space-y-3">
+          {faqs.map((faq, i) => {
+            const isOpen = openFaqIndex === i;
+            return (
+              <div 
+                key={i} 
+                className="rounded-xl bg-white border border-slate-200 shadow-xs overflow-hidden transition-all"
+              >
+                <button
+                  onClick={() => toggleFaq(i)}
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50/80 transition-colors"
+                >
+                  <h4 className="text-base font-semibold text-slate-900">{faq.q}</h4>
+                  <div className="p-1 rounded-md bg-slate-100 text-slate-600 shrink-0">
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-cyan-600" /> : <ChevronDown className="w-4 h-4" />}
+                  </div>
+                </button>
+                {isOpen && (
+                  <div className="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/30 animate-in fade-in duration-150">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 

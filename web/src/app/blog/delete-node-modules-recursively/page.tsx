@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, AlertTriangle, Download, HardDrive } from 'lucide-react';
+import CodeBlock from '@/components/CodeBlock';
 
 export const metadata = {
   title: 'How to Find & Delete node_modules Recursively on Mac — DiskWarren',
@@ -43,9 +44,10 @@ export default function DeleteNodeModulesGuidePage() {
             <p>
               Developers often attempt to purge dependencies using generic bash scripts:
             </p>
-            <pre className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs overflow-x-auto shadow-inner">
-              find . -name &quot;node_modules&quot; -type d -prune -exec rm -rf &apos;{}&apos; +
-            </pre>
+            <CodeBlock 
+              code="find . -name &quot;node_modules&quot; -type d -prune -exec rm -rf '{}' +" 
+              title="Risky Terminal Command" 
+            />
             <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div className="text-xs text-amber-950">

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Download, Cpu } from 'lucide-react';
+import CodeBlock from '@/components/CodeBlock';
 
 export const metadata = {
   title: 'How to Manage & Delete Ollama Models on Mac — DiskWarren',
@@ -36,9 +37,10 @@ export default function DeleteOllamaModelsGuidePage() {
             <p>
               By default on macOS, Ollama stores its manifests and binary layer blobs inside your home directory:
             </p>
-            <pre className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-purple-300 font-mono text-xs overflow-x-auto shadow-inner">
-              ~/.ollama/models/blobs
-            </pre>
+            <CodeBlock 
+              code="~/.ollama/models/blobs" 
+              title="Ollama Blobs Storage Path" 
+            />
             <p>
               Because Ollama splits models into content-addressed SHA-256 blobs (similar to Docker), you cannot simply look inside this folder with Finder and see human-readable model names.
             </p>
@@ -56,9 +58,10 @@ export default function DeleteOllamaModelsGuidePage() {
             <p>
               You can also list and delete models via the Ollama CLI:
             </p>
-            <pre className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs overflow-x-auto shadow-inner">
-              ollama list{"\n"}ollama rm &lt;model-name&gt;
-            </pre>
+            <CodeBlock 
+              code={`# List all installed local models\nollama list\n\n# Remove a specific model to reclaim SSD space\nollama rm llama3.3:70b`} 
+              title="Ollama CLI Commands" 
+            />
           </section>
         </div>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Download, HardDrive } from 'lucide-react';
+import CodeBlock from '@/components/CodeBlock';
 
 export const metadata = {
   title: 'How to Clear "System Data" on Mac (macOS Sonoma & Sequoia) — DiskWarren',
@@ -42,6 +43,17 @@ export default function ClearSystemDataGuidePage() {
               <li><strong>Local AI Model Weights:</strong> Ollama blobs and LM Studio GGUFs stored inside hidden <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">~/.cache</code> or <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">~/.ollama</code> directories.</li>
               <li><strong>Application Caches &amp; Residual Support Files:</strong> Stored under <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">~/Library/Caches</code> and <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">~/Library/Application Support</code>.</li>
             </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-bold text-slate-900">Checking Time Machine Local Snapshots</h2>
+            <p>
+              You can inspect local APFS snapshots hoarding gigabytes via terminal:
+            </p>
+            <CodeBlock 
+              code="tmutil listlocalsnapshots /" 
+              title="List APFS Snapshots" 
+            />
           </section>
 
           <section className="space-y-3">

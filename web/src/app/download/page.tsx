@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Download, ShieldCheck, Terminal, CheckCircle2, Copy, Check, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
+import { Download, ShieldCheck, Terminal, CheckCircle2, Copy, Check, Sparkles, ArrowRight } from 'lucide-react';
+import CodeBlock from '@/components/CodeBlock';
 
 export default function DownloadPage() {
   const sha256Checksum = "f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303";
   const [copied, setCopied] = useState(false);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(sha256Checksum);
@@ -51,7 +51,7 @@ export default function DownloadPage() {
               macOS 14.0 Sonoma &amp; macOS 15.0+ Sequoia
             </span>
             <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-              Size: ~24.8 MB
+              Size: ~2.09 MB DMG Payload
             </span>
           </div>
 
@@ -67,7 +67,7 @@ export default function DownloadPage() {
           </div>
 
           <p className="text-xs text-slate-500">
-            Free inspection &amp; treemap exploration included. Pro upgrade available for 1-click batch cleanup.
+            Free inspection &amp; treemap exploration included. <Link href="/pricing" className="text-cyan-600 font-semibold hover:underline">Pro upgrade available</Link> for 1-click batch cleanup.
           </p>
         </div>
 
@@ -82,16 +82,16 @@ export default function DownloadPage() {
               <span className="text-[11px] text-emerald-700 font-mono font-semibold">Apple Notary Verified</span>
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
                     <span className="text-emerald-700 font-semibold">Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3" />
+                    <Copy className="w-3.5 h-3.5" />
                     <span>Copy SHA</span>
                   </>
                 )}
@@ -105,6 +105,24 @@ export default function DownloadPage() {
             Verify integrity via terminal: <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/60">shasum -a 256 DiskWarren-1.0.0.dmg</code>
           </p>
         </div>
+      </div>
+
+      {/* Developer Terminal & Homebrew Option */}
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-cyan-600" />
+            <h3 className="text-base font-bold text-slate-900">Install via Homebrew</h3>
+          </div>
+          <span className="text-xs text-slate-500 font-mono">Terminal Fast-Path</span>
+        </div>
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Prefer managing Mac apps from your command line? Install the native application and companion CLI binary via Homebrew Cask:
+        </p>
+        <CodeBlock 
+          code={`# Install DiskWarren desktop app\nbrew install --cask diskwarren\n\n# Optional: install the terminal CLI companion\nbrew install diskwarren/tap/warren`}
+          title="Homebrew Cask & CLI Install"
+        />
       </div>
 
       {/* 3-Step Installation Guide */}
@@ -196,16 +214,13 @@ export default function DownloadPage() {
         </div>
       </div>
 
-      {/* Support Callout */}
-      <div className="text-center text-sm text-slate-500 pt-4">
-        Need assistance or have questions before installing? Visit our{' '}
-        <Link href="/support" className="text-cyan-600 hover:underline font-semibold">
-          Support &amp; Help Center
-        </Link>{' '}
-        or read our{' '}
-        <Link href="/privacy" className="text-cyan-600 hover:underline font-semibold">
-          Zero-Telemetry Privacy Policy
-        </Link>.
+      {/* Support & Pricing Callout */}
+      <div className="text-center text-sm text-slate-500 pt-4 flex flex-wrap items-center justify-center gap-4">
+        <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($29)</Link></span>
+        <span>•</span>
+        <span>Questions? Visit <Link href="/support" className="text-cyan-600 hover:underline font-semibold">Support &amp; Help Center</Link></span>
+        <span>•</span>
+        <Link href="/privacy" className="text-cyan-600 hover:underline font-semibold">Zero-Telemetry Privacy</Link>
       </div>
     </div>
   );

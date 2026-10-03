@@ -49,13 +49,13 @@ export default function Footer() {
 
           {/* Legal & Trust */}
           <div>
-            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Trust &amp; Support</h4>
+            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Trust &amp; Pricing</h4>
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/download" className="hover:text-cyan-600 transition-colors">Download DiskWarren</Link></li>
+              <li><Link href="/pricing" className="hover:text-cyan-600 transition-colors">Pricing &amp; Perpetual License</Link></li>
               <li><Link href="/support" className="hover:text-cyan-600 transition-colors">Customer &amp; Engineering Support</Link></li>
               <li><Link href="/privacy" className="hover:text-cyan-600 transition-colors">Zero-Telemetry Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-cyan-600 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/#safety" className="hover:text-cyan-600 transition-colors">Trash-First Safety Architecture</Link></li>
             </ul>
           </div>
         </div>

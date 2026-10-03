@@ -26,6 +26,7 @@ ROUTES = [
     "/mac-ai-storage-cleaner",
     "/mac-cleaner-for-developers",
     "/mac-disk-space-analyzer",
+    "/pricing",
     "/privacy",
     "/support",
     "/terms",
@@ -37,8 +38,8 @@ ROUTES = [
 
 def check_url(url):
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'DiskWarren-QABot/1.0'})
-        with urllib.request.urlopen(req, timeout=5) as response:
+        req = urllib.request.Request(url, headers={'User-Agent': 'DiskWarren-QABot/1.0', 'Connection': 'close'})
+        with urllib.request.urlopen(req, timeout=10) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as e:
         return e.code, None
