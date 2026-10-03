@@ -55,21 +55,33 @@ fun getCategoryColor(category: MediaCategory): Color {
     }
 }
 
+data class AppCacheEntry(
+    val id: String,
+    val name: String,
+    val icon: String,
+    val totalSizeBytes: Long,
+    val cacheSizeBytes: Long,
+    val isCleared: Boolean = false
+)
+
 @Composable
 fun StorageOverviewHeader(
     totalUsedBytes: Long,
     totalAvailableBytes: Long = 0L,
     categories: List<CategorySummary> = emptyList(),
+    appCacheBytes: Long = 0L,
     onScanClicked: () -> Unit,
-    onClearClicked: (() -> Unit)? = null
+    onClearClicked: (() -> Unit)? = null,
+    onManageCachesClicked: (() -> Unit)? = null
 ) {
     var selectedCategory by remember { mutableStateOf<MediaCategory?>(null) }
     val totalCapacity = maxOf(1L, totalUsedBytes + totalAvailableBytes)
 
-    // Compute reclaimable candidates (Downloads, temporary captures)
-    val reclaimableBytes = categories
+    // Compute reclaimable candidates (Downloads + App Caches)
+    val downloadsBytes = categories
         .filter { it.category == MediaCategory.DOWNLOADS }
         .sumOf { it.totalSizeBytes }
+    val totalReclaimableBytes = downloadsBytes + appCacheBytes
 
     Card(
         modifier = Modifier
@@ -138,8 +150,8 @@ fun StorageOverviewHeader(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Reclaimable Space Banner (Clean, Focused, Zero Redundancy)
-            if (reclaimableBytes > 0) {
+            // Reclaimable Space Banner (Downloads & App Caches)
+            if (totalReclaimableBytes > 0) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -176,15 +188,16 @@ fun StorageOverviewHeader(
                             )
                             Row(verticalAlignment = Alignment.Baseline) {
                                 Text(
-                                    text = MediaItem.formatBytes(reclaimableBytes),
+                                    text = MediaItem.formatBytes(totalReclaimableBytes),
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.ExtraBold,
                                     fontFamily = FontFamily.Monospace,
                                     color = ColorTextPrimary
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
+                                val desc = if (appCacheBytes > 0) "Downloads & App Caches" else "Downloads"
                                 Text(
-                                    text = "safe to clean in Downloads",
+                                    text = "safe to clean ($desc)",
                                     fontSize = 11.5.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = ColorTextSecondary,
@@ -197,18 +210,40 @@ fun StorageOverviewHeader(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Button(
-                        onClick = { onClearClicked?.invoke() },
-                        colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
-                        shape = RoundedCornerShape(10.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text(
-                            text = "Clean Space",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
+                        if (appCacheBytes > 0 && onManageCachesClicked != null) {
+                            OutlinedButton(
+                                onClick = onManageCachesClicked,
+                                shape = RoundedCornerShape(10.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorBrandCyan),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, ColorBrandCyan.copy(alpha = 0.4f))
+                            ) {
+                                Text(
+                                    text = "⚡ Caches",
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = ColorBrandCyan
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { onClearClicked?.invoke() },
+                            colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = "Clean All",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
 
@@ -348,8 +383,10 @@ fun StorageDonutChart(
 @Composable
 fun CategorySummaryList(
     categories: List<CategorySummary>,
+    appCacheBytes: Long = 0L,
     onCategoryClicked: ((MediaCategory) -> Unit)? = null,
-    onClearCategoryClicked: ((MediaCategory) -> Unit)? = null
+    onClearCategoryClicked: ((MediaCategory) -> Unit)? = null,
+    onManageCachesClicked: (() -> Unit)? = null
 ) {
     val totalBytes = maxOf(1L, categories.sumOf { it.totalSizeBytes })
 
@@ -387,11 +424,18 @@ fun CategorySummaryList(
             val color = getCategoryColor(cat.category)
             val pct = (cat.totalSizeBytes.toDouble() / totalBytes.toDouble() * 100)
             val isReclaimable = cat.category == MediaCategory.DOWNLOADS
+            val isAppCategory = cat.category == MediaCategory.SYSTEM_APPS
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onCategoryClicked?.invoke(cat.category) },
+                    .clickable {
+                        if (isAppCategory && onManageCachesClicked != null) {
+                            onManageCachesClicked()
+                        } else {
+                            onCategoryClicked?.invoke(cat.category)
+                        }
+                    },
                 colors = CardDefaults.cardColors(containerColor = ColorCardLight),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
                 shape = RoundedCornerShape(14.dp)
@@ -448,9 +492,25 @@ fun CategorySummaryList(
                                             )
                                         }
                                     }
+                                    if (isAppCategory && appCacheBytes > 0) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(ColorBrandCyan.copy(alpha = 0.12f))
+                                                .padding(horizontal = 5.dp, vertical = 1.dp)
+                                        ) {
+                                            Text(
+                                                text = "${MediaItem.formatBytes(appCacheBytes)} Cache",
+                                                fontSize = 9.5.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = ColorBrandCyan
+                                            )
+                                        }
+                                    }
                                 }
                                 Text(
-                                    text = "${cat.itemCount} items",
+                                    text = if (isAppCategory && appCacheBytes > 0) "${cat.itemCount} apps • Tap to clear cache" else "${cat.itemCount} items",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = ColorTextSecondary
@@ -514,58 +574,164 @@ fun CategorySummaryList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomClearBar(
-    reclaimableBytes: Long,
-    onClearClicked: () -> Unit,
-    modifier: Modifier = Modifier
+fun AppCacheBottomSheet(
+    apps: List<AppCacheEntry>,
+    onDismiss: () -> Unit,
+    onClearSingleApp: (String) -> Unit,
+    onClearAllCaches: () -> Unit
 ) {
-    if (reclaimableBytes <= 0) return
+    val totalCache = apps.filter { !it.isCleared }.sumOf { it.cacheSizeBytes }
 
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        color = ColorCardLight,
-        shape = RoundedCornerShape(18.dp),
-        shadowElevation = 8.dp,
-        border = androidx.compose.foundation.BorderStroke(1.dp, ColorBorderLight)
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = ColorCardLight,
+        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 32.dp)
         ) {
-            Column {
-                Text(
-                    text = "RECLAIMABLE STORAGE",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = ColorEmeraldSafe
-                )
-                Text(
-                    text = MediaItem.formatBytes(reclaimableBytes),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontFamily = FontFamily.Monospace,
-                    color = ColorTextPrimary
-                )
+            Text(
+                text = "App Cache Manager",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = ColorTextPrimary
+            )
+            Text(
+                text = "Temporary streams, webviews, and shader caches safe to scrub without losing logins.",
+                fontSize = 12.sp,
+                color = ColorTextSecondary,
+                modifier = Modifier.padding(top = 2.dp, bottom = 14.dp)
+            )
+
+            // Master Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = ColorEmeraldSafe.copy(alpha = 0.10f)),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "TOTAL CLEANABLE CACHE",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = ColorEmeraldSafe
+                        )
+                        Text(
+                            text = MediaItem.formatBytes(totalCache),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = FontFamily.Monospace,
+                            color = ColorTextPrimary
+                        )
+                    }
+
+                    Button(
+                        onClick = onClearAllCaches,
+                        enabled = totalCache > 0,
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = if (totalCache > 0) "Clear All Caches" else "All Cleaned ✓",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
             }
 
-            Button(
-                onClick = onClearClicked,
-                colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Text(
+                text = "INSTALLED APPLICATIONS",
+                fontSize = 10.5.sp,
+                fontWeight = FontWeight.Bold,
+                color = ColorTextSecondary,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = "Clear Space",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
-                )
+                items(apps) { app ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = ColorBgLight),
+                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, ColorBorderLight)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = app.icon,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Color.White)
+                                        .wrapContentSize(Alignment.Center)
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = app.name,
+                                        fontSize = 13.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = ColorTextPrimary
+                                    )
+                                    Text(
+                                        text = "Total: ${MediaItem.formatBytes(app.totalSizeBytes)} • Cache: ${if (app.isCleared) "0 B" else MediaItem.formatBytes(app.cacheSizeBytes)}",
+                                        fontSize = 11.5.sp,
+                                        color = ColorTextSecondary
+                                    )
+                                }
+                            }
+
+                            Button(
+                                onClick = { onClearSingleApp(app.id) },
+                                enabled = !app.isCleared && app.cacheSizeBytes > 0,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = ColorEmeraldSafe,
+                                    disabledContainerColor = ColorBorderLight
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                modifier = Modifier.height(30.dp)
+                            ) {
+                                Text(
+                                    text = if (app.isCleared) "Cleaned ✓" else "Clear Cache",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (app.isCleared) ColorTextSecondary else Color.White
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

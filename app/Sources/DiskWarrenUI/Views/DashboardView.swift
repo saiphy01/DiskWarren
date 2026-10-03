@@ -154,10 +154,15 @@ public struct DashboardView: View {
                             .foregroundColor(WarrenTheme.textPrimary)
                     }
                     
-                    Spacer()
-                    
-                    WarrenButton("Reclaim Space", icon: "trash", style: .subtle) {
-                        onReviewCleanup()
+                    HStack(spacing: 8) {
+                        WarrenButton("Clear Caches", icon: "bolt.fill", style: .subtle) {
+                            onSelectCategory(.caches)
+                            onReviewCleanup()
+                        }
+                        
+                        WarrenButton("Reclaim Space", icon: "trash", style: .primary) {
+                            onReviewCleanup()
+                        }
                     }
                 }
                 .padding(14)

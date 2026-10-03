@@ -932,9 +932,14 @@ public static class UiHtml
           <p style=""font-size:12px; color:var(--text-muted); margin-bottom:16px; max-width:260px;"">
             Verified disposable compiler caches, package archives, and crash logs ready for zero-risk recycling.
           </p>
-          <button class=""btn btn-primary"" style=""width:100%;"" onclick=""stageAllLowRiskTargets()"">
-            Stage All Verified Safe Targets
-          </button>
+          <div style=""display:flex; gap:8px; width:100%;"">
+            <button class=""btn btn-secondary"" style=""flex:1;"" onclick=""switchView('toolchains')"">
+              ⚡ Clear App &amp; Dev Caches
+            </button>
+            <button class=""btn btn-primary"" style=""flex:1;"" onclick=""stageAllLowRiskTargets()"">
+              Stage All Targets
+            </button>
+          </div>
         </div>
 
         <div class=""card"">

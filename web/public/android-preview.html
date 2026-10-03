@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiskWarren Android — Executive Device Preview</title>
+  <title>DiskWarren Android — Executive Device Preview with App Cache Scrub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
     }
     .preview-header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       color: #f8fafc;
     }
     .preview-header h1 {
@@ -110,7 +110,7 @@
     .app-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 12px 16px 24px 16px;
+      padding: 12px 16px 20px 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -162,7 +162,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Sleek Outline Scan Button */
+    /* Outline Scan Button */
     .btn-scan {
       background: #f8fafc;
       color: #0f172a;
@@ -205,6 +205,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
+      flex: 1;
     }
     .spark-pod {
       width: 34px;
@@ -221,6 +223,7 @@
     .clean-meta {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
     .clean-tag {
       font-size: 10px;
@@ -236,6 +239,7 @@
       display: flex;
       align-items: baseline;
       gap: 5px;
+      flex-wrap: wrap;
     }
     .clean-headline .clean-amount {
       font-size: 15px;
@@ -249,12 +253,19 @@
       color: #64748b;
     }
 
-    /* Unmistakable Clean Space Pill Button */
+    .clean-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Clean Space Pill Button */
     .btn-clean-action {
       background: #10b981;
       color: #ffffff;
       border: none;
-      padding: 7px 15px;
+      padding: 7px 14px;
       border-radius: 10px;
       font-size: 12px;
       font-weight: 700;
@@ -278,6 +289,26 @@
       color: #64748b;
       cursor: default;
       box-shadow: none;
+    }
+
+    /* Secondary Cache Scrub Button */
+    .btn-cache-pill {
+      background: rgba(8, 145, 178, 0.1);
+      color: #0891b2;
+      border: 1px solid rgba(8, 145, 178, 0.25);
+      padding: 6px 11px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-cache-pill:hover {
+      background: rgba(8, 145, 178, 0.18);
     }
 
     /* Donut Canvas Container */
@@ -342,8 +373,12 @@
     }
     .section-hint {
       font-size: 11px;
-      font-weight: 500;
-      color: #94a3b8;
+      font-weight: 600;
+      color: #0891b2;
+      cursor: pointer;
+    }
+    .section-hint:hover {
+      text-decoration: underline;
     }
 
     .category-cards {
@@ -419,6 +454,17 @@
       padding: 1px 5px;
       border-radius: 4px;
       letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+    .cache-chip {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #0891b2;
+      background: rgba(8, 145, 178, 0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
     }
     .cat-count {
       font-size: 11px;
@@ -449,7 +495,7 @@
       color: #64748b;
     }
 
-    /* Row Accessory Slot (chevron or clean trigger) */
+    /* Row Accessory Slot */
     .cat-accessory {
       width: 20px;
       display: flex;
@@ -470,6 +516,235 @@
       height: 100%;
       border-radius: 2px;
       transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Interactive App Cache Bottom Sheet (Material 3) */
+    .sheet-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .sheet-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .app-cache-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffff;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 16px 18px 24px 18px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+      z-index: 160;
+      transform: translateY(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 82%;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-cache-sheet.active {
+      transform: translateY(0);
+    }
+
+    .sheet-drag-handle {
+      width: 36px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 2px;
+      margin: 0 auto 12px auto;
+    }
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .sheet-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .sheet-header p {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .btn-sheet-close {
+      background: #f1f5f9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 14px;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-sheet-close:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Master Clear All Caches Action Card in Sheet */
+    .sheet-master-card {
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      border: 1px solid #d1fae5;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .sheet-master-left {
+      display: flex;
+      flex-direction: column;
+    }
+    .sheet-master-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #059669;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .sheet-master-val {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #0f172a;
+    }
+    .btn-clear-all-caches {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
+      transition: all 0.15s ease;
+    }
+    .btn-clear-all-caches:hover {
+      background: #059669;
+    }
+    .btn-clear-all-caches.cleaned {
+      background: #e2e8f0;
+      color: #64748b;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    /* App Cache Items List */
+    .app-cache-list {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 2px;
+      max-height: 400px;
+    }
+    .app-cache-row {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+    .app-cache-row:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .app-row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .app-row-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+    .app-row-meta {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .app-row-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-row-sub {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .app-row-sub span.cache-val {
+      font-weight: 700;
+      color: #0891b2;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Individual "Clear Cache" Button for EVERY App */
+    .btn-clear-app {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      padding: 5px 11px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .btn-clear-app:hover {
+      background: #ecfdf5;
+      color: #059669;
+      border-color: #10b981;
+    }
+    .btn-clear-app:active {
+      transform: scale(0.96);
+    }
+    .btn-clear-app.cleaned {
+      background: #f1f5f9;
+      color: #94a3b8;
+      border-color: #e2e8f0;
+      cursor: default;
+      box-shadow: none;
     }
 
     /* Android Home Navigation Bar */
@@ -516,8 +791,8 @@
 <body>
 
   <div class="preview-header">
-    <h1>DiskWarren Android — Executive Design Preview</h1>
-    <p>Material 3 Jetpack Compose Architecture • Precision Alignment • Zero Text Redundancy</p>
+    <h1>DiskWarren Android — Executive Device Preview</h1>
+    <p>Material 3 Jetpack Compose Architecture • Deep App Cache Scrub • Zero Text Redundancy</p>
   </div>
 
   <div class="phone-chassis">
@@ -560,14 +835,19 @@
               <div class="clean-meta">
                 <span class="clean-tag" id="cleanTag">Reclaimable Space</span>
                 <div class="clean-headline">
-                  <span class="clean-amount" id="cleanAmount">14.2 GB</span>
-                  <span class="clean-desc" id="cleanDesc">safe to clean in Downloads</span>
+                  <span class="clean-amount" id="cleanAmount">21.5 GB</span>
+                  <span class="clean-desc" id="cleanDesc">safe to clean (Downloads & App Caches)</span>
                 </div>
               </div>
             </div>
-            <button class="btn-clean-action" id="btnCleanAction" onclick="executeClearSpace()">
-              <span>Clean Space</span>
-            </button>
+            <div class="clean-actions-row">
+              <button class="btn-cache-pill" onclick="openAppCacheSheet()">
+                <span>⚡ Caches</span>
+              </button>
+              <button class="btn-clean-action" id="btnCleanAction" onclick="executeClearSpace()">
+                <span>Clean All</span>
+              </button>
+            </div>
           </div>
 
           <!-- Master Storage Donut Chart -->
@@ -584,7 +864,7 @@
         <!-- Category Breakdown -->
         <div class="section-header-row">
           <span class="section-label">Media & Storage Allocation</span>
-          <span class="section-hint" id="itemCountHint">4,821 items</span>
+          <span class="section-hint" onclick="openAppCacheSheet()">Manage App Caches (7.3 GB) ›</span>
         </div>
         <div class="category-cards" id="categoryCardsContainer"></div>
       </div>
@@ -592,6 +872,35 @@
       <!-- Bottom Gesture Navigation Pill -->
       <div class="home-pill-bar">
         <div class="home-pill"></div>
+      </div>
+
+      <!-- Sheet Backdrop -->
+      <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeAppCacheSheet()"></div>
+
+      <!-- Interactive App Cache Management Bottom Sheet -->
+      <div class="app-cache-sheet" id="appCacheSheet">
+        <div class="sheet-drag-handle"></div>
+        <div class="sheet-header">
+          <div>
+            <h3>App Cache Manager</h3>
+            <p>Temporary streams, webviews, and shader caches safe to scrub.</p>
+          </div>
+          <button class="btn-sheet-close" onclick="closeAppCacheSheet()">✕</button>
+        </div>
+
+        <!-- Master Clean All App Caches Card -->
+        <div class="sheet-master-card">
+          <div class="sheet-master-left">
+            <span class="sheet-master-label">TOTAL APP CACHES</span>
+            <span class="sheet-master-val" id="sheetMasterVal">7.3 GB</span>
+          </div>
+          <button class="btn-clear-all-caches" id="btnSheetClearAll" onclick="clearAllAppCaches()">
+            Clear All Caches
+          </button>
+        </div>
+
+        <!-- Per-App List (Every app has its own Clear Cache button) -->
+        <div class="app-cache-list" id="appCacheListContainer"></div>
       </div>
 
       <!-- Toast Pill -->
@@ -641,15 +950,37 @@
       { id: 'videos', title: 'Videos & Screen Records', icon: '🎬', sizeBytes: 51755106304, count: 457, color: '#2563eb', reclaimable: false },
       { id: 'photos', title: 'Photos & Images', icon: '📷', sizeBytes: 39084204032, count: 3372, color: '#0891b2', reclaimable: false },
       { id: 'downloads', title: 'Public Downloads & APKs', icon: '📥', sizeBytes: 15247130624, count: 184, color: '#f59e0b', reclaimable: true },
+      { id: 'apps', title: 'Apps & Cached Data', icon: '📦', sizeBytes: 16106127360, count: 48, color: '#6366f1', reclaimable: true, isAppCache: true },
       { id: 'audio', title: 'Audio & Voice Memos', icon: '🎵', sizeBytes: 8589934592, count: 215, color: '#8b5cf6', reclaimable: false },
-      { id: 'documents', title: 'Documents & Archives', icon: '📄', sizeBytes: 6442450944, count: 593, color: '#d97706', reclaimable: false },
-      { id: 'apps', title: 'App Footprint', icon: '📦', sizeBytes: 16106127360, count: 48, color: '#64748b', reclaimable: false }
+      { id: 'documents', title: 'Documents & Archives', icon: '📄', sizeBytes: 6442450944, count: 593, color: '#d97706', reclaimable: false }
+    ];
+
+    // Individual App Cache Breakdown (Every app has dedicated Clear Cache option)
+    let appList = [
+      { id: 'spotify', name: 'Spotify Music', icon: '🎧', totalBytes: 3435973836, cacheBytes: 1932735283, color: '#1db954', cleared: false },
+      { id: 'youtube', name: 'YouTube', icon: '▶️', totalBytes: 3113851289, cacheBytes: 1610612736, color: '#ff0000', cleared: false },
+      { id: 'chrome', name: 'Google Chrome', icon: '🌐', totalBytes: 2362232012, cacheBytes: 1395864371, color: '#4285f4', cleared: false },
+      { id: 'instagram', name: 'Instagram', icon: '📸', totalBytes: 2040109465, cacheBytes: 1027604480, color: '#e1306c', cleared: false },
+      { id: 'tiktok', name: 'TikTok', icon: '🎵', totalBytes: 1825361100, cacheBytes: 880803840, color: '#00f2fe', cleared: false },
+      { id: 'reddit', name: 'Reddit', icon: '🤖', totalBytes: 1181116006, cacheBytes: 471859200, color: '#ff4500', cleared: false }
     ];
 
     const totalDriveBytes = 256 * 1024 * 1024 * 1024; // 256 GB device
     let isCleaned = false;
     let selectedCategoryId = null;
-    let totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
+
+    function getReclaimableDownloads() {
+      const d = categories.find(c => c.id === 'downloads');
+      return d ? d.sizeBytes : 0;
+    }
+
+    function getTotalAppCache() {
+      return appList.reduce((acc, a) => acc + (a.cleared ? 0 : a.cacheBytes), 0);
+    }
+
+    function getTotalBytes() {
+      return categories.reduce((acc, c) => acc + c.sizeBytes, 0);
+    }
 
     function formatBytes(bytes) {
       if (bytes <= 0) return '0 B';
@@ -672,6 +1003,7 @@
       const outerR = 170;
       const strokeW = 40;
       const innerR = outerR - strokeW;
+      const totalBytes = getTotalBytes();
 
       ctx.clearRect(0, 0, width, height);
 
@@ -728,11 +1060,12 @@
       ctx.fill();
     }
 
-    // Update Telemetry Pod
+    // Update Telemetry Pod & Banner
     function updateTelemetry() {
       const teleLabel = document.getElementById('teleLabel');
       const teleSize = document.getElementById('teleSize');
       const teleSub = document.getElementById('teleSub');
+      const totalBytes = getTotalBytes();
 
       if (selectedCategoryId) {
         const cat = categories.find(c => c.id === selectedCategoryId);
@@ -748,24 +1081,61 @@
       }
 
       const drivePct = ((totalBytes / totalDriveBytes) * 100).toFixed(1);
-      teleLabel.innerText = isCleaned ? 'CLEANED & PROTECTED' : 'USED';
-      teleLabel.style.color = isCleaned ? '#10b981' : '#64748b';
+      const totalReclaimable = getReclaimableDownloads() + getTotalAppCache();
+
+      teleLabel.innerText = totalReclaimable === 0 ? 'CLEANED & PROTECTED' : 'USED';
+      teleLabel.style.color = totalReclaimable === 0 ? '#10b981' : '#64748b';
       teleSize.innerText = formatBytes(totalBytes);
       teleSize.style.color = '#0f172a';
       teleSub.innerText = `${drivePct}% of 256 GB`;
+
+      // Update Banner
+      if (totalReclaimable > 0) {
+        document.getElementById('cleanTag').innerText = 'Reclaimable Space';
+        document.getElementById('cleanTag').style.color = '#059669';
+        document.getElementById('cleanAmount').innerText = formatBytes(totalReclaimable);
+        document.getElementById('cleanDesc').innerText = `safe to clean (${formatBytes(getReclaimableDownloads())} Downloads • ${formatBytes(getTotalAppCache())} App Caches)`;
+        document.getElementById('sparkPod').innerText = '✨';
+        document.getElementById('sparkPod').style.background = 'rgba(16, 185, 129, 0.16)';
+        const btn = document.getElementById('btnCleanAction');
+        btn.classList.remove('cleaned');
+        btn.innerHTML = '<span>Clean All</span>';
+      } else {
+        document.getElementById('cleanTag').innerText = 'Storage Optimized';
+        document.getElementById('cleanTag').style.color = '#059669';
+        document.getElementById('cleanAmount').innerText = 'All Clean';
+        document.getElementById('cleanDesc').innerText = 'Downloads & App Caches protected';
+        document.getElementById('sparkPod').innerText = '✓';
+        document.getElementById('sparkPod').style.background = 'rgba(16, 185, 129, 0.25)';
+        const btn = document.getElementById('btnCleanAction');
+        btn.classList.add('cleaned');
+        btn.innerHTML = '<span>Cleaned ✓</span>';
+      }
+
+      document.getElementById('sheetMasterVal').innerText = formatBytes(getTotalAppCache());
+      const allCleanBtn = document.getElementById('btnSheetClearAll');
+      if (getTotalAppCache() === 0) {
+        allCleanBtn.classList.add('cleaned');
+        allCleanBtn.innerText = 'All Caches Cleaned ✓';
+      } else {
+        allCleanBtn.classList.remove('cleaned');
+        allCleanBtn.innerText = `Clear All (${formatBytes(getTotalAppCache())})`;
+      }
     }
 
     // Render Category Cards (Strict Right-Aligned Column Flow)
     function renderCategoryCards() {
       const container = document.getElementById('categoryCardsContainer');
+      const totalBytes = getTotalBytes();
       let html = '';
 
       categories.forEach(cat => {
         const pct = ((cat.sizeBytes / totalBytes) * 100).toFixed(1);
         const isActive = selectedCategoryId === cat.id;
+        const totalCache = getTotalAppCache();
 
         html += `
-          <div class="cat-card ${isActive ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+          <div class="cat-card ${isActive ? 'active' : ''}" onclick="${cat.isAppCache ? 'openAppCacheSheet()' : `selectCategory('${cat.id}')`}">
             <div class="cat-top">
               <div class="cat-left">
                 <div class="cat-icon-pod" style="background:${cat.color}1a; color:${cat.color}">
@@ -774,9 +1144,10 @@
                 <div class="cat-titles">
                   <div class="cat-title-row">
                     <span class="cat-title">${cat.title}</span>
-                    ${cat.reclaimable && !isCleaned ? `<span class="cleanable-chip">Cleanable</span>` : ''}
+                    ${cat.id === 'downloads' && cat.sizeBytes > 0 ? `<span class="cleanable-chip">Cleanable</span>` : ''}
+                    ${cat.isAppCache && totalCache > 0 ? `<span class="cache-chip">${formatBytes(totalCache)} Cache</span>` : ''}
                   </div>
-                  <span class="cat-count">${cat.count.toLocaleString()} items</span>
+                  <span class="cat-count">${cat.isAppCache ? `${cat.count} installed apps • Tap to clear cache` : `${cat.count.toLocaleString()} items`}</span>
                 </div>
               </div>
 
@@ -796,8 +1167,31 @@
       });
 
       container.innerHTML = html;
-      const totalCount = categories.reduce((acc, c) => acc + c.count, 0);
-      document.getElementById('itemCountHint').innerText = `${totalCount.toLocaleString()} items`;
+    }
+
+    // Render App Cache Management Sheet Items
+    function renderAppCacheList() {
+      const container = document.getElementById('appCacheListContainer');
+      let html = '';
+
+      appList.forEach(app => {
+        html += `
+          <div class="app-cache-row">
+            <div class="app-row-left">
+              <div class="app-row-icon">${app.icon}</div>
+              <div class="app-row-meta">
+                <span class="app-row-name">${app.name}</span>
+                <span class="app-row-sub">Total: ${formatBytes(app.totalBytes)} • Cache: <span class="cache-val">${app.cleared ? '0 B' : formatBytes(app.cacheBytes)}</span></span>
+              </div>
+            </div>
+            <button class="btn-clear-app ${app.cleared ? 'cleaned' : ''}" onclick="clearSingleAppCache('${app.id}')">
+              ${app.cleared ? 'Cleaned ✓' : 'Clear Cache'}
+            </button>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
     }
 
     function selectCategory(id) {
@@ -806,6 +1200,109 @@
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
+    }
+
+    // Sheet Controls
+    function openAppCacheSheet() {
+      playAudio('click');
+      renderAppCacheList();
+      document.getElementById('sheetBackdrop').classList.add('active');
+      document.getElementById('appCacheSheet').classList.add('active');
+    }
+
+    function closeAppCacheSheet() {
+      playAudio('click');
+      document.getElementById('sheetBackdrop').classList.remove('active');
+      document.getElementById('appCacheSheet').classList.remove('active');
+    }
+
+    // Clear Single App Cache (Available on EVERY App)
+    function clearSingleAppCache(appId) {
+      const app = appList.find(a => a.id === appId);
+      if (!app || app.cleared) return;
+
+      playAudio('clean');
+      const freedBytes = app.cacheBytes;
+      app.cleared = true;
+      app.totalBytes = Math.max(0, app.totalBytes - freedBytes);
+
+      // Deduct from Apps category
+      const appsCat = categories.find(c => c.id === 'apps');
+      if (appsCat) {
+        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - freedBytes);
+      }
+
+      renderAppCacheList();
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+      showToast(`Cleared ${formatBytes(freedBytes)} cache from ${app.name}`);
+    }
+
+    // Clear All App Caches
+    function clearAllAppCaches() {
+      const totalCache = getTotalAppCache();
+      if (totalCache === 0) {
+        showToast('All app caches already clean!');
+        return;
+      }
+
+      playAudio('clean');
+      appList.forEach(a => {
+        if (!a.cleared) {
+          a.totalBytes = Math.max(0, a.totalBytes - a.cacheBytes);
+          a.cleared = true;
+        }
+      });
+
+      // Deduct from Apps category
+      const appsCat = categories.find(c => c.id === 'apps');
+      if (appsCat) {
+        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
+      }
+
+      renderAppCacheList();
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+      showToast(`Cleared ${formatBytes(totalCache)} across all installed apps`);
+    }
+
+    // Global Clear Space Execution (Downloads + All App Caches)
+    function executeClearSpace() {
+      const totalReclaimable = getReclaimableDownloads() + getTotalAppCache();
+      if (totalReclaimable === 0) {
+        showToast('Storage already optimized!');
+        return;
+      }
+
+      playAudio('clean');
+
+      // Deduct Downloads
+      const downloadsCat = categories.find(c => c.id === 'downloads');
+      if (downloadsCat) {
+        downloadsCat.sizeBytes = 0;
+        downloadsCat.count = 0;
+      }
+
+      // Deduct all app caches
+      const totalCache = getTotalAppCache();
+      appList.forEach(a => {
+        if (!a.cleared) {
+          a.totalBytes = Math.max(0, a.totalBytes - a.cacheBytes);
+          a.cleared = true;
+        }
+      });
+      const appsCat = categories.find(c => c.id === 'apps');
+      if (appsCat) {
+        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
+      }
+
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+      renderAppCacheList();
+      showToast(`✨ ${formatBytes(totalReclaimable)} cleared (Downloads & App Caches)!`);
     }
 
     // Canvas Hit Testing
@@ -821,7 +1318,11 @@
 
       const hit = slicesMeta.find(s => dist >= s.r1 - 10 && dist <= s.r2 + 10 && angle >= s.a1 && angle <= s.a2);
       if (hit) {
-        selectCategory(hit.id);
+        if (hit.id === 'apps') {
+          openAppCacheSheet();
+        } else {
+          selectCategory(hit.id);
+        }
       } else {
         selectedCategoryId = null;
         drawDonut();
@@ -849,45 +1350,8 @@
         btn.innerText = 'Scan';
         icon.innerText = '↻';
         playAudio('clean');
-        showToast('MediaStore scan complete • 4,821 items indexed');
+        showToast('MediaStore & App Package scan complete • 4,821 items');
       }, 600);
-    }
-
-    // Clear Space Execution
-    function executeClearSpace() {
-      if (isCleaned) {
-        showToast('Storage already optimized!');
-        return;
-      }
-
-      playAudio('clean');
-      isCleaned = true;
-
-      // Deduct 14.2 GB from downloads
-      const downloadsCat = categories.find(c => c.id === 'downloads');
-      if (downloadsCat) {
-        downloadsCat.sizeBytes = 0;
-        downloadsCat.count = 0;
-      }
-      categories = categories.filter(c => c.sizeBytes > 0);
-      totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
-
-      // Update Banner with executive calm state
-      document.getElementById('cleanTag').innerText = 'Storage Optimized';
-      document.getElementById('cleanTag').style.color = '#059669';
-      document.getElementById('cleanAmount').innerText = '14.2 GB';
-      document.getElementById('cleanDesc').innerText = 'freed & moved to OS Trash';
-      document.getElementById('sparkPod').innerText = '✓';
-      document.getElementById('sparkPod').style.background = 'rgba(16, 185, 129, 0.25)';
-      
-      const cleanBtn = document.getElementById('btnCleanAction');
-      cleanBtn.classList.add('cleaned');
-      cleanBtn.innerHTML = '<span>Cleaned ✓</span>';
-
-      drawDonut();
-      updateTelemetry();
-      renderCategoryCards();
-      showToast('14.2 GB cleaned and moved to Android Trash');
     }
 
     // Live clock
@@ -905,6 +1369,7 @@
     drawDonut();
     updateTelemetry();
     renderCategoryCards();
+    renderAppCacheList();
   </script>
 </body>
 </html>

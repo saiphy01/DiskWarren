@@ -111,17 +111,31 @@ public struct StorageInsightsView: View {
 
                         Spacer()
 
-                        Button {
-                            // Quick Action Filter
-                            selectedFilter = .duplicates
-                        } label: {
-                            Text("Review")
-                                .font(.caption.bold())
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color(red: 16/255, green: 185/255, blue: 129/255).opacity(0.15))
-                                .foregroundStyle(Color(red: 16/255, green: 185/255, blue: 129/255))
-                                .clipShape(Capsule())
+                        HStack(spacing: 8) {
+                            Button {
+                                selectedFilter = .screenshots
+                            } label: {
+                                Text("Clear Cache")
+                                    .font(.caption.bold())
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(Color(red: 8/255, green: 145/255, blue: 178/255).opacity(0.12))
+                                    .foregroundStyle(Color(red: 8/255, green: 145/255, blue: 178/255))
+                                    .clipShape(Capsule())
+                            }
+
+                            Button {
+                                // Quick Action Filter
+                                selectedFilter = .duplicates
+                            } label: {
+                                Text("Review")
+                                    .font(.caption.bold())
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color(red: 16/255, green: 185/255, blue: 129/255).opacity(0.15))
+                                    .foregroundStyle(Color(red: 16/255, green: 185/255, blue: 129/255))
+                                    .clipShape(Capsule())
+                            }
                         }
                     }
                     .padding(14)
