@@ -23,6 +23,8 @@ obj/
 .vs/
 windows/publish/
 windows/publish_ui/
+windows/src/DiskWarren.Setup/payload.zip
+*.wixpdb
 
 # Android / Gradle / Java
 .gradle/

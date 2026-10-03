@@ -20,8 +20,8 @@ import {
 import CodeBlock from '@/components/CodeBlock';
 
 export default function WindowsDownloadPage() {
-  const sha256Installer = "23eba299ae1e5ba7f5108307080a390a5c49fff1e49eaeeb009b2a1b0828298e";
-  const sha256Portable = "1eff7da8de3baec6cb419e1f93eaa5e0ca70e3defc229413980c47d8f4ef84b2";
+  const sha256Installer = "1868057cae96ef4665079895a2a5bf55e055b9c2c93db35d36f0f7aabe4d85f9";
+  const sha256Portable = "8e6ceb7580cd9974d17b7512a2fcf05aa82f83e0525574493e41e1d245c5d943";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
   const [copiedPortable, setCopiedPortable] = useState(false);
 
@@ -79,20 +79,21 @@ export default function WindowsDownloadPage() {
                 x64 &amp; ARM64 (Copilot+ PCs)
               </span>
               <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-                Windows 10 (20H2+) &amp; Windows 11
+                Windows 10 &amp; Windows 11
               </span>
               <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-                Size: ~18.4 MB
+                Size: ~61.8 MB MSI
               </span>
             </div>
 
             <div className="pt-2">
               <a
                 href="/downloads/DiskWarren-Setup-1.0.0.msi"
+                download="DiskWarren-Setup-1.0.0.msi"
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base shadow-lg shadow-blue-600/25 transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Download className="w-5 h-5" />
-                <span>Download Installer (.msi)</span>
+                <span>Download Windows Installer (.msi)</span>
               </a>
             </div>
 
@@ -101,7 +102,7 @@ export default function WindowsDownloadPage() {
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                  SHA-256 Checksum
+                  SHA-256 Checksum (MSI)
                 </span>
                 <button
                   onClick={handleCopyInstaller}
@@ -153,51 +154,52 @@ export default function WindowsDownloadPage() {
                 No Admin Setup Needed
               </span>
               <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-                Size: ~28.2 MB
+                Size: ~63.4 MB
               </span>
             </div>
 
-            <div className="pt-2">
-              <a
-                href="/downloads/DiskWarren-v1.0.0-win-x64-portable.zip"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-base shadow-md transition-all active:scale-[0.98] cursor-pointer"
-              >
-                <Download className="w-5 h-5" />
-                <span>Download Portable (.zip)</span>
-              </a>
-            </div>
-
-            {/* SHA-256 Checksum */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                  SHA-256 Checksum
-                </span>
-                <button
-                  onClick={handleCopyPortable}
-                  className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 transition-colors"
+              <div className="pt-2">
+                <a
+                  href="/downloads/DiskWarren-v1.0.0-win-x64-portable.zip"
+                  download="DiskWarren-v1.0.0-win-x64-portable.zip"
+                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-base shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  {copiedPortable ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-600">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>Copy</span>
-                    </>
-                  )}
-                </button>
+                  <Download className="w-5 h-5" />
+                  <span>Download Portable (.zip)</span>
+                </a>
               </div>
-              <p className="font-mono text-[11px] text-slate-600 break-all select-all bg-white p-2 rounded border border-slate-200/80">
-                {sha256Portable}
-              </p>
+
+              {/* SHA-256 Checksum */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-left">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                    SHA-256 Checksum
+                  </span>
+                  <button
+                    onClick={handleCopyPortable}
+                    className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 transition-colors"
+                  >
+                    {copiedPortable ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-600">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <p className="font-mono text-[11px] text-slate-600 break-all select-all bg-white p-2 rounded border border-slate-200/80">
+                  {sha256Portable}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       {/* Terminal / WinGet Installation */}
       <div className="bg-slate-900 text-slate-100 rounded-2xl p-8 shadow-xl space-y-6">

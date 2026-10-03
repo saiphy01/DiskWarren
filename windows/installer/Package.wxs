@@ -1,0 +1,65 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="DiskWarren"
+           Manufacturer="DiskWarren"
+           Version="1.0.0.0"
+           UpgradeCode="B8E1B9A1-3E2A-4D78-9F1B-6A3B5C7D8E9F"
+           Scope="perUser">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of DiskWarren is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="AppIcon" SourceFile="windows\src\DiskWarren.UI\app.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPHELPLINK" Value="https://diskwarren.com/support" />
+    <Property Id="ARPURLINFOABOUT" Value="https://diskwarren.com" />
+    <Property Id="ALLUSERS" Value="2" />
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="DiskWarren">
+          <Component Id="MainExecutable" Guid="C1A2B3C4-D5E6-4F7A-8B9C-0D1E2F3A4B5C">
+            <File Id="DiskWarrenExe" Source="windows\publish\dist\DiskWarren.exe" KeyPath="yes">
+              <Shortcut Id="StartMenuShortcut"
+                        Directory="ProgramMenuFolder"
+                        Name="DiskWarren"
+                        Description="DiskWarren — Storage Intelligence &amp; Safe Cleanup"
+                        WorkingDirectory="INSTALLFOLDER"
+                        Icon="AppIcon"
+                        Advertise="no" />
+              <Shortcut Id="DesktopShortcut"
+                        Directory="DesktopFolder"
+                        Name="DiskWarren"
+                        Description="DiskWarren — Storage Intelligence &amp; Safe Cleanup"
+                        WorkingDirectory="INSTALLFOLDER"
+                        Icon="AppIcon"
+                        Advertise="no" />
+            </File>
+            <File Id="AppIconFile" Source="windows\publish\dist\app.ico" />
+            <File Id="WebView2LoaderDll" Source="windows\publish\dist\WebView2Loader.dll" />
+            <File Id="WpfgfxDll" Source="windows\publish\dist\wpfgfx_cor3.dll" />
+            <File Id="PresentationNativeDll" Source="windows\publish\dist\PresentationNative_cor3.dll" />
+            <File Id="PenImcDll" Source="windows\publish\dist\PenImc_cor3.dll" />
+            <File Id="D3DCompilerDll" Source="windows\publish\dist\D3DCompiler_47_cor3.dll" />
+            <File Id="VcruntimeDll" Source="windows\publish\dist\vcruntime140_cor3.dll" />
+
+            <RegistryValue Root="HKCU" Key="Software\DiskWarren" Name="installed" Type="integer" Value="1" />
+          </Component>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="DesktopFolder" />
+
+    <Feature Id="MainFeature" Title="DiskWarren" Level="1">
+      <ComponentRef Id="MainExecutable" />
+    </Feature>
+
+    <CustomAction Id="LaunchApp" Directory="INSTALLFOLDER" ExeCommand="&quot;[#DiskWarrenExe]&quot;" Return="asyncNoWait" />
+
+    <InstallExecuteSequence>
+      <Custom Action="LaunchApp" After="InstallFinalize" Condition="NOT Installed" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>

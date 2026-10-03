@@ -98,7 +98,7 @@ export default function HomePage() {
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-base transition-all shadow-md shadow-cyan-600/25 flex items-center justify-center gap-2 group active:scale-95 cursor-pointer"
           >
             <Download className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
-            <span>Download Free for Mac</span>
+            <span>Download Free</span>
           </Link>
 
           <a
@@ -109,6 +109,10 @@ export default function HomePage() {
             <ArrowRight className="w-4 h-4 text-cyan-600" />
           </a>
         </div>
+
+        <p className="text-xs text-slate-500 pt-1 font-medium">
+          Available for <Link href="/download" className="text-cyan-700 underline font-semibold">macOS (Universal DMG)</Link> and <Link href="/windows/download" className="text-blue-700 underline font-semibold">Windows (1-Click Installer)</Link>
+        </p>
 
         {/* Trust Row */}
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-600 pt-4 font-medium">
@@ -521,7 +525,7 @@ export default function HomePage() {
           </h2>
 
           <p className="text-base text-slate-300 max-w-xl mx-auto">
-            Download the native macOS app and discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints in seconds.
+            Download DiskWarren natively for macOS or Windows. Discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -530,12 +534,12 @@ export default function HomePage() {
               className="px-8 py-3.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-400/25 flex items-center gap-2 cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              <span>Download DiskWarren Universal DMG (macOS 14+)</span>
+              <span>Download DiskWarren (macOS &amp; Windows)</span>
             </Link>
           </div>
 
           <div className="text-xs text-slate-400 pt-2 font-medium">
-            Universal 2 DMG • 100% Local Privacy • 30-Day Money Back Guarantee
+            macOS Universal DMG • Windows MSI Installer • 100% Local Privacy
           </div>
         </div>
       </section>
