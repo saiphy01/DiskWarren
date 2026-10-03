@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Download, ShieldCheck, Terminal, CheckCircle2, Copy, Check, Sparkles, ArrowRight } from 'lucide-react';
+import { Download, ShieldCheck, Terminal, CheckCircle2, Copy, Check, Sparkles, ArrowRight, Info, HardDrive } from 'lucide-react';
 import CodeBlock from '@/components/CodeBlock';
 
 export default function DownloadPage() {
@@ -18,17 +18,17 @@ export default function DownloadPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-16">
       {/* Hero Section */}
-      <div className="text-center space-y-6 max-w-3xl mx-auto">
+      <div className="text-center space-y-4 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold uppercase tracking-wider shadow-xs">
-          <ShieldCheck className="w-4 h-4 text-cyan-600" />
-          <span>Official Production Release v1.0.0</span>
+          <HardDrive className="w-4 h-4 text-cyan-600" />
+          <span>Official Universal Release v1.0.0</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
           Download DiskWarren for macOS
         </h1>
         <p className="text-lg text-slate-600 leading-relaxed">
           Reclaim gigabytes of developer caches, local AI weights, and uninstalled app leftovers. 
-          100% native Swift, Apple Notarized, and zero cloud telemetry.
+          100% native Swift, air-gapped indexing, and zero cloud telemetry.
         </p>
       </div>
 
@@ -40,18 +40,18 @@ export default function DownloadPage() {
           </div>
           
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
-            DiskWarren v1.0.0 (Production Universal DMG)
+            DiskWarren v1.0.0 (Universal DMG)
           </h2>
           
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-slate-600">
             <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-              Universal 2 Binary (Apple Silicon &amp; Intel)
+              Universal 2 (Apple Silicon M1-M4 &amp; Intel)
             </span>
             <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
               macOS 14.0 Sonoma &amp; macOS 15.0+ Sequoia
             </span>
             <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-              Size: ~2.09 MB DMG Payload
+              Size: ~2.09 MB DMG
             </span>
           </div>
 
@@ -67,7 +67,7 @@ export default function DownloadPage() {
           </div>
 
           <p className="text-xs text-slate-500">
-            Free inspection &amp; treemap exploration included. <Link href="/pricing" className="text-cyan-600 font-semibold hover:underline">Pro upgrade available</Link> for 1-click batch cleanup.
+            Free disk scan &amp; interactive treemap exploration included. <Link href="/pricing" className="text-cyan-600 font-semibold hover:underline">Pro lifetime license ($9.99)</Link> unlocks one-click batch recycling.
           </p>
         </div>
 
@@ -79,7 +79,6 @@ export default function DownloadPage() {
               Cryptographic SHA-256 Checksum Verification
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-[11px] text-emerald-700 font-mono font-semibold">Apple Notary Verified</span>
               <button
                 onClick={handleCopy}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
@@ -92,7 +91,7 @@ export default function DownloadPage() {
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>Copy SHA</span>
+                    <span>Copy Hash</span>
                   </>
                 )}
               </button>
@@ -102,27 +101,9 @@ export default function DownloadPage() {
             {sha256Checksum}
           </div>
           <p className="text-[11px] text-slate-500 mt-2 font-mono">
-            Verify integrity via terminal: <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/60">shasum -a 256 DiskWarren-1.0.0.dmg</code>
+            Verify integrity via macOS Terminal: <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/60">shasum -a 256 DiskWarren-1.0.0.dmg</code>
           </p>
         </div>
-      </div>
-
-      {/* Developer Terminal & Homebrew Option */}
-      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-cyan-600" />
-            <h3 className="text-base font-bold text-slate-900">Install via Homebrew</h3>
-          </div>
-          <span className="text-xs text-slate-500 font-mono">Terminal Fast-Path</span>
-        </div>
-        <p className="text-xs text-slate-600 leading-relaxed">
-          Prefer managing Mac apps from your command line? Install the native application and companion CLI binary via Homebrew Cask:
-        </p>
-        <CodeBlock 
-          code={`# Install DiskWarren desktop app\nbrew install --cask diskwarren\n\n# Optional: install the terminal CLI companion\nbrew install diskwarren/tap/warren`}
-          title="Homebrew Cask & CLI Install"
-        />
       </div>
 
       {/* 3-Step Installation Guide */}
@@ -138,7 +119,7 @@ export default function DownloadPage() {
             </div>
             <h4 className="text-base font-semibold text-slate-900">Drag to Applications</h4>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Open the downloaded <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">.dmg</code> file and drag the <strong className="text-slate-900">DiskWarren</strong> icon into your Applications folder.
+              Open the downloaded <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">.dmg</code> image and drag the <strong className="text-slate-900">DiskWarren</strong> app into your Applications folder.
             </p>
           </div>
 
@@ -146,9 +127,9 @@ export default function DownloadPage() {
             <div className="w-8 h-8 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 font-bold flex items-center justify-center text-sm">
               2
             </div>
-            <h4 className="text-base font-semibold text-slate-900">Grant Full Disk Access</h4>
+            <h4 className="text-base font-semibold text-slate-900">First Launch &amp; Gatekeeper</h4>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Open <strong className="text-slate-900">System Settings &gt; Privacy &amp; Security &gt; Full Disk Access</strong> and toggle DiskWarren ON. Required to index Xcode caches and hidden library paths.
+              Launch DiskWarren from Applications. If macOS displays a standard security verification prompt, click <strong className="text-slate-900">Open</strong> (or right-click DiskWarren.app &gt; Open).
             </p>
           </div>
 
@@ -156,41 +137,41 @@ export default function DownloadPage() {
             <div className="w-8 h-8 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 font-bold flex items-center justify-center text-sm">
               3
             </div>
-            <h4 className="text-base font-semibold text-slate-900">Scan &amp; Safely Clean</h4>
+            <h4 className="text-base font-semibold text-slate-900">Grant Full Disk Access</h4>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Click <strong className="text-slate-900">Scan Storage</strong>. DiskWarren indexes your drive at 12,000+ files/sec. Review candidates with Trash-first safety and zero accidental deletion risk.
+              Go to <strong className="text-slate-900">System Settings &gt; Privacy &amp; Security &gt; Full Disk Access</strong> and toggle DiskWarren ON to allow indexing of hidden Xcode caches and library files.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Security & Notarization Specs */}
+      {/* Honest Technical Specifications */}
       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="space-y-4">
           <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-cyan-600" />
-            Apple Notarization &amp; Hardened Runtime
+            Native Architecture &amp; Privacy Standards
           </h3>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Every build of DiskWarren is compiled with Apple Hardened Runtime, signed with an official Apple Developer ID Application certificate, and notarized by Apple Ticket Service.
+            DiskWarren is compiled natively using Apple Swift 6.0 and SwiftUI. It operates as an independent, standalone desktop utility with zero network dependencies for core indexing.
           </p>
           <ul className="space-y-2 text-xs text-slate-600">
             <li className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-              <span>Zero external telemetry or cloud uploads — completely air-gapped indexing</span>
+              <span>Zero external telemetry or cloud uploads — completely air-gapped processing</span>
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-              <span>Trash-first architecture — files recycled via macOS Trash, never permanent rm -rf</span>
+              <span>Trash-first architecture — files recycled via native macOS Trash where supported</span>
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-              <span>Strict system directory blacklist protecting macOS integrity</span>
+              <span>Permanent system directory safeguards protecting critical OS files</span>
             </li>
           </ul>
         </div>
 
-        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-4 text-xs">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-3.5 text-xs">
           <div className="flex justify-between border-b border-slate-100 pb-2">
             <span className="text-slate-500">Application Name:</span>
             <span className="font-semibold text-slate-900 font-mono">DiskWarren.app</span>
@@ -201,26 +182,32 @@ export default function DownloadPage() {
           </div>
           <div className="flex justify-between border-b border-slate-100 pb-2">
             <span className="text-slate-500">Minimum macOS:</span>
-            <span className="font-semibold text-slate-900 font-mono">14.0 Sonoma</span>
+            <span className="font-semibold text-slate-900 font-mono">macOS 14.0 Sonoma</span>
+          </div>
+          <div className="flex justify-between border-b border-slate-100 pb-2">
+            <span className="text-slate-500">Target macOS:</span>
+            <span className="font-semibold text-slate-900 font-mono">macOS 15.0+ Sequoia</span>
           </div>
           <div className="flex justify-between border-b border-slate-100 pb-2">
             <span className="text-slate-500">Architecture:</span>
             <span className="font-semibold text-slate-900 font-mono">arm64 + x86_64 (Universal 2)</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-500">Update Mechanism:</span>
-            <span className="font-semibold text-slate-900 font-mono">Sparkle 2 EdDSA Signed</span>
+            <span className="text-slate-500">License Verification:</span>
+            <span className="font-semibold text-slate-900 font-mono">On-device Cryptographic (Ed25519)</span>
           </div>
         </div>
       </div>
 
-      {/* Support & Pricing Callout */}
+      {/* Support & Release Notes Callout */}
       <div className="text-center text-sm text-slate-500 pt-4 flex flex-wrap items-center justify-center gap-4">
-        <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($9.99 Special)</Link></span>
+        <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($9.99 One-Time)</Link></span>
         <span>•</span>
-        <span>Questions? Visit <Link href="/support" className="text-cyan-600 hover:underline font-semibold">Support &amp; Help Center</Link></span>
+        <Link href="/release-notes" className="text-cyan-600 hover:underline font-semibold">Release Notes (v1.0.0)</Link>
         <span>•</span>
-        <Link href="/privacy" className="text-cyan-600 hover:underline font-semibold">Zero-Telemetry Privacy</Link>
+        <Link href="/system-requirements" className="text-cyan-600 hover:underline font-semibold">System Requirements</Link>
+        <span>•</span>
+        <Link href="/support" className="text-cyan-600 hover:underline font-semibold">Support &amp; Help Center</Link>
       </div>
     </div>
   );

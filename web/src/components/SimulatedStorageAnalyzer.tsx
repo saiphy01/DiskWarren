@@ -62,7 +62,7 @@ const initialItems: SimulatedItem[] = [
     risk: 'Low',
     selected: true,
     description: 'Intermediate build products, module caches, and index stores from previous compilations.',
-    rebuildImpact: 'Xcode will re-index projects on next launch (takes 1–2 mins).',
+    rebuildImpact: 'Xcode will re-index projects on next compilation.',
     lastUsed: '3 days ago'
   },
   {
@@ -79,14 +79,14 @@ const initialItems: SimulatedItem[] = [
   },
   {
     id: '3',
-    name: 'Orphaned node_modules (3 Client Projects)',
+    name: 'Orphaned node_modules (3 Archived Projects)',
     category: 'developer',
     path: '~/Projects/archive-2025/*/node_modules',
     sizeGB: 6.8,
     risk: 'Review',
     selected: true,
-    description: 'Stale npm/yarn/pnpm dependencies in inactive client repositories.',
-    rebuildImpact: 'Can be restored instantly from Trash or re-installed with `npm install`.',
+    description: 'Stale npm/yarn/pnpm dependencies in inactive repositories.',
+    rebuildImpact: 'Can be restored from Trash or re-installed with `npm install`.',
     lastUsed: '45 days ago'
   },
   {
@@ -122,7 +122,7 @@ const initialItems: SimulatedItem[] = [
     risk: 'Review',
     selected: true,
     description: 'Residual caches and autosaves from an app removed months ago.',
-    rebuildImpact: 'App is uninstalled; files are abandoned orphans.',
+    rebuildImpact: 'App is uninstalled; residual support files are abandoned.',
     lastUsed: '110 days ago'
   }
 ];
@@ -137,7 +137,7 @@ const partitionDefinitions: PartitionSlice[] = [
     hoverColor: '#475569',
     icon: 'HardDrive',
     canClean: true,
-    description: 'Time Machine local snapshots, sleep images, and hidden application caches.'
+    description: 'Time Machine local snapshots, sleep images, and application caches.'
   },
   {
     id: 'developer',
@@ -238,7 +238,7 @@ export default function SimulatedStorageAnalyzer() {
     setTimeout(() => {
       setIsCleaning(false);
       setIsSimulatedClean(true);
-    }, 850);
+    }, 750);
   };
 
   const handleReset = () => {
@@ -256,7 +256,6 @@ export default function SimulatedStorageAnalyzer() {
   const radius = 114;
   const circumference = 2 * Math.PI * radius; // ~716.28
 
-  // Calculate slice angles
   let cumulativeOffset = 0;
   const renderedSlices = partitionDefinitions.map(slice => {
     const currentSize = isSimulatedClean ? slice.cleanedSizeGB : slice.sizeGB;
@@ -276,16 +275,20 @@ export default function SimulatedStorageAnalyzer() {
   return (
     <div className="w-full max-w-5xl mx-auto rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-200/60 overflow-hidden transition-all relative">
       {/* Simulation Disclaimer Banner */}
-      <div className="bg-gradient-to-r from-cyan-50/90 via-slate-50 to-blue-50/90 px-6 py-2.5 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs gap-2">
-        <div className="flex items-center gap-2 text-cyan-900 font-medium">
+      <div className="bg-gradient-to-r from-cyan-50/90 via-slate-50 to-blue-50/90 px-6 py-3 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs gap-3">
+        <div className="flex items-center gap-2 text-slate-800 font-medium">
           <AlertCircle className="w-4 h-4 text-cyan-600 shrink-0" />
-          <span>Interactive CDO Simulation: Experience DiskWarren&apos;s real-time partition visualizer without scanning your local device.</span>
+          <span>
+            <strong>Interactive Storage Demo:</strong> This demonstration uses synthetic storage data and does not access your Mac.
+          </span>
         </div>
         
-        {/* View Mode Toggle: Pie / Donut vs Treemap */}
-        <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-xs shrink-0">
+        {/* View Mode Toggle: Pie vs Treemap */}
+        <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-xs shrink-0" role="tablist" aria-label="Visualization View Mode">
           <button
             onClick={() => setViewMode('pie')}
+            role="tab"
+            aria-selected={viewMode === 'pie'}
             className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'pie'
                 ? 'bg-cyan-600 text-white shadow-xs'
@@ -293,11 +296,13 @@ export default function SimulatedStorageAnalyzer() {
             }`}
           >
             <PieChartIcon className="w-3.5 h-3.5" />
-            <span>macOS Partition Ring (Pie)</span>
+            <span>Radial Ring (Pie)</span>
           </button>
 
           <button
             onClick={() => setViewMode('treemap')}
+            role="tab"
+            aria-selected={viewMode === 'treemap'}
             className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'treemap'
                 ? 'bg-cyan-600 text-white shadow-xs'
@@ -319,10 +324,10 @@ export default function SimulatedStorageAnalyzer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-sm">
                 <HardDrive className="w-4 h-4 stroke-[2.5]" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900">Macintosh HD — 500 GB Storage Intelligence</h3>
+              <h3 className="text-xl font-bold text-slate-900">Macintosh HD — 500 GB Storage Simulation</h3>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Apple Silicon Internal SSD (APFS Container `disk3s1s1`) • macOS 15 Sequoia
+              Synthetic APFS Container (`disk3s1s1`) • Native macOS Sequoia Style
             </p>
           </div>
 
@@ -375,7 +380,7 @@ export default function SimulatedStorageAnalyzer() {
             {/* Left: Interactive Radial Donut SVG */}
             <div className="md:col-span-5 flex flex-col items-center justify-center relative">
               <div className="w-64 h-64 relative flex items-center justify-center">
-                <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 320 320">
+                <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 320 320" aria-label="APFS Storage Distribution Donut Chart">
                   {/* Background Track */}
                   <circle
                     cx="160"
@@ -411,7 +416,7 @@ export default function SimulatedStorageAnalyzer() {
                   {hoveredSlice ? (
                     <div className="animate-in fade-in duration-150 space-y-1">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-                        Partition Slice
+                        Storage Category
                       </span>
                       <div className="text-base font-extrabold text-slate-900 leading-tight">
                         {hoveredSlice.label}
@@ -420,7 +425,7 @@ export default function SimulatedStorageAnalyzer() {
                         {(hoveredSlice.currentSize ?? hoveredSlice.sizeGB).toFixed(1)} GB
                       </div>
                       <span className="text-[10px] text-slate-500 font-mono block">
-                        {(((hoveredSlice.currentSize ?? hoveredSlice.sizeGB) / totalVolumeGB) * 100).toFixed(1)}% of Mac SSD
+                        {(((hoveredSlice.currentSize ?? hoveredSlice.sizeGB) / totalVolumeGB) * 100).toFixed(1)}% of Simulated Volume
                       </span>
                     </div>
                   ) : (
@@ -442,14 +447,14 @@ export default function SimulatedStorageAnalyzer() {
                 </div>
               </div>
               <p className="text-[11px] text-slate-500 text-center mt-3">
-                Hover or tap slices to inspect APFS partition blocks.
+                Hover or tap slices to inspect simulated APFS volume categories.
               </p>
             </div>
 
             {/* Right: Partition Breakdown Cards */}
             <div className="md:col-span-7 space-y-2.5">
               <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
-                <span>Mac APFS Volume Breakdown</span>
+                <span>Synthetic APFS Storage Breakdown</span>
                 <span className="text-slate-500 font-mono text-[11px]">Total: 500.0 GB</span>
               </h4>
 
@@ -497,7 +502,7 @@ export default function SimulatedStorageAnalyzer() {
             </div>
           </div>
         ) : (
-          /* REDESIGNED CDO-GRADE APPLE SQUARIFIED TREEMAP MATRIX */
+          /* SQUARIFIED TREEMAP MATRIX */
           <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-50 to-white border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200">
               <div className="flex items-center gap-2">
@@ -506,11 +511,11 @@ export default function SimulatedStorageAnalyzer() {
                 <span className="text-slate-500 font-mono text-[11px]">Proportional 500 GB Layout</span>
               </div>
               <span className="text-cyan-700 font-mono text-[11px] font-semibold">
-                {hoveredTreemapBlock ? `Inspecting: ${hoveredTreemapBlock}` : 'Hover blocks to drill down'}
+                {hoveredTreemapBlock ? `Inspecting: ${hoveredTreemapBlock}` : 'Hover blocks to inspect details'}
               </span>
             </div>
 
-            {/* Nested Apple-Style Treemap Grid */}
+            {/* Nested Treemap Grid */}
             <div className="grid grid-cols-12 gap-3 h-80">
               {/* Block 1: Developer Caches (Cyan/Teal Gradient) */}
               <div 
@@ -530,7 +535,6 @@ export default function SimulatedStorageAnalyzer() {
                   </span>
                 </div>
 
-                {/* Sub-blocks inside Developer */}
                 <div className="grid grid-cols-2 gap-1.5 mt-2 flex-1">
                   <div className="bg-white/80 border border-cyan-200/80 rounded-lg p-2 flex flex-col justify-between shadow-2xs hover:bg-white transition-colors">
                     <span className="text-[11px] font-bold text-slate-800 block truncate">DerivedData</span>
@@ -602,11 +606,10 @@ export default function SimulatedStorageAnalyzer() {
                 </div>
               </div>
 
-              {/* Block 3: System Data & Applications (Right Column) */}
+              {/* Block 3: System Data & Applications */}
               <div className="col-span-5 grid grid-rows-2 gap-2">
-                {/* Top Half: System Data */}
                 <div 
-                  onMouseEnter={() => setHoveredTreemapBlock('System Data (APFS Local Snapshots, Logs, Sleep Images)')}
+                  onMouseEnter={() => setHoveredTreemapBlock('System Data (Time Machine Local Snapshots, Logs, Caches)')}
                   onMouseLeave={() => setHoveredTreemapBlock(null)}
                   className="rounded-xl border border-slate-300 bg-gradient-to-r from-slate-100 to-slate-200/70 p-3 flex flex-col justify-between hover:border-slate-400 transition-all cursor-pointer shadow-2xs"
                 >
@@ -626,7 +629,6 @@ export default function SimulatedStorageAnalyzer() {
                   </div>
                 </div>
 
-                {/* Bottom Half: Applications & Available Free Space */}
                 <div className="grid grid-cols-2 gap-2">
                   <div 
                     onMouseEnter={() => setHoveredTreemapBlock('Applications & Leftover residual support folders')}
@@ -640,7 +642,6 @@ export default function SimulatedStorageAnalyzer() {
                     <span className="text-[10px] text-slate-500">Xcode &amp; Leftovers</span>
                   </div>
 
-                  {/* Available Space Cell */}
                   <div 
                     onMouseEnter={() => setHoveredTreemapBlock('Available Free APFS Space on SSD')}
                     onMouseLeave={() => setHoveredTreemapBlock(null)}
@@ -700,7 +701,7 @@ export default function SimulatedStorageAnalyzer() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
             {/* Category Filter Tabs */}
-            <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0" role="tablist" aria-label="Candidate item categories">
               {[
                 { id: 'all', label: 'All Items' },
                 { id: 'developer', label: 'Developer (Xcode, Node)' },
@@ -711,6 +712,8 @@ export default function SimulatedStorageAnalyzer() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                     activeTab === tab.id
                       ? 'bg-cyan-50 border border-cyan-200 text-cyan-800 font-bold'
@@ -759,6 +762,7 @@ export default function SimulatedStorageAnalyzer() {
                         type="checkbox"
                         checked={item.selected}
                         onChange={() => toggleSelect(item.id)}
+                        aria-label={`Select ${item.name} for cleanup`}
                         className="w-4 h-4 rounded text-cyan-600 focus:ring-cyan-500 border-slate-300 cursor-pointer"
                       />
                       <div className="min-w-0">
@@ -784,6 +788,7 @@ export default function SimulatedStorageAnalyzer() {
                       </span>
                       <button
                         onClick={() => setExpandedItemId(isExpanded ? null : item.id)}
+                        aria-label={isExpanded ? `Collapse ${item.name} details` : `Expand ${item.name} details`}
                         className="p-1 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
                       >
                         {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -800,9 +805,9 @@ export default function SimulatedStorageAnalyzer() {
                         <p>{item.rebuildImpact}</p>
                       </div>
                       <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-1">
-                        <span>Last modified/accessed: {item.lastUsed}</span>
+                        <span>Last modified: {item.lastUsed}</span>
                         <span>•</span>
-                        <span>Restorable via macOS Trash: Yes</span>
+                        <span>Restorable via macOS Trash: Yes (Put Back supported)</span>
                       </div>
                     </div>
                   )}
@@ -813,9 +818,9 @@ export default function SimulatedStorageAnalyzer() {
         </div>
       </div>
 
-      {/* CDO-GRADE APPLE-STYLE CONFIRMATION MODAL & DELETION MANIFEST */}
+      {/* CONFIRMATION MODAL & DELETION MANIFEST */}
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm animate-in fade-in duration-150" role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-7 space-y-5 animate-in zoom-in-95 duration-150">
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-3 border-b border-slate-100">
@@ -824,7 +829,7 @@ export default function SimulatedStorageAnalyzer() {
                   <ShieldAlert className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 id="modal-title" className="text-lg font-bold text-slate-900">
                     Confirm Move to Trash ({selectedBytes.toFixed(1)} GB)
                   </h3>
                   <span className="text-xs text-slate-500 flex items-center gap-1">
@@ -835,6 +840,7 @@ export default function SimulatedStorageAnalyzer() {
               </div>
               <button 
                 onClick={() => setShowConfirmModal(false)}
+                aria-label="Close confirmation dialog"
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -844,7 +850,7 @@ export default function SimulatedStorageAnalyzer() {
             {/* Description & Space Reclamation Equation */}
             <div className="space-y-3">
               <p className="text-xs text-slate-600 leading-relaxed">
-                Review the exact items scheduled for recycling. No files will be permanently erased.
+                Review the exact items scheduled for recycling. Files are moved to the macOS Trash, not permanently erased.
               </p>
 
               {/* Space Equation Bar */}
@@ -866,7 +872,7 @@ export default function SimulatedStorageAnalyzer() {
               </div>
             </div>
 
-            {/* ITEM MANIFEST BREAKDOWN (Shows what is being deleted) */}
+            {/* ITEM MANIFEST BREAKDOWN */}
             <div className="space-y-2">
               <span className="text-xs font-bold text-slate-700 block uppercase tracking-wider">
                 Scheduled Items ({selectedItems.length})
@@ -898,7 +904,7 @@ export default function SimulatedStorageAnalyzer() {
             <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs flex items-start gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <p className="leading-relaxed">
-                <strong>Put Back Guarantee:</strong> Items will reside safely in your macOS Trash. Open Trash anytime and select <span className="underline font-semibold">Put Back</span> to restore files to their exact original locations.
+                <strong>Safety by Design:</strong> Items reside safely in your native macOS Trash. Open Trash anytime and select <span className="underline font-semibold">Put Back</span> to restore files to their exact original locations.
               </p>
             </div>
 

@@ -30,10 +30,9 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-          <Link href="/#features" className="hover:text-cyan-600 transition-colors">Features</Link>
           <Link href="/#simulator" className="hover:text-cyan-600 transition-colors">Interactive Demo</Link>
-          <Link href="/#developer" className="hover:text-cyan-600 transition-colors">Developer &amp; AI</Link>
-          <Link href="/#safety" className="hover:text-cyan-600 transition-colors">Safety First</Link>
+          <Link href="/#developer-ai" className="hover:text-cyan-600 transition-colors">Developer &amp; AI</Link>
+          <Link href="/#safety" className="hover:text-cyan-600 transition-colors">Safety by Design</Link>
           <Link href="/pricing" className="hover:text-cyan-600 transition-colors">Pricing</Link>
           <Link href="/blog" className="hover:text-cyan-600 transition-colors">Guides</Link>
           <Link href="/support" className="hover:text-cyan-600 transition-colors">Support</Link>
@@ -43,7 +42,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/download"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold transition-all shadow-sm shadow-cyan-600/25 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold transition-all shadow-sm shadow-cyan-600/25 active:scale-95 cursor-pointer"
           >
             <Download className="w-4 h-4" />
             <span>Download v1.0</span>
@@ -75,14 +74,6 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-b border-slate-200 px-6 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200">
           <div className="flex flex-col space-y-3 text-sm font-medium text-slate-700">
             <Link 
-              href="/#features" 
-              onClick={closeMobileMenu}
-              className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
-            >
-              <span>Features</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" />
-            </Link>
-            <Link 
               href="/#simulator" 
               onClick={closeMobileMenu}
               className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
@@ -91,11 +82,11 @@ export default function Navbar() {
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
             <Link 
-              href="/#developer" 
+              href="/#developer-ai" 
               onClick={closeMobileMenu}
               className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
             >
-              <span>Developer &amp; AI Intelligence</span>
+              <span>Developer &amp; AI Storage</span>
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
             <Link 
@@ -103,7 +94,7 @@ export default function Navbar() {
               onClick={closeMobileMenu}
               className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
             >
-              <span>Safety First &amp; Trash-First</span>
+              <span>Safety by Design</span>
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
             <Link 
@@ -142,7 +133,7 @@ export default function Navbar() {
               <span>Download DiskWarren Universal DMG</span>
             </Link>
             <div className="flex items-center justify-center gap-3 text-[11px] text-slate-500 pt-1">
-              <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-cyan-600" /> Apple Notarized</span>
+              <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-cyan-600" /> 100% Local Privacy</span>
               <span>•</span>
               <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-amber-500" /> macOS 14 &amp; 15+</span>
             </div>
