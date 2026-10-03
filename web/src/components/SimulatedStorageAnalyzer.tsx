@@ -20,7 +20,10 @@ import {
   Sparkles,
   Lock,
   Cpu,
-  Hammer
+  Hammer,
+  Folder,
+  ArrowRight,
+  FileText
 } from 'lucide-react';
 
 interface SimulatedItem {
@@ -214,6 +217,7 @@ export default function SimulatedStorageAnalyzer() {
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
   const [cleanedSize, setCleanedSize] = useState<number>(0);
   const [hoveredSlice, setHoveredSlice] = useState<PartitionSlice | null>(null);
+  const [hoveredTreemapBlock, setHoveredTreemapBlock] = useState<string | null>(null);
 
   const toggleSelect = (id: string) => {
     setItems(prev => prev.map(item => item.id === id ? { ...item, selected: !item.selected } : item));
@@ -282,7 +286,7 @@ export default function SimulatedStorageAnalyzer() {
         <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 shadow-xs shrink-0">
           <button
             onClick={() => setViewMode('pie')}
-            className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'pie'
                 ? 'bg-cyan-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -294,7 +298,7 @@ export default function SimulatedStorageAnalyzer() {
 
           <button
             onClick={() => setViewMode('treemap')}
-            className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'treemap'
                 ? 'bg-cyan-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -480,10 +484,10 @@ export default function SimulatedStorageAnalyzer() {
 
                       <div className="text-right shrink-0">
                         <span className="text-xs font-bold font-mono text-slate-900 block">
-                          {slice.currentSize.toFixed(1)} GB
+                          {(slice.currentSize ?? slice.sizeGB).toFixed(1)} GB
                         </span>
                         <span className="text-[10px] text-slate-500 font-mono">
-                          {((slice.currentSize / totalVolumeGB) * 100).toFixed(0)}%
+                          {(((slice.currentSize ?? slice.sizeGB) / totalVolumeGB) * 100).toFixed(0)}%
                         </span>
                       </div>
                     </div>
@@ -493,54 +497,173 @@ export default function SimulatedStorageAnalyzer() {
             </div>
           </div>
         ) : (
-          /* TREEMAP MATRIX VIEW */
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-white space-y-4">
-            <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-800 font-mono">
-              <span className="text-cyan-400">Squarified Proportional Matrix</span>
-              <span className="text-slate-400">Total: 500.0 GB</span>
+          /* REDESIGNED CDO-GRADE APPLE SQUARIFIED TREEMAP MATRIX */
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-50 to-white border border-slate-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-slate-800">Squarified Treemap Matrix</span>
+                <span className="text-slate-400">•</span>
+                <span className="text-slate-500 font-mono text-[11px]">Proportional 500 GB Layout</span>
+              </div>
+              <span className="text-cyan-700 font-mono text-[11px] font-semibold">
+                {hoveredTreemapBlock ? `Inspecting: ${hoveredTreemapBlock}` : 'Hover blocks to drill down'}
+              </span>
             </div>
 
-            <div className="grid grid-cols-12 gap-2 h-64">
-              {/* System Data */}
-              <div className="col-span-4 bg-slate-800/80 border border-slate-700 rounded-xl p-3 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-slate-300 block">System Data</span>
-                  <span className="text-[11px] font-mono text-slate-400">Caches &amp; Snapshots</span>
+            {/* Nested Apple-Style Treemap Grid */}
+            <div className="grid grid-cols-12 gap-3 h-80">
+              {/* Block 1: Developer Caches (Cyan/Teal Gradient) */}
+              <div 
+                onMouseEnter={() => setHoveredTreemapBlock('Developer Caches (~/Library/Developer & ~/Projects)')}
+                onMouseLeave={() => setHoveredTreemapBlock(null)}
+                className={`col-span-4 rounded-xl border border-cyan-300 bg-gradient-to-br from-cyan-500/10 via-cyan-500/5 to-teal-500/15 p-3 flex flex-col justify-between transition-all hover:shadow-md hover:border-cyan-400 relative overflow-hidden group cursor-pointer ${
+                  isSimulatedClean ? 'opacity-40' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Hammer className="w-3.5 h-3.5 text-cyan-600" />
+                    <span className="text-xs font-bold text-cyan-950">Developer Caches</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-100 text-cyan-800">
+                    {isSimulatedClean ? '17.5 GB' : '48.4 GB'}
+                  </span>
                 </div>
-                <span className="text-sm font-bold font-mono text-slate-200">
-                  {isSimulatedClean ? '42.0 GB' : '78.6 GB'}
-                </span>
+
+                {/* Sub-blocks inside Developer */}
+                <div className="grid grid-cols-2 gap-1.5 mt-2 flex-1">
+                  <div className="bg-white/80 border border-cyan-200/80 rounded-lg p-2 flex flex-col justify-between shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">DerivedData</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-cyan-700">
+                      <span>24.1 GB</span>
+                      <span className="text-slate-400">1,420 files</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/80 border border-cyan-200/80 rounded-lg p-2 flex flex-col justify-between shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">Simulators</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-cyan-700">
+                      <span>12.4 GB</span>
+                      <span className="text-slate-400">iOS 18</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/80 border border-cyan-200/80 rounded-lg p-2 flex flex-col justify-between shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">node_modules</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-cyan-700">
+                      <span>6.8 GB</span>
+                      <span className="text-slate-400">3 projects</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/80 border border-cyan-200/80 rounded-lg p-2 flex flex-col justify-between shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">Cargo debug</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-cyan-700">
+                      <span>5.1 GB</span>
+                      <span className="text-slate-400">target/</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Developer Caches */}
-              <div className="col-span-3 bg-cyan-950/70 border border-cyan-500/50 rounded-xl p-3 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-cyan-300 block">Developer Caches</span>
-                  <span className="text-[11px] font-mono text-cyan-400">DerivedData &amp; node_modules</span>
+              {/* Block 2: Local AI Weights (Purple/Indigo Gradient) */}
+              <div 
+                onMouseEnter={() => setHoveredTreemapBlock('Local AI Models (~/.ollama & LM Studio GGUFs)')}
+                onMouseLeave={() => setHoveredTreemapBlock(null)}
+                className={`col-span-3 rounded-xl border border-purple-300 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-indigo-500/15 p-3 flex flex-col justify-between transition-all hover:shadow-md hover:border-purple-400 relative overflow-hidden group cursor-pointer ${
+                  isSimulatedClean ? 'opacity-40' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Cpu className="w-3.5 h-3.5 text-purple-600" />
+                    <span className="text-xs font-bold text-purple-950">AI Models</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-100 text-purple-800">
+                    {isSimulatedClean ? '11.2 GB' : '38.5 GB'}
+                  </span>
                 </div>
-                <span className="text-sm font-bold font-mono text-cyan-300">
-                  {isSimulatedClean ? '17.5 GB' : '48.4 GB'}
-                </span>
+
+                <div className="space-y-1.5 mt-2 flex-1 flex flex-col justify-between">
+                  <div className="bg-white/80 border border-purple-200/80 rounded-lg p-2 shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">Ollama Blobs</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-purple-700 mt-0.5">
+                      <span>22.5 GB</span>
+                      <span className="text-slate-400">Llama3 70B</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/80 border border-purple-200/80 rounded-lg p-2 shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[11px] font-bold text-slate-800 block truncate">LM Studio GGUF</span>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-purple-700 mt-0.5">
+                      <span>11.2 GB</span>
+                      <span className="text-slate-400">Mistral-7B</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/80 border border-purple-200/80 rounded-lg p-1.5 shadow-2xs hover:bg-white transition-colors">
+                    <span className="text-[10px] font-medium text-slate-700 block truncate">Hugging Face Hub (4.8 GB)</span>
+                  </div>
+                </div>
               </div>
 
-              {/* AI Models */}
-              <div className="col-span-3 bg-purple-950/70 border border-purple-500/50 rounded-xl p-3 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-purple-300 block">AI Models</span>
-                  <span className="text-[11px] font-mono text-purple-400">Ollama &amp; LM Studio GGUFs</span>
+              {/* Block 3: System Data & Applications (Right Column) */}
+              <div className="col-span-5 grid grid-rows-2 gap-2">
+                {/* Top Half: System Data */}
+                <div 
+                  onMouseEnter={() => setHoveredTreemapBlock('System Data (APFS Local Snapshots, Logs, Sleep Images)')}
+                  onMouseLeave={() => setHoveredTreemapBlock(null)}
+                  className="rounded-xl border border-slate-300 bg-gradient-to-r from-slate-100 to-slate-200/70 p-3 flex flex-col justify-between hover:border-slate-400 transition-all cursor-pointer shadow-2xs"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <HardDrive className="w-3.5 h-3.5 text-slate-600" />
+                      <span className="text-xs font-bold text-slate-900">macOS System Data</span>
+                    </div>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-200 text-slate-800">
+                      {isSimulatedClean ? '42.0 GB' : '78.6 GB'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 pt-2 text-[10px] font-mono text-slate-600">
+                    <span className="px-2 py-0.5 rounded bg-white/70 border border-slate-200">Snapshots: 42 GB</span>
+                    <span className="px-2 py-0.5 rounded bg-white/70 border border-slate-200">Caches: 22.6 GB</span>
+                    <span className="px-2 py-0.5 rounded bg-white/70 border border-slate-200">Sleep: 14 GB</span>
+                  </div>
                 </div>
-                <span className="text-sm font-bold font-mono text-purple-300">
-                  {isSimulatedClean ? '11.2 GB' : '38.5 GB'}
-                </span>
-              </div>
 
-              {/* Applications */}
-              <div className="col-span-2 bg-blue-950/70 border border-blue-500/50 rounded-xl p-3 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-blue-300 block">Apps</span>
-                  <span className="text-[11px] font-mono text-blue-400">Applications</span>
+                {/* Bottom Half: Applications & Available Free Space */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div 
+                    onMouseEnter={() => setHoveredTreemapBlock('Applications & Leftover residual support folders')}
+                    onMouseLeave={() => setHoveredTreemapBlock(null)}
+                    className="rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 p-2.5 flex flex-col justify-between hover:border-blue-300 transition-all cursor-pointer shadow-2xs"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-blue-900">Apps</span>
+                      <span className="text-[10px] font-mono font-bold text-blue-700">52.6 GB</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500">Xcode &amp; Leftovers</span>
+                  </div>
+
+                  {/* Available Space Cell */}
+                  <div 
+                    onMouseEnter={() => setHoveredTreemapBlock('Available Free APFS Space on SSD')}
+                    onMouseLeave={() => setHoveredTreemapBlock(null)}
+                    className={`rounded-xl border-2 p-2.5 flex flex-col justify-between transition-all cursor-pointer shadow-xs ${
+                      isSimulatedClean
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-950 scale-[1.02]'
+                        : 'border-emerald-300/80 bg-emerald-50/50 text-emerald-900'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        Available
+                      </span>
+                      <span className="text-[11px] font-mono font-bold text-emerald-700">
+                        {isSimulatedClean ? '335.6 GB' : '193.8 GB'}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-emerald-700 font-medium">
+                      {isSimulatedClean ? '+48.2 GB Reclaimed!' : 'APFS Free blocks'}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-sm font-bold font-mono text-blue-300">52.6 GB</span>
               </div>
             </div>
           </div>
@@ -690,45 +813,109 @@ export default function SimulatedStorageAnalyzer() {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* CDO-GRADE APPLE-STYLE CONFIRMATION MODAL & DELETION MANIFEST */}
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center gap-3 text-amber-600">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
-                <ShieldAlert className="w-5 h-5 text-amber-600" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 sm:p-7 space-y-5 animate-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-xs">
+                  <ShieldAlert className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">
+                    Confirm Move to Trash ({selectedBytes.toFixed(1)} GB)
+                  </h3>
+                  <span className="text-xs text-slate-500 flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-emerald-600" />
+                    Trash-First Protection • Native &quot;Put Back&quot; Supported
+                  </span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Confirm Move to Trash</h3>
-                <span className="text-xs text-slate-500">Trash-First Safety Architecture</span>
-              </div>
+              <button 
+                onClick={() => setShowConfirmModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            <div className="text-xs text-slate-600 leading-relaxed space-y-2">
-              <p>
-                You are about to simulate moving <strong className="text-slate-900 font-bold">{selectedItems.length} candidate items ({selectedBytes.toFixed(1)} GB)</strong> to the native macOS Trash.
+            {/* Description & Space Reclamation Equation */}
+            <div className="space-y-3">
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Review the exact items scheduled for recycling. No files will be permanently erased.
               </p>
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 space-y-1">
-                <span className="font-bold flex items-center gap-1.5 text-emerald-800">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  Zero permanent deletion:
-                </span>
-                <p>All items remain in your macOS Trash until you choose to empty it. You can restore any item instantly using &quot;Put Back&quot;.</p>
+
+              {/* Space Equation Bar */}
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Current Free Space</span>
+                  <span className="font-bold text-slate-900 font-mono">193.8 GB</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-cyan-600" />
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Reclaimed to Trash</span>
+                  <span className="font-bold text-emerald-600 font-mono">+{selectedBytes.toFixed(1)} GB</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-cyan-600" />
+                <div>
+                  <span className="text-slate-500 block text-[11px]">New Free Space</span>
+                  <span className="font-bold text-cyan-700 font-mono">{(193.8 + selectedBytes).toFixed(1)} GB</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2">
+            {/* ITEM MANIFEST BREAKDOWN (Shows what is being deleted) */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-slate-700 block uppercase tracking-wider">
+                Scheduled Items ({selectedItems.length})
+              </span>
+              <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1 divide-y divide-slate-100 border border-slate-200 rounded-xl p-2 bg-slate-50/50">
+                {selectedItems.map(item => (
+                  <div key={item.id} className="pt-1.5 first:pt-0 flex items-center justify-between gap-3 text-xs">
+                    <div className="min-w-0 flex items-center gap-2">
+                      <FileText className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <div className="truncate">
+                        <span className="font-bold text-slate-900 block truncate">{item.name}</span>
+                        <span className="text-[10px] font-mono text-slate-500 truncate block">{item.path}</span>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 flex items-center gap-2">
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
+                        item.risk === 'Low' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {item.risk}
+                      </span>
+                      <span className="font-bold font-mono text-slate-900">{item.sizeGB} GB</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Trash Put Back Guarantee Note */}
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs flex items-start gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <p className="leading-relaxed">
+                <strong>Put Back Guarantee:</strong> Items will reside safely in your macOS Trash. Open Trash anytime and select <span className="underline font-semibold">Put Back</span> to restore files to their exact original locations.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmClean}
-                className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-md shadow-emerald-600/25 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-md shadow-emerald-600/25 flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                Proceed to Trash ({selectedBytes.toFixed(1)} GB)
+                <Trash2 className="w-4 h-4" />
+                <span>Move {selectedBytes.toFixed(1)} GB to Trash</span>
               </button>
             </div>
           </div>
