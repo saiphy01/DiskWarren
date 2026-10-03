@@ -87,39 +87,113 @@ public partial class MainWindow : Window
                 case "cleanRule":
                     if (root.TryGetProperty("ruleTitle", out var titleElem))
                     {
-                        CleanRuleByTitle(titleElem.GetString() ?? "");
-                        await SendInitialDataAsync();
+                        string ruleTitle = titleElem.GetString() ?? "";
+                        _ = Task.Run(async () =>
+                        {
+                            CleanRuleByTitle(ruleTitle);
+                            await Dispatcher.InvokeAsync(async () =>
+                            {
+                                await SendInitialDataAsync();
+                            });
+                        });
                     }
                     break;
 
                 case "cleanAllRules":
-                    CleanAllLowRiskRules();
-                    await SendInitialDataAsync();
+                    _ = Task.Run(async () =>
+                    {
+                        CleanAllLowRiskRules();
+                        await Dispatcher.InvokeAsync(async () =>
+                        {
+                            await SendInitialDataAsync();
+                        });
+                    });
                     break;
 
                 case "recycleFile":
                     if (root.TryGetProperty("path", out var fileElem))
                     {
                         string fp = fileElem.GetString() ?? "";
-                        if (File.Exists(fp) || Directory.Exists(fp))
+                        _ = Task.Run(async () =>
                         {
-                            WindowsRecycleBin.MoveToRecycleBin(fp);
-                        }
+                            if (File.Exists(fp) || Directory.Exists(fp))
+                            {
+                                WindowsRecycleBin.MoveToRecycleBin(fp, false, false);
+                            }
+                            await Dispatcher.InvokeAsync(async () =>
+                            {
+                                await SendInitialDataAsync();
+                            });
+                        });
                     }
                     break;
 
                 case "batchRecycle":
                     if (root.TryGetProperty("paths", out var pathsElem) && pathsElem.ValueKind == JsonValueKind.Array)
                     {
+                        var pathsToRecycle = new List<string>();
                         foreach (var item in pathsElem.EnumerateArray())
                         {
                             string p = item.GetString() ?? "";
-                            if (File.Exists(p) || Directory.Exists(p))
+                            if (!string.IsNullOrWhiteSpace(p))
                             {
-                                WindowsRecycleBin.MoveToRecycleBin(p);
+                                pathsToRecycle.Add(p);
                             }
                         }
-                        await SendInitialDataAsync();
+
+                        _ = Task.Run(async () =>
+                        {
+                            int total = pathsToRecycle.Count;
+                            int successCount = 0;
+
+                            for (int i = 0; i < total; i++)
+                            {
+                                string p = pathsToRecycle[i];
+                                string name = Path.GetFileName(p.TrimEnd('\\', '/'));
+                                if (string.IsNullOrEmpty(name)) name = p;
+
+                                var prog = new
+                                {
+                                    status = "in_progress",
+                                    index = i + 1,
+                                    total = total,
+                                    percent = (int)((double)i / total * 100),
+                                    currentName = name
+                                };
+                                string progJson = JsonSerializer.Serialize(prog, JsonOpts);
+                                await Dispatcher.InvokeAsync(async () =>
+                                {
+                                    await WebViewControl.CoreWebView2.ExecuteScriptAsync($"window.onRecycleProgress?.({progJson});");
+                                });
+
+                                try
+                                {
+                                    if (File.Exists(p) || Directory.Exists(p))
+                                    {
+                                        var res = WindowsRecycleBin.MoveToRecycleBin(p, false, false);
+                                        if (res.Succeeded) successCount++;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"[Recycle Error] {ex.Message}");
+                                }
+                            }
+
+                            var comp = new
+                            {
+                                status = "completed",
+                                success = true,
+                                successCount = successCount,
+                                totalCount = total
+                            };
+                            string compJson = JsonSerializer.Serialize(comp, JsonOpts);
+                            await Dispatcher.InvokeAsync(async () =>
+                            {
+                                await WebViewControl.CoreWebView2.ExecuteScriptAsync($"window.onRecycleCompleted?.({compJson});");
+                                await SendInitialDataAsync();
+                            });
+                        });
                     }
                     break;
 

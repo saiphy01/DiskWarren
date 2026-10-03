@@ -1843,16 +1843,38 @@
       document.getElementById('dockHeadlineText').innerText = `${count} ${count === 1 ? 'Target' : 'Targets'} • ${formatBytes(totalBytes)} Staged`;
     }
 
+    let isRecycling = false;
+
     function dispatchBatchRecycle() {
       closeConfirmationModal();
       const paths = stagedItems.map(i => i.path);
+      if (paths.length === 0) return;
+
+      isRecycling = true;
+      const dockHeadline = document.getElementById('dockHeadlineText');
+      if (dockHeadline) {
+        dockHeadline.innerHTML = `<span style="color:var(--accent-primary); animation:pulseAnim 1.5s infinite;">Moving ${paths.length} targets to Windows Recycle Bin...</span>`;
+      }
+      showToast(`Recycling ${paths.length} items in background...`);
+
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage({ action: 'batchRecycle', paths: paths });
       }
-      playSound('clean');
-      showToast(`Cleaned ${stagedItems.length} items to Windows Recycle Bin!`);
-      clearCollectorTray();
     }
+
+    window.onRecycleProgress = function(data) {
+      const dockHeadline = document.getElementById('dockHeadlineText');
+      if (dockHeadline) {
+        dockHeadline.innerHTML = `<span style="color:var(--accent-primary);">Recycling (${data.index}/${data.total}): <strong>${data.currentName}</strong></span>`;
+      }
+    };
+
+    window.onRecycleCompleted = function(data) {
+      isRecycling = false;
+      playSound('clean');
+      showToast(`Successfully moved ${data.successCount} items to Windows Recycle Bin!`);
+      clearCollectorTray();
+    };
 
     function stageAllLowRiskTargets() {
       let count = 0;

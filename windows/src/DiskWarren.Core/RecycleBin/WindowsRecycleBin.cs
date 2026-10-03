@@ -31,38 +31,44 @@ public static class WindowsRecycleBin
     [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int SHFileOperation(ref SHFILEOPSTRUCT lpFileOp);
 
-    public static CleanupResult MoveToRecycleBin(string path, bool dryRun = false)
+    public static CleanupResult MoveToRecycleBin(string path, bool dryRun = false, bool calculateSize = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
-        if (!File.Exists(path) && !Directory.Exists(path))
+        // Normalize path (strip trailing separators for Win32 SHFileOperation)
+        string normalizedPath = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        if (!File.Exists(normalizedPath) && !Directory.Exists(normalizedPath))
         {
-            return new CleanupResult(path, 0, false, false, "Path does not exist.");
+            return new CleanupResult(normalizedPath, 0, false, false, "Path does not exist.");
         }
 
         // Safety verification
-        WindowsSafetyGate.AssertSafeToDelete(path);
+        WindowsSafetyGate.AssertSafeToDelete(normalizedPath);
 
         long sizeBytes = 0;
-        try
+        if (calculateSize)
         {
-            if (File.Exists(path))
+            try
             {
-                sizeBytes = new FileInfo(path).Length;
+                if (File.Exists(normalizedPath))
+                {
+                    sizeBytes = new FileInfo(normalizedPath).Length;
+                }
+                else if (Directory.Exists(normalizedPath))
+                {
+                    sizeBytes = CalculateDirectorySize(new DirectoryInfo(normalizedPath));
+                }
             }
-            else if (Directory.Exists(path))
+            catch (Exception ex)
             {
-                sizeBytes = CalculateDirectorySize(new DirectoryInfo(path));
+                return new CleanupResult(normalizedPath, 0, false, false, $"Failed to compute size: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            return new CleanupResult(path, 0, false, false, $"Failed to compute size: {ex.Message}");
         }
 
         if (dryRun)
         {
-            return new CleanupResult(path, sizeBytes, true, true, null);
+            return new CleanupResult(normalizedPath, sizeBytes, true, true, null);
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -73,27 +79,27 @@ public static class WindowsRecycleBin
                 var fileOp = new SHFILEOPSTRUCT
                 {
                     wFunc = FO_DELETE,
-                    pFrom = path + "\0\0",
+                    pFrom = normalizedPath + "\0\0",
                     fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT
                 };
 
                 int result = SHFileOperation(ref fileOp);
                 if (result == 0 && !fileOp.fAnyOperationsAborted)
                 {
-                    return new CleanupResult(path, sizeBytes, true, true, null);
+                    return new CleanupResult(normalizedPath, sizeBytes, true, true, null);
                 }
 
                 // If shell recycle failed (e.g. on special drive or network share), fall back to standard safe delete
-                if (File.Exists(path))
+                if (File.Exists(normalizedPath))
                 {
-                    File.Delete(path);
+                    File.Delete(normalizedPath);
                 }
-                else if (Directory.Exists(path))
+                else if (Directory.Exists(normalizedPath))
                 {
-                    Directory.Delete(path, true);
+                    Directory.Delete(normalizedPath, true);
                 }
 
-                return new CleanupResult(path, sizeBytes, true, false, null);
+                return new CleanupResult(normalizedPath, sizeBytes, true, false, null);
             }
             catch (Exception ex)
             {
