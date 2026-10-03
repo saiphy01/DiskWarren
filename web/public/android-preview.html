@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiskWarren Android — Executive Storage Suite & Per-App Cache Manager</title>
+  <title>DiskWarren Android — Executive Storage Suite & App Cache Bucket</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@
       --accent-primary: #0284c7;
       --accent-primary-light: #e0f2fe;
       --accent-indigo: #6366f1;
+      --accent-indigo-light: #eef2ff;
       --accent-amber: #f59e0b;
       --accent-rose: #f43f5e;
       --phone-w: 392px;
@@ -99,7 +100,7 @@
       flex-direction: column;
     }
 
-    /* Front Camera Notch / Punch Hole */
+    /* Front Camera Notch */
     .camera-punch {
       position: absolute;
       top: 10px;
@@ -215,7 +216,7 @@
       stroke-width: 2.2;
     }
 
-    /* Executive Hero Card (Sculpted Material) */
+    /* Executive Hero Card */
     .hero-storage-card {
       background: var(--card-bg);
       border-radius: 24px;
@@ -276,7 +277,7 @@
       margin-top: 3px;
     }
 
-    /* Proportional Spectrum Track Bar */
+    /* Spectrum Bar */
     .spectrum-track {
       width: 100%;
       height: 6px;
@@ -472,6 +473,140 @@
       transform: none;
     }
 
+    /* THE APP CACHE BUCKET MASTER CARD (CDO Executive Bucket) */
+    .bucket-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 16px;
+      border: 1.5px solid rgba(99, 102, 241, 0.25);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bucket-card:hover {
+      border-color: var(--accent-indigo);
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.15);
+    }
+    .bucket-card:active {
+      transform: scale(0.98);
+    }
+
+    .bucket-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .bucket-icon-vault {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.16) 0%, rgba(2, 132, 199, 0.16) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-indigo);
+      flex-shrink: 0;
+    }
+    .bucket-icon-vault svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+    }
+    .bucket-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .bucket-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bucket-title-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .bucket-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-light);
+      padding: 1.5px 6px;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
+    }
+    .bucket-desc {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Avatar Stack in Bucket Card */
+    .avatar-stack-row {
+      display: flex;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .stack-avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      margin-left: -5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .stack-avatar:first-child {
+      margin-left: 0;
+    }
+    .stack-caption {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+
+    .bucket-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+    .bucket-metric-val {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-indigo);
+      line-height: 1.2;
+    }
+    .bucket-open-btn {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
     /* Section Subheaders */
     .section-header-bar {
       display: flex;
@@ -479,168 +614,12 @@
       align-items: center;
       padding: 6px 0;
     }
-    .section-title-cluster {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
     .section-title {
       font-size: 11.5px;
       font-weight: 800;
       color: var(--text-muted);
       letter-spacing: 0.06em;
       text-transform: uppercase;
-    }
-    .section-badge-counter {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--accent-emerald-dark);
-      background: rgba(16, 185, 129, 0.12);
-      padding: 2px 7px;
-      border-radius: 6px;
-    }
-    .section-action-btn {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-emerald-dark);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
-    }
-    .section-action-btn:hover {
-      background: rgba(16, 185, 129, 0.16);
-      border-color: var(--accent-emerald);
-    }
-    .section-action-btn svg {
-      width: 12px;
-      height: 12px;
-      stroke-width: 2.2;
-    }
-
-    /* Directly Visible Application Cache Manager Section */
-    .app-cache-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .app-row-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 12px 14px;
-      border: 1px solid var(--border-light);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
-      transition: all 0.15s ease;
-    }
-    .app-row-card:hover {
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
-    }
-    .app-row-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
-    .app-avatar-pod {
-      width: 32px;
-      height: 32px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #ffffff;
-      flex-shrink: 0;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    .app-row-meta {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .app-name-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .app-cache-sub {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .cache-highlight {
-      font-weight: 700;
-      color: var(--accent-emerald-dark);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .app-total-dim {
-      color: var(--text-dim);
-    }
-
-    /* Fixed-Width, Laser-Aligned Clear Cache Button on EVERY SINGLE APP */
-    .btn-clear-cache-pill {
-      width: 104px;
-      min-width: 104px;
-      max-width: 104px;
-      height: 32px;
-      box-sizing: border-box;
-      background: rgba(16, 185, 129, 0.10);
-      color: var(--accent-emerald-dark);
-      border: 1px solid rgba(16, 185, 129, 0.28);
-      border-radius: 9px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      flex-shrink: 0;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-      text-align: center;
-    }
-    .btn-clear-cache-pill:hover {
-      background: var(--accent-emerald);
-      color: #ffffff;
-      border-color: var(--accent-emerald);
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
-    }
-    .btn-clear-cache-pill:active {
-      transform: scale(0.95);
-    }
-    .btn-clear-cache-pill svg {
-      width: 12px;
-      height: 12px;
-      stroke-width: 2.2;
-      flex-shrink: 0;
-    }
-    .btn-clear-cache-pill.cleaned {
-      background: #f1f5f9;
-      color: var(--text-dim);
-      border-color: var(--border-light);
-      cursor: default;
-      box-shadow: none;
-      transform: none;
     }
 
     /* Category List Cards (Strict Mathematical Grid Alignment) */
@@ -735,7 +714,7 @@
       color: var(--text-muted);
     }
 
-    /* Fixed Metrics Column (Always strictly aligned) */
+    /* Fixed Metrics Column */
     .cat-row-right {
       display: flex;
       align-items: center;
@@ -795,6 +774,341 @@
       opacity: 0.6;
     }
 
+    /* ========================================================
+       INSIDE THE BUCKET: FULL DRILL-DOWN INSPECTION SHEET
+       ======================================================== */
+    .bucket-scrim {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 150;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .bucket-scrim.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bucket-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ffffff;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 14px 18px 24px 18px;
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.28);
+      z-index: 160;
+      transform: translateY(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 88%;
+      height: 88%;
+      display: flex;
+      flex-direction: column;
+    }
+    .bucket-sheet.active {
+      transform: translateY(0);
+    }
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 2px;
+      margin: 0 auto 12px auto;
+    }
+
+    /* Bucket Sheet Header */
+    .bucket-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .bucket-sheet-title-group h3 {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bucket-sheet-title-group p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .btn-close-bucket {
+      background: #f1f5f9;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      transition: background 0.15s ease;
+    }
+    .btn-close-bucket:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    /* Bucket Controls Bar (Select All / Telemetry) */
+    .bucket-controls-bar {
+      background: #f8fafc;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 9px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .select-status-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .select-badge {
+      background: var(--accent-indigo-light);
+      color: var(--accent-indigo);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+    }
+    .btn-toggle-select-all {
+      background: transparent;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent-primary);
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+    .btn-toggle-select-all:hover {
+      text-decoration: underline;
+    }
+
+    /* Selectable App Items Scroll Area */
+    .bucket-items-scroll {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 2px;
+      margin-bottom: 12px;
+    }
+    .bucket-items-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Granular Selectable App Card */
+    .bucket-item-row {
+      background: #ffffff;
+      border: 1.5px solid var(--border-light);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .bucket-item-row:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+    .bucket-item-row.selected {
+      border-color: var(--accent-emerald);
+      background: rgba(236, 253, 245, 0.4);
+    }
+    .bucket-item-row.cleared-item {
+      opacity: 0.55;
+      background: #f8fafc;
+      border-color: var(--border-light);
+      cursor: default;
+    }
+
+    .item-left-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    /* Custom Checkbox */
+    .custom-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 2px solid #cbd5e1;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .bucket-item-row.selected .custom-checkbox {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: #ffffff;
+    }
+    .custom-checkbox svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.5;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.15s ease;
+    }
+    .bucket-item-row.selected .custom-checkbox svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .app-avatar-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .item-text-stack {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .item-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-cache-desc {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Item Right Cluster */
+    .item-right-cluster {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+    .item-cache-size {
+      font-size: 14px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+    }
+    .item-cache-size.freed {
+      color: var(--text-dim);
+    }
+    .item-status-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-emerald-dark);
+    }
+
+    /* Sticky Bottom Action Bar */
+    .bucket-bottom-bar {
+      background: #ffffff;
+      border-top: 1px solid var(--border-light);
+      padding-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .summary-stack {
+      display: flex;
+      flex-direction: column;
+    }
+    .summary-stack-tag {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .summary-stack-num {
+      font-size: 17px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-emerald-dark);
+    }
+
+    /* Master Delete Button */
+    .btn-delete-selected {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.32);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-delete-selected:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-1px);
+    }
+    .btn-delete-selected:active {
+      transform: scale(0.97);
+    }
+    .btn-delete-selected svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.2;
+    }
+    .btn-delete-selected:disabled {
+      background: #e2e8f0;
+      color: var(--text-dim);
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
     /* Toast Alert */
     .android-toast {
       position: absolute;
@@ -823,7 +1137,7 @@
 
   <div class="preview-header">
     <h1>DiskWarren Android — Executive Storage Suite</h1>
-    <p>Chief Design Officer Grade • Dual Action Pill • Per-App Cache Cleaners</p>
+    <p>App Cache Storage Bucket • Interactive Drill-Down & Granular Selection</p>
   </div>
 
   <div class="phone-chassis">
@@ -897,13 +1211,13 @@
               </div>
             </div>
 
-            <!-- Balanced Dual Action Pill Row (50/50 CSS Grid) -->
+            <!-- Balanced Dual Action Pill Row -->
             <div class="reclaim-action-row">
-              <button class="btn-action-cache" id="btnHeroClearCache" onclick="clearAllAppCaches()">
+              <button class="btn-action-cache" id="btnHeroClearCache" onclick="openCacheBucket()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                 </svg>
-                <span id="heroCacheBtnText">Clear Cache</span>
+                <span id="heroCacheBtnText">Open Cache Bucket</span>
               </button>
               <button class="btn-action-all" id="btnHeroCleanAll" onclick="executeClearSpace()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -915,28 +1229,46 @@
           </div>
         </div>
 
-        <!-- Directly Visible Application Caches Section -->
+        <!-- APPLICATION CACHE BUCKET MASTER CARD -->
         <div class="section-header-bar">
-          <div class="section-title-cluster">
-            <span class="section-title">Application Caches</span>
-            <span class="section-badge-counter" id="mainAppCacheBadge">6 Apps • 7.3 GB</span>
-          </div>
-          <button class="section-action-btn" onclick="clearAllAppCaches()" id="btnSectionClearAll">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-            <span>Clear All</span>
-          </button>
+          <span class="section-title">Storage Vaults</span>
         </div>
 
-        <!-- App Caches List with Laser-Aligned [Clear Cache] Button on Every App -->
-        <div class="app-cache-stack" id="mainAppCacheList"></div>
+        <div class="bucket-card" id="appCacheBucketCard" onclick="openCacheBucket()">
+          <div class="bucket-left">
+            <div class="bucket-icon-vault">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <div class="bucket-info">
+              <div class="bucket-title-row">
+                <span class="bucket-title-text">App Cache Bucket</span>
+                <span class="bucket-badge" id="bucketAppsBadge">6 Apps</span>
+              </div>
+              <span class="bucket-desc">Media buffers &amp; temporary streams safe to clear</span>
+              <div class="avatar-stack-row">
+                <div class="stack-avatar" style="background:#1db954;">S</div>
+                <div class="stack-avatar" style="background:#ff0000;">Y</div>
+                <div class="stack-avatar" style="background:#4285f4;">C</div>
+                <div class="stack-avatar" style="background:#e1306c;">I</div>
+                <div class="stack-avatar" style="background:#00f2fe;">T</div>
+                <div class="stack-avatar" style="background:#ff4500;">R</div>
+                <span class="stack-caption">Tap to select &amp; clean ›</span>
+              </div>
+            </div>
+          </div>
+          <div class="bucket-right">
+            <span class="bucket-metric-val" id="bucketMetricVal">7.3 GB</span>
+            <span class="bucket-open-btn">Inspect ›</span>
+          </div>
+        </div>
 
         <!-- Storage Allocation Categories -->
         <div class="section-header-bar">
-          <div class="section-title-cluster">
-            <span class="section-title">Storage Breakdown</span>
-          </div>
+          <span class="section-title">Storage Breakdown</span>
           <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">6 Categories</span>
         </div>
 
@@ -946,6 +1278,56 @@
       <!-- Bottom Gesture Navigation Pill -->
       <div class="home-indicator-bar">
         <div class="home-pill"></div>
+      </div>
+
+      <!-- Scrim Backdrop for Bucket Drill-Down -->
+      <div class="bucket-scrim" id="bucketScrim" onclick="closeCacheBucket()"></div>
+
+      <!-- INSIDE THE BUCKET: INTERACTIVE DRILL-DOWN MODAL -->
+      <div class="bucket-sheet" id="bucketSheet">
+        <div class="sheet-handle"></div>
+
+        <div class="bucket-sheet-header">
+          <div class="bucket-sheet-title-group">
+            <h3>
+              <span>App Cache Bucket</span>
+              <span class="bucket-badge" id="sheetBucketBadge">6 Apps</span>
+            </h3>
+            <p>Select which application caches to delete or clean all at once.</p>
+          </div>
+          <button class="btn-close-bucket" onclick="closeCacheBucket()">✕</button>
+        </div>
+
+        <!-- Selection Controls & Status -->
+        <div class="bucket-controls-bar">
+          <div class="select-status-label">
+            <span>Selection:</span>
+            <span class="select-badge" id="selectionCountBadge">6 Selected</span>
+          </div>
+          <button class="btn-toggle-select-all" id="btnToggleSelectAll" onclick="toggleSelectAll()">
+            Deselect All
+          </button>
+        </div>
+
+        <!-- Granular Selectable List of Apps Inside the Bucket -->
+        <div class="bucket-items-scroll" id="bucketItemsContainer"></div>
+
+        <!-- Sticky Bottom Action Bar with Dynamic Reclaim Counter -->
+        <div class="bucket-bottom-bar">
+          <div class="summary-stack">
+            <span class="summary-stack-tag">SELECTED TO DELETE</span>
+            <span class="summary-stack-num" id="selectedSizeTotal">7.3 GB</span>
+          </div>
+          <button class="btn-delete-selected" id="btnDeleteSelected" onclick="deleteSelectedCaches()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+            <span id="btnDeleteSelectedText">Delete Selected</span>
+          </button>
+        </div>
       </div>
 
       <!-- Toast Alert -->
@@ -1000,15 +1382,18 @@
       { id: 'documents', title: 'Documents & Archives', count: 593, sizeBytes: 6442450944, color: '#d97706', iconSvg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' }
     ];
 
-    // Installed Apps List (Every single app has an identical fixed-width, strictly aligned Clear Cache button)
+    // Apps inside the Cache Bucket
     let appList = [
-      { id: 'spotify', name: 'Spotify Music', initial: 'S', color: '#1db954', totalBytes: 3435973836, cacheBytes: 1932735283, cleared: false },
-      { id: 'youtube', name: 'YouTube', initial: 'Y', color: '#ff0000', totalBytes: 3113851289, cacheBytes: 1610612736, cleared: false },
-      { id: 'chrome', name: 'Google Chrome', initial: 'C', color: '#4285f4', totalBytes: 2362232012, cacheBytes: 1395864371, cleared: false },
-      { id: 'instagram', name: 'Instagram', initial: 'I', color: '#e1306c', totalBytes: 2040109465, cacheBytes: 1027604480, cleared: false },
-      { id: 'tiktok', name: 'TikTok', initial: 'T', color: '#00f2fe', totalBytes: 1825361100, cacheBytes: 880803840, cleared: false },
-      { id: 'reddit', name: 'Reddit', initial: 'R', color: '#ff4500', totalBytes: 1181116006, cacheBytes: 471859200, cleared: false }
+      { id: 'spotify', name: 'Spotify Music', initial: 'S', color: '#1db954', totalBytes: 3435973836, cacheBytes: 1932735283, cacheType: 'Media Stream & Offline Buffers', cleared: false },
+      { id: 'youtube', name: 'YouTube', initial: 'Y', color: '#ff0000', totalBytes: 3113851289, cacheBytes: 1610612736, cacheType: 'Video Chunk Pre-loads', cleared: false },
+      { id: 'chrome', name: 'Google Chrome', initial: 'C', color: '#4285f4', totalBytes: 2362232012, cacheBytes: 1395864371, cacheType: 'Web Cache & Image CDN', cleared: false },
+      { id: 'instagram', name: 'Instagram', initial: 'I', color: '#e1306c', totalBytes: 2040109465, cacheBytes: 1027604480, cacheType: 'Story & Reel Temp Cache', cleared: false },
+      { id: 'tiktok', name: 'TikTok', initial: 'T', color: '#00f2fe', totalBytes: 1825361100, cacheBytes: 880803840, cacheType: 'Video Buffers & Shader Cache', cleared: false },
+      { id: 'reddit', name: 'Reddit', initial: 'R', color: '#ff4500', totalBytes: 1181116006, cacheBytes: 471859200, cacheType: 'Thumbnail & Post Cache', cleared: false }
     ];
+
+    // Active Selection Set for Deletion inside the Bucket
+    let selectedAppIds = new Set(['spotify', 'youtube', 'chrome', 'instagram', 'tiktok', 'reddit']);
 
     const totalDriveBytes = 256 * 1024 * 1024 * 1024; // 256 GB
     let selectedCategoryId = null;
@@ -1024,6 +1409,15 @@
 
     function getTotalUsed() {
       return categories.reduce((acc, c) => acc + c.sizeBytes, 0);
+    }
+
+    function getSelectedCacheBytes() {
+      return appList.reduce((acc, a) => {
+        if (!a.cleared && selectedAppIds.has(a.id)) {
+          return acc + a.cacheBytes;
+        }
+        return acc;
+      }, 0);
     }
 
     function formatBytes(bytes) {
@@ -1097,7 +1491,7 @@
       ctx.fill();
     }
 
-    // Update Telemetry Hub & Reclaim Indicators
+    // Update Telemetry Hub & Indicators
     function updateTelemetry() {
       const teleLabel = document.getElementById('teleLabel');
       const teleSize = document.getElementById('teleSize');
@@ -1136,7 +1530,6 @@
       const heroCacheBtnText = document.getElementById('heroCacheBtnText');
       const btnHeroCleanAll = document.getElementById('btnHeroCleanAll');
       const heroAllBtnText = document.getElementById('heroAllBtnText');
-      const mainAppCacheBadge = document.getElementById('mainAppCacheBadge');
 
       if (totalReclaim > 0) {
         reclaimStatusText.innerText = 'RECLAIMABLE STORAGE';
@@ -1150,13 +1543,13 @@
         reclaimDescText.innerText = 'Downloads & App Caches protected';
       }
 
-      // Update Hero Cache Button (Concise, Perfectly Sized)
+      // Update Hero Cache Button
       if (totalCache > 0) {
         btnHeroClearCache.classList.remove('cleaned');
-        heroCacheBtnText.innerText = 'Clear Cache';
+        heroCacheBtnText.innerText = 'Open Cache Bucket';
       } else {
         btnHeroClearCache.classList.add('cleaned');
-        heroCacheBtnText.innerText = 'Caches Cleaned ✓';
+        heroCacheBtnText.innerText = 'Bucket Empty ✓';
       }
 
       // Update Hero Clean All Button
@@ -1168,9 +1561,13 @@
         heroAllBtnText.innerText = 'Cleaned ✓';
       }
 
-      // Update Badge
-      const uncleanedAppsCount = appList.filter(a => !a.cleared).length;
-      mainAppCacheBadge.innerText = totalCache > 0 ? `${uncleanedAppsCount} Apps • ${formatBytes(totalCache)}` : 'All Clean ✓';
+      // Update Bucket Card on Main Screen
+      const bucketMetricVal = document.getElementById('bucketMetricVal');
+      const bucketAppsBadge = document.getElementById('bucketAppsBadge');
+      const activeAppsCount = appList.filter(a => !a.cleared).length;
+
+      bucketMetricVal.innerText = formatBytes(totalCache);
+      bucketAppsBadge.innerText = activeAppsCount > 0 ? `${activeAppsCount} Apps` : 'Empty ✓';
 
       // Update Spectrum Track
       const track = document.getElementById('spectrumTrack');
@@ -1179,42 +1576,7 @@
       `).join('');
     }
 
-    // Render Direct Visible Application Caches Section (Every app button has exact same 104px x 32px geometry)
-    function renderMainAppCaches() {
-      const container = document.getElementById('mainAppCacheList');
-      let html = '';
-
-      appList.forEach(app => {
-        html += `
-          <div class="app-row-card">
-            <div class="app-row-left">
-              <div class="app-avatar-pod" style="background:${app.color};">
-                ${app.initial}
-              </div>
-              <div class="app-row-meta">
-                <span class="app-name-title">${app.name}</span>
-                <span class="app-cache-sub">
-                  Cache: <span class="cache-highlight">${app.cleared ? '0 B' : formatBytes(app.cacheBytes)}</span>
-                  <span class="app-total-dim">• Total ${formatBytes(app.totalBytes)}</span>
-                </span>
-              </div>
-            </div>
-
-            <!-- Strictly Fixed-Width Button Aligned to Right Guideline -->
-            <button class="btn-clear-cache-pill ${app.cleared ? 'cleaned' : ''}" onclick="clearSingleAppCache('${app.id}')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                ${app.cleared ? '<polyline points="20 6 9 17 4 12"/>' : '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'}
-              </svg>
-              <span>${app.cleared ? 'Cleaned' : 'Clear Cache'}</span>
-            </button>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    // Render Category Breakdown Cards (Strict column alignment)
+    // Render Category Breakdown Cards
     function renderCategoryCards() {
       const container = document.getElementById('categoryCardsContainer');
       const total = getTotalUsed();
@@ -1226,7 +1588,7 @@
         const isActive = selectedCategoryId === cat.id;
 
         html += `
-          <div class="cat-item-card ${isActive ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+          <div class="cat-item-card ${isActive ? 'active' : ''}" onclick="${cat.isAppCache ? 'openCacheBucket()' : `selectCategory('${cat.id}')`}">
             <div class="cat-row-main">
               <div class="cat-row-left">
                 <div class="cat-icon-container" style="background:${cat.color}14; color:${cat.color}">
@@ -1236,9 +1598,9 @@
                   <div class="cat-name-row">
                     <span class="cat-title-text">${cat.title}</span>
                     ${cat.id === 'downloads' && cat.sizeBytes > 0 ? `<span class="micro-chip chip-reclaim">Cleanable</span>` : ''}
-                    ${cat.isAppCache && totalCache > 0 ? `<span class="micro-chip chip-cache">${formatBytes(totalCache)} Cache</span>` : ''}
+                    ${cat.isAppCache && totalCache > 0 ? `<span class="micro-chip chip-cache">${formatBytes(totalCache)} in Bucket</span>` : ''}
                   </div>
-                  <span class="cat-count-sub">${cat.isAppCache ? `${cat.count} apps installed` : `${cat.count.toLocaleString()} items`}</span>
+                  <span class="cat-count-sub">${cat.isAppCache ? `${cat.count} apps installed • Tap to inspect bucket` : `${cat.count.toLocaleString()} items`}</span>
                 </div>
               </div>
 
@@ -1260,6 +1622,158 @@
       container.innerHTML = html;
     }
 
+    // ========================================================
+    // BUCKET CONTROLS & SELECTION LOGIC
+    // ========================================================
+
+    function openCacheBucket() {
+      playSound('tap');
+      // Ensure only uncleared apps are preselected
+      selectedAppIds = new Set(appList.filter(a => !a.cleared).map(a => a.id));
+      renderBucketItems();
+      updateBucketSelectionUI();
+
+      document.getElementById('bucketScrim').classList.add('active');
+      document.getElementById('bucketSheet').classList.add('active');
+    }
+
+    function closeCacheBucket() {
+      playSound('tap');
+      document.getElementById('bucketScrim').classList.remove('active');
+      document.getElementById('bucketSheet').classList.remove('active');
+    }
+
+    // Toggle individual app selection in bucket
+    function toggleAppSelection(appId) {
+      const app = appList.find(a => a.id === appId);
+      if (!app || app.cleared) return;
+
+      playSound('tap');
+      if (selectedAppIds.has(appId)) {
+        selectedAppIds.delete(appId);
+      } else {
+        selectedAppIds.add(appId);
+      }
+      renderBucketItems();
+      updateBucketSelectionUI();
+    }
+
+    // Select All / Deselect All Toggle
+    function toggleSelectAll() {
+      playSound('tap');
+      const uncleared = appList.filter(a => !a.cleared);
+      if (selectedAppIds.size === uncleared.length && uncleared.length > 0) {
+        // Deselect all
+        selectedAppIds.clear();
+      } else {
+        // Select all uncleared
+        selectedAppIds = new Set(uncleared.map(a => a.id));
+      }
+      renderBucketItems();
+      updateBucketSelectionUI();
+    }
+
+    // Update Bucket Selection Counters & Master Button
+    function updateBucketSelectionUI() {
+      const unclearedCount = appList.filter(a => !a.cleared).length;
+      const selectedCount = selectedAppIds.size;
+      const selectedBytes = getSelectedCacheBytes();
+
+      document.getElementById('selectionCountBadge').innerText = `${selectedCount} of ${unclearedCount} Selected`;
+      document.getElementById('sheetBucketBadge').innerText = `${unclearedCount} Apps Available`;
+
+      const btnToggle = document.getElementById('btnToggleSelectAll');
+      btnToggle.innerText = (selectedCount === unclearedCount && unclearedCount > 0) ? 'Deselect All' : 'Select All';
+
+      const selectedSizeTotal = document.getElementById('selectedSizeTotal');
+      selectedSizeTotal.innerText = formatBytes(selectedBytes);
+
+      const btnDelete = document.getElementById('btnDeleteSelected');
+      const btnDeleteText = document.getElementById('btnDeleteSelectedText');
+
+      if (selectedBytes > 0 && selectedCount > 0) {
+        btnDelete.disabled = false;
+        btnDeleteText.innerText = `Delete Selected (${formatBytes(selectedBytes)})`;
+      } else {
+        btnDelete.disabled = true;
+        btnDeleteText.innerText = unclearedCount === 0 ? 'All Caches Cleaned ✓' : 'Select Apps to Delete';
+      }
+    }
+
+    // Render Granular Selectable List inside the Bucket
+    function renderBucketItems() {
+      const container = document.getElementById('bucketItemsContainer');
+      let html = '';
+
+      appList.forEach(app => {
+        const isSelected = selectedAppIds.has(app.id) && !app.cleared;
+
+        html += `
+          <div class="bucket-item-row ${isSelected ? 'selected' : ''} ${app.cleared ? 'cleared-item' : ''}" onclick="${app.cleared ? '' : `toggleAppSelection('${app.id}')`}">
+            <div class="item-left-cluster">
+              <div class="custom-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+
+              <div class="app-avatar-badge" style="background:${app.color};">
+                ${app.initial}
+              </div>
+
+              <div class="item-text-stack">
+                <span class="item-name">${app.name}</span>
+                <span class="item-cache-desc">${app.cacheType}</span>
+              </div>
+            </div>
+
+            <div class="item-right-cluster">
+              <span class="item-cache-size ${app.cleared ? 'freed' : ''}">
+                ${app.cleared ? '0 B' : formatBytes(app.cacheBytes)}
+              </span>
+              ${app.cleared ? '<span class="item-status-tag">Cleaned ✓</span>' : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Execute Delete for Selected Caches
+    function deleteSelectedCaches() {
+      const selectedBytes = getSelectedCacheBytes();
+      const count = selectedAppIds.size;
+      if (selectedBytes === 0 || count === 0) return;
+
+      playSound('clean');
+
+      // Scrub selected apps
+      appList.forEach(a => {
+        if (selectedAppIds.has(a.id) && !a.cleared) {
+          a.totalBytes = Math.max(0, a.totalBytes - a.cacheBytes);
+          a.cleared = true;
+        }
+      });
+
+      // Deduct from Apps Category
+      const appsCat = categories.find(c => c.id === 'apps');
+      if (appsCat) {
+        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - selectedBytes);
+      }
+
+      // Clear selection
+      selectedAppIds.clear();
+
+      renderBucketItems();
+      updateBucketSelectionUI();
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+
+      showToast(`✨ Freed ${formatBytes(selectedBytes)} cache from ${count} selected apps`);
+    }
+
     function selectCategory(id) {
       playSound('tap');
       selectedCategoryId = (selectedCategoryId === id) ? null : id;
@@ -1268,57 +1782,7 @@
       renderCategoryCards();
     }
 
-    // Clear Single App Cache
-    function clearSingleAppCache(appId) {
-      const app = appList.find(a => a.id === appId);
-      if (!app || app.cleared) return;
-
-      playSound('clean');
-      const freed = app.cacheBytes;
-      app.cleared = true;
-      app.totalBytes = Math.max(0, app.totalBytes - freed);
-
-      const appsCat = categories.find(c => c.id === 'apps');
-      if (appsCat) {
-        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - freed);
-      }
-
-      renderMainAppCaches();
-      drawDonut();
-      updateTelemetry();
-      renderCategoryCards();
-      showToast(`Cleared ${formatBytes(freed)} cache from ${app.name}`);
-    }
-
-    // Clear All App Caches
-    function clearAllAppCaches() {
-      const totalCache = getTotalAppCache();
-      if (totalCache === 0) {
-        showToast('All app caches are already clean!');
-        return;
-      }
-
-      playSound('clean');
-      appList.forEach(a => {
-        if (!a.cleared) {
-          a.totalBytes = Math.max(0, a.totalBytes - a.cacheBytes);
-          a.cleared = true;
-        }
-      });
-
-      const appsCat = categories.find(c => c.id === 'apps');
-      if (appsCat) {
-        appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
-      }
-
-      renderMainAppCaches();
-      drawDonut();
-      updateTelemetry();
-      renderCategoryCards();
-      showToast(`Cleared ${formatBytes(totalCache)} across all installed apps`);
-    }
-
-    // Global Clear Space
+    // Global Clear Space (Clean All: Downloads + App Caches)
     function executeClearSpace() {
       const totalReclaim = getReclaimableDownloads() + getTotalAppCache();
       if (totalReclaim === 0) {
@@ -1335,7 +1799,7 @@
         d.count = 0;
       }
 
-      // Deduct all app caches
+      // Deduct all app caches in bucket
       const totalCache = getTotalAppCache();
       appList.forEach(a => {
         if (!a.cleared) {
@@ -1343,6 +1807,8 @@
           a.cleared = true;
         }
       });
+      selectedAppIds.clear();
+
       const appsCat = categories.find(c => c.id === 'apps');
       if (appsCat) {
         appsCat.sizeBytes = Math.max(0, appsCat.sizeBytes - totalCache);
@@ -1351,7 +1817,8 @@
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
-      renderMainAppCaches();
+      renderBucketItems();
+      updateBucketSelectionUI();
       showToast(`✨ ${formatBytes(totalReclaim)} cleared (Downloads & App Caches)`);
     }
 
@@ -1368,7 +1835,11 @@
 
       const hit = slicesMeta.find(s => dist >= s.r1 - 10 && dist <= s.r2 + 10 && angle >= s.a1 && angle <= s.a2);
       if (hit) {
-        selectCategory(hit.id);
+        if (hit.id === 'apps') {
+          openCacheBucket();
+        } else {
+          selectCategory(hit.id);
+        }
       } else {
         selectedCategoryId = null;
         drawDonut();
@@ -1409,7 +1880,8 @@
     drawDonut();
     updateTelemetry();
     renderCategoryCards();
-    renderMainAppCaches();
+    renderBucketItems();
+    updateBucketSelectionUI();
   </script>
 </body>
 </html>

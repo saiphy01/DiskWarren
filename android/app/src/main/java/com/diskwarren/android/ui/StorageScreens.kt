@@ -562,15 +562,105 @@ fun CategorySummaryList(
     }
 }
 
+@Composable
+fun AppCacheBucketCard(
+    totalCacheBytes: Long,
+    appCount: Int,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = ColorCardLight),
+        border = androidx.compose.foundation.BorderStroke(1.dp, ColorPurpleAI.copy(alpha = 0.25f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(ColorPurpleAI.copy(alpha = 0.12f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "📦", fontSize = 18.sp)
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "App Cache Bucket",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = ColorTextPrimary
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(ColorPurpleAI.copy(alpha = 0.10f))
+                                .padding(horizontal = 5.dp, vertical = 1.dp)
+                        ) {
+                            Text(
+                                text = "$appCount Apps",
+                                fontSize = 9.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ColorPurpleAI
+                            )
+                        }
+                    }
+                    Text(
+                        text = "Media buffers & temp streams • Tap to inspect",
+                        fontSize = 11.sp,
+                        color = ColorTextSecondary
+                    )
+                }
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = MediaItem.formatBytes(totalCacheBytes),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    color = ColorPurpleAI
+                )
+                Text(
+                    text = "Inspect ›",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = ColorBrandCyan
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppCacheBottomSheet(
     apps: List<AppCacheEntry>,
     onDismiss: () -> Unit,
     onClearSingleApp: (String) -> Unit,
-    onClearAllCaches: () -> Unit
+    onClearAllCaches: () -> Unit,
+    onDeleteSelectedCaches: ((Set<String>) -> Unit)? = null
 ) {
-    val totalCache = apps.filter { !it.isCleared }.sumOf { it.cacheSizeBytes }
+    val unclearedApps = apps.filter { !it.isCleared && it.cacheSizeBytes > 0 }
+    var selectedAppIds by remember { mutableStateOf(unclearedApps.map { it.id }.toSet()) }
+
+    val selectedBytes = apps.filter { !it.isCleared && selectedAppIds.contains(it.id) }.sumOf { it.cacheSizeBytes }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -584,84 +674,79 @@ fun AppCacheBottomSheet(
                 .padding(bottom = 32.dp)
         ) {
             Text(
-                text = "App Cache Manager",
+                text = "App Cache Bucket",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = ColorTextPrimary
             )
             Text(
-                text = "Temporary streams, webviews, and shader caches safe to scrub without losing logins.",
+                text = "Go inside the bucket and select which applications to clean.",
                 fontSize = 12.sp,
                 color = ColorTextSecondary,
-                modifier = Modifier.padding(top = 2.dp, bottom = 14.dp)
+                modifier = Modifier.padding(top = 2.dp, bottom = 12.dp)
             )
 
-            // Master Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = ColorEmeraldSafe.copy(alpha = 0.10f)),
-                shape = RoundedCornerShape(14.dp)
+            // Selection Controls Bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(ColorBgLight)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "TOTAL CLEANABLE CACHE",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = ColorEmeraldSafe
-                        )
-                        Text(
-                            text = MediaItem.formatBytes(totalCache),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontFamily = FontFamily.Monospace,
-                            color = ColorTextPrimary
-                        )
-                    }
+                Text(
+                    text = "${selectedAppIds.size} of ${unclearedApps.size} Selected",
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ColorBrandCyan
+                )
 
-                    Button(
-                        onClick = onClearAllCaches,
-                        enabled = totalCache > 0,
-                        colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
-                        shape = RoundedCornerShape(10.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = if (totalCache > 0) "Clear All Caches" else "All Cleaned ✓",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
+                Text(
+                    text = if (selectedAppIds.size == unclearedApps.size && unclearedApps.isNotEmpty()) "Deselect All" else "Select All",
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ColorBrandCyan,
+                    modifier = Modifier.clickable {
+                        selectedAppIds = if (selectedAppIds.size == unclearedApps.size && unclearedApps.isNotEmpty()) {
+                            emptySet()
+                        } else {
+                            unclearedApps.map { it.id }.toSet()
+                        }
                     }
-                }
+                )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Text(
-                text = "INSTALLED APPLICATIONS",
-                fontSize = 10.5.sp,
-                fontWeight = FontWeight.Bold,
-                color = ColorTextSecondary,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Spacer(modifier = Modifier.height(10.dp))
 
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(apps) { app ->
+                    val isChecked = selectedAppIds.contains(app.id) && !app.isCleared
+
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = ColorBgLight),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = !app.isCleared) {
+                                selectedAppIds = if (selectedAppIds.contains(app.id)) {
+                                    selectedAppIds - app.id
+                                } else {
+                                    selectedAppIds + app.id
+                                }
+                            },
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isChecked) ColorEmeraldSafe.copy(alpha = 0.06f) else ColorBgLight
+                        ),
                         shape = RoundedCornerShape(12.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, ColorBorderLight)
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (isChecked) ColorEmeraldSafe.copy(alpha = 0.4f) else ColorBorderLight
+                        )
                     ) {
                         Row(
                             modifier = Modifier
@@ -674,16 +759,22 @@ fun AppCacheBottomSheet(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text(
-                                    text = app.icon,
-                                    fontSize = 20.sp,
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(Color.White)
-                                        .wrapContentSize(Alignment.Center)
+                                Checkbox(
+                                    checked = isChecked,
+                                    onCheckedChange = { checked ->
+                                        selectedAppIds = if (checked) {
+                                            selectedAppIds + app.id
+                                        } else {
+                                            selectedAppIds - app.id
+                                        }
+                                    },
+                                    enabled = !app.isCleared,
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = ColorEmeraldSafe,
+                                        checkmarkColor = Color.White
+                                    )
                                 )
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
                                 Column {
                                     Text(
                                         text = app.name,
@@ -692,33 +783,81 @@ fun AppCacheBottomSheet(
                                         color = ColorTextPrimary
                                     )
                                     Text(
-                                        text = "Total: ${MediaItem.formatBytes(app.totalSizeBytes)} • Cache: ${if (app.isCleared) "0 B" else MediaItem.formatBytes(app.cacheSizeBytes)}",
+                                        text = "Cache: ${if (app.isCleared) "0 B" else MediaItem.formatBytes(app.cacheSizeBytes)}",
                                         fontSize = 11.5.sp,
-                                        color = ColorTextSecondary
+                                        color = if (app.isCleared) ColorTextSecondary else ColorEmeraldSafe,
+                                        fontWeight = FontWeight.SemiBold
                                     )
                                 }
                             }
 
-                            Button(
-                                onClick = { onClearSingleApp(app.id) },
-                                enabled = !app.isCleared && app.cacheSizeBytes > 0,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = ColorEmeraldSafe,
-                                    disabledContainerColor = ColorBorderLight
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                                modifier = Modifier.height(30.dp)
-                            ) {
+                            if (app.isCleared) {
                                 Text(
-                                    text = if (app.isCleared) "Cleaned ✓" else "Clear Cache",
-                                    fontSize = 11.sp,
+                                    text = "Cleaned ✓",
+                                    fontSize = 11.5.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (app.isCleared) ColorTextSecondary else Color.White
+                                    color = ColorTextSecondary
+                                )
+                            } else {
+                                Text(
+                                    text = MediaItem.formatBytes(app.cacheSizeBytes),
+                                    fontSize = 13.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Bold,
+                                    color = ColorTextPrimary
                                 )
                             }
                         }
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Sticky Bottom Action Bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "SELECTED TO DELETE",
+                        fontSize = 9.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = ColorTextSecondary,
+                        letterSpacing = 0.5.sp
+                    )
+                    Text(
+                        text = MediaItem.formatBytes(selectedBytes),
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontFamily = FontFamily.Monospace,
+                        color = ColorEmeraldSafe
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        if (onDeleteSelectedCaches != null) {
+                            onDeleteSelectedCaches(selectedAppIds)
+                        } else {
+                            selectedAppIds.forEach { onClearSingleApp(it) }
+                        }
+                    },
+                    enabled = selectedBytes > 0,
+                    colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = if (selectedBytes > 0) "Delete Selected (${MediaItem.formatBytes(selectedBytes)})" else "Select to Delete",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
             }
         }

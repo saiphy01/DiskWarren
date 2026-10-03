@@ -103,6 +103,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            fun deleteSelectedAppCaches(selectedIds: Set<String>) {
+                lifecycleScope.launch {
+                    appCacheEntries = appCacheEntries.map {
+                        if (selectedIds.contains(it.id)) it.copy(isCleared = true) else it
+                    }
+                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes } + appCacheEntries.sumOf { if (it.isCleared) it.totalSizeBytes - it.cacheSizeBytes else it.totalSizeBytes }
+                }
+            }
+
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
@@ -118,6 +127,17 @@ class MainActivity : ComponentActivity() {
                         onClearClicked = { clearReclaimable() },
                         onManageCachesClicked = { showAppCacheSheet = true }
                     )
+
+                    if (totalAppCacheBytes > 0) {
+                        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
+                            AppCacheBucketCard(
+                                totalCacheBytes = totalAppCacheBytes,
+                                appCount = appCacheEntries.filter { !it.isCleared }.size,
+                                onClick = { showAppCacheSheet = true }
+                            )
+                        }
+                    }
+
                     CategorySummaryList(
                         categories = categorySummaries,
                         appCacheBytes = totalAppCacheBytes,
@@ -131,7 +151,8 @@ class MainActivity : ComponentActivity() {
                         apps = appCacheEntries,
                         onDismiss = { showAppCacheSheet = false },
                         onClearSingleApp = { clearSingleAppCache(it) },
-                        onClearAllCaches = { clearAllAppCaches() }
+                        onClearAllCaches = { clearAllAppCaches() },
+                        onDeleteSelectedCaches = { deleteSelectedAppCaches(it) }
                     )
                 }
             }
