@@ -22,7 +22,7 @@ const androidFaqs: FAQItem[] = [
   },
   {
     question: "Can DiskWarren delete important system files or my other apps' data?",
-    answer: "No. The Android security sandbox physically prevents third-party apps from touching or modifying other applications' private databases or operating system files. DiskWarren focuses exclusively on media, downloads, and redundant caches."
+    answer: "No. The Android security sandbox physically prevents third-party apps from touching or modifying other applications&apos; private databases or operating system files. DiskWarren focuses exclusively on media, downloads, and redundant caches."
   },
   {
     question: "Where do deleted photos and videos go?",
@@ -30,7 +30,7 @@ const androidFaqs: FAQItem[] = [
   },
   {
     question: "Why doesn't DiskWarren request 'All Files Access' (MANAGE_EXTERNAL_STORAGE)?",
-    answer: "Many aggressive cleaner apps ask for broad 'All Files Access' to scan your entire storage and collect telemetry. DiskWarren intentionally respects Google's Scoped Storage guidelines, requesting only the precise media permissions necessary to audit images, videos, and downloads."
+    answer: "Many aggressive cleaner apps ask for broad &lsquo;All Files Access&rsquo; to scan your entire storage and collect telemetry. DiskWarren intentionally respects Google&apos;s Scoped Storage guidelines, requesting only the precise media permissions necessary to audit images, videos, and downloads."
   },
   {
     question: "Can DiskWarren clean WhatsApp without deleting my chat history?",
@@ -42,7 +42,7 @@ const androidFaqs: FAQItem[] = [
   },
   {
     question: "Are my photos or files uploaded to any servers?",
-    answer: "No. All perceptual hashing, duplicate detection, and file indexing occur 100% on your phone's processor. No images, file paths, or private information are ever uploaded to cloud servers or third parties."
+    answer: "No. All perceptual hashing, duplicate detection, and file indexing occur 100% on your phone&apos;s processor. No images, file paths, or private information are ever uploaded to cloud servers or third parties."
   },
   {
     question: "Is DiskWarren for Android a subscription?",

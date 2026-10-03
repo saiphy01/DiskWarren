@@ -92,7 +92,7 @@ export default function AndroidPrivacyPage() {
               4. Reversible 30-Day OS Trash Architecture
             </h2>
             <p>
-              To protect your memories from accidental loss, DiskWarren invokes Android's native <code className="text-emerald-900 bg-emerald-50 px-1 py-0.5 rounded font-mono text-xs">MediaStore.createTrashRequest()</code> API. Cleaned photos and videos are placed into your device’s native Gallery Trash for 30 days, where they can be restored at any time before permanent deletion.
+              To protect your memories from accidental loss, DiskWarren invokes Android&apos;s native <code className="text-emerald-900 bg-emerald-50 px-1 py-0.5 rounded font-mono text-xs">MediaStore.createTrashRequest()</code> API. Cleaned photos and videos are placed into your device’s native Gallery Trash for 30 days, where they can be restored at any time before permanent deletion.
             </p>
           </section>
 

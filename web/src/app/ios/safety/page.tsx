@@ -38,9 +38,9 @@ export default function IOSSafetyPage() {
           <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
             <RefreshCw className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900">1. Built-in "Recently Deleted" Album</h2>
+          <h2 className="text-xl font-bold text-slate-900">1. Built-in &ldquo;Recently Deleted&rdquo; Album</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            DiskWarren never permanently erases your photos. Every cleanup moves media to the official Apple Photos <strong>"Recently Deleted"</strong> album. 
+            DiskWarren never permanently erases your photos. Every cleanup moves media to the official Apple Photos <strong>&ldquo;Recently Deleted&rdquo;</strong> album. 
             If you ever change your mind, open Photos &gt; Albums &gt; Recently Deleted to recover your items with a single tap.
           </p>
         </div>
@@ -52,8 +52,8 @@ export default function IOSSafetyPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">2. Mandatory iOS System Confirmation</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            By design, Apple prohibits any third-party app from deleting media silently. Whenever a cleanup is executed, iOS displays its native system sheet: 
-            <em>"Allow DiskWarren to delete X items?"</em> No media can be moved without your direct biometric or passcode confirmation.
+            By design, Apple prohibits any third-party app from deleting media silently. Whenever a cleanup is executed, iOS displays its native system confirmation modal: 
+            <em>&ldquo;Allow DiskWarren to delete X items?&rdquo;</em> No media can be moved without your direct biometric or passcode confirmation.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export default function IOSSafetyPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">4. Apple Neural Engine Processing</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Photo similarity analysis and duplicate hashing are calculated locally on your iPhone's Apple Silicon Neural Engine. 
+            Photo similarity analysis and duplicate hashing are calculated locally on your iPhone&apos;s Apple Silicon Neural Engine. 
             DiskWarren requires no internet connection to analyze your photos, ensuring total confidentiality.
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function IOSSafetyPage() {
           <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Zero Cloud Telemetry</span>
           <h3 className="text-2xl sm:text-3xl font-bold">Data Not Collected Guarantee</h3>
           <p className="text-sm text-slate-300 leading-relaxed">
-            We don't collect diagnostics, user IDs, or advertising identifiers. DiskWarren does not include third-party marketing SDKs or analytics trackers.
+            We don&apos;t collect diagnostics, user IDs, or advertising identifiers. DiskWarren does not include third-party marketing SDKs or analytics trackers.
           </p>
         </div>
 

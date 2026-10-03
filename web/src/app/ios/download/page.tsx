@@ -144,7 +144,7 @@ export default function IOSDownloadPage() {
           </div>
           <h3 className="font-bold text-slate-900">Recently Deleted Safety</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Every photo or video cleanup moves items directly to your Apple Photos <strong>"Recently Deleted"</strong> album. You have 30 days to review and restore anything at will.
+            Every photo or video cleanup moves items directly to your Apple Photos <strong>&ldquo;Recently Deleted&rdquo;</strong> album. You have 30 days to review and restore anything at will.
           </p>
         </div>
 
@@ -164,7 +164,7 @@ export default function IOSDownloadPage() {
           </div>
           <h3 className="font-bold text-slate-900">Apple Neural Engine AI</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Perceptual photo duplicate detection runs locally on your iPhone's Apple Silicon Neural Engine. 100% private, instantaneous, and operates completely offline.
+            Perceptual photo duplicate detection runs locally on your iPhone&apos;s Apple Silicon Neural Engine. 100% private, instantaneous, and operates completely offline.
           </p>
         </div>
       </div>

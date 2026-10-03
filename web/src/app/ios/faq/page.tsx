@@ -18,15 +18,15 @@ interface FAQItem {
 const iosFaqs: FAQItem[] = [
   {
     question: "Can DiskWarren clear 'System Data' or 'Other' storage on iPhone?",
-    answer: "We believe in complete technical honesty: Apple's iOS security sandbox strictly forbids any third-party app from directly wiping system-level cache partitions. However, by safely identifying and removing gigabytes of redundant local media and duplicate videos, DiskWarren signals iOS that storage pressure has changed, allowing the operating system to automatically flush purgeable system caches and optimize local indexes."
+    answer: "We believe in complete technical honesty: Apple&apos;s iOS security sandbox strictly forbids any third-party app from directly wiping system-level cache partitions. However, by safely identifying and removing gigabytes of redundant local media and duplicate videos, DiskWarren signals iOS that storage pressure has changed, allowing the operating system to automatically flush purgeable system caches and optimize local indexes."
   },
   {
     question: "Where do deleted photos and videos go?",
-    answer: "Every item removed through DiskWarren moves directly to your Apple Photos 'Recently Deleted' album. Apple preserves these items for 30 days, so you can easily review and restore any photo or video with a single tap if you ever change your mind."
+    answer: "Every item removed through DiskWarren moves directly to your Apple Photos &lsquo;Recently Deleted&rsquo; album. Apple preserves these items for 30 days, so you can easily review and restore any photo or video with a single tap if you ever change your mind."
   },
   {
     question: "Can DiskWarren delete photos without my knowledge?",
-    answer: "No. Apple enforces strict security protections in iOS: no app can delete or trash media without displaying the official iOS confirmation modal ('Allow DiskWarren to delete X items?'). You must approve every single cleanup action."
+    answer: "No. Apple enforces strict security protections in iOS: no app can delete or trash media without displaying the official iOS confirmation modal (&lsquo;Allow DiskWarren to delete X items?&rsquo;). You must approve every single cleanup action."
   },
   {
     question: "Are my photos or videos uploaded to any cloud servers?",
@@ -54,7 +54,7 @@ const iosFaqs: FAQItem[] = [
   },
   {
     question: "How does DiskWarren handle iCloud Photos?",
-    answer: "If you have 'Optimize iPhone Storage' enabled in iCloud Photos, DiskWarren distinguishes between full-resolution photos stored locally on your device and low-resolution iCloud thumbnails. It focuses on removing local duplicates that are actively occupying physical storage."
+    answer: "If you have &lsquo;Optimize iPhone Storage&rsquo; enabled in iCloud Photos, DiskWarren distinguishes between full-resolution photos stored locally on your device and low-resolution iCloud thumbnails. It focuses on removing local duplicates that are actively occupying physical storage."
   }
 ];
 

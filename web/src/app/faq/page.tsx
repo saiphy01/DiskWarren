@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { 
   HelpCircle, 
   ChevronDown, 
-  Laptop, 
   ShieldCheck, 
-  ArrowRight 
+  ArrowRight,
+  Download
 } from 'lucide-react';
 
 interface FAQItem {
@@ -17,44 +17,44 @@ interface FAQItem {
 
 const macFaqs: FAQItem[] = [
   {
-    question: "Does DiskWarren request Full Disk Access?",
-    answer: "Yes, Full Disk Access (FDA) is optional but recommended. On modern macOS (Sonoma, Sequoia), Apple restricts apps from reading directory sizes inside ~/Library/Application Support, Xcode developer directories, and Docker storage. Granting FDA in System Settings > Privacy & Security > Full Disk Access allows DiskWarren to calculate exact folder sizes across your entire Mac. You remain in total control and can revoke FDA at any time."
+    question: "Why does macOS show so much mystery 'System Data'?",
+    answer: "Whenever macOS doesn't recognize a file as Music, Photos, or Apps, it lumps it into 'System Data'. In practice, on developer machines this is almost entirely Xcode DerivedData (~/Library/Developer), local Time Machine snapshots, Docker.raw virtual disks, and node_modules trees. DiskWarren indexes these exact directories so you can see the real items behind the vague label."
   },
   {
-    question: "Can DiskWarren delete important system files?",
-    answer: "No. DiskWarren is architected with strict, immutable safety gates. It will never touch Apple System Integrity Protection (SIP) partitions (/System, /usr/bin), core macOS frameworks, or user documents. All cleanups are restricted to reproducible build caches, uninstalled app leftovers, and local AI model weights. Furthermore, you must review and confirm every item before it is moved."
+    question: "Why does DiskWarren recommend Full Disk Access?",
+    answer: "Starting in macOS Sonoma and Sequoia, Apple's Privacy & Security protections prevent ordinary apps from reading the size of folders in other application containers (like ~/Library/Developer or Docker's VM disk). Without Full Disk Access, any disk utility is forced to report those directories as 0 bytes. Giving DiskWarren Full Disk Access lets it accurately calculate folder sizes. DiskWarren operates 100% locally and you can revoke the permission anytime in System Settings."
   },
   {
-    question: "Which Macs and macOS versions are supported?",
-    answer: "DiskWarren is compiled as a Universal 2 binary supporting both Apple Silicon (M1, M2, M3, M4) and 64-bit Intel Macs. It is compatible with macOS 12 Monterey, macOS 13 Ventura, macOS 14 Sonoma, and macOS 15 Sequoia."
+    question: "How is DiskWarren different from DaisyDisk or GrandPerspective?",
+    answer: "DaisyDisk and GrandPerspective show you raw file sizes, but leave you guessing whether an 18GB folder is safe to delete. DiskWarren pairs visual treemaps with domain intelligence: it knows what DerivedData, Cargo targets, and Ollama model blobs are, marks them with safe risk ratings, and lets you recycle them cleanly to the macOS Trash with a single click."
   },
   {
-    question: "Does DiskWarren upload my files or send analytics?",
-    answer: "No. DiskWarren is 100% air-gapped. All directory indexing, file size calculations, and duplicate hashing occur entirely in memory on your Mac. DiskWarren does not collect telemetry, personal identifiers, file names, or code paths."
+    question: "Can DiskWarren accidentally delete important operating system files?",
+    answer: "No. The engine has hardcoded blocklists protecting Apple SIP volumes (/System, /usr, /bin), user keychains, and sealed APFS snapshots. It literally refuses to modify them. Furthermore, DiskWarren never runs automatic background deletions—every action requires your explicit confirmation."
   },
   {
-    question: "Does DiskWarren scan the contents of my files?",
-    answer: "No. DiskWarren scans file system metadata (path, size, modification date, and file attributes). It does not parse or read the contents of your source code, documents, or personal data. The only exception is cryptographic duplicate checking, where read-only chunk hashes are calculated on-device to verify identical files."
+    question: "Will deleting DerivedData or node_modules break my projects?",
+    answer: "No. DerivedData consists entirely of intermediate compilation caches and index files; Xcode will automatically rebuild whatever it needs on your next compile. Deleting node_modules from dormant projects is equally safe because you can always run 'npm install' or 'pnpm install' whenever you revisit that project."
   },
   {
-    question: "Can I undo a cleanup action?",
-    answer: "Yes. DiskWarren uses macOS Trash-first deletion (via NSFileManager.trashItem). Cleaned files and directories are moved to your Mac's Dock Trash rather than being instantly erased. You can open the Trash, right-click any item, and select 'Put Back' to restore it to its original location."
+    question: "Can I undo a cleanup action if I make a mistake?",
+    answer: "Yes! DiskWarren routes cleaned items through the native macOS Trash (using NSFileManager.trashItem). If you delete something and realize you needed it, simply open the Trash from your Dock, right-click the item, and click 'Put Back' to restore it to its original path."
   },
   {
-    question: "Is DiskWarren a subscription?",
-    answer: "No. DiskWarren is sold as a lifetime purchase with no recurring fees. Pay once for a single Mac license ($9.99 launch promotion / $29.99 regular) or a Power Pack for up to 3 Macs. Minor updates within version 1.x are included for free."
+    question: "How does the license key work if I get a new Mac or reinstall macOS?",
+    answer: "DiskWarren uses offline cryptographic license keys (Ed25519) with zero server activation calls. If you migrate to a new Mac, simply copy your key or enter it in DiskWarren > Settings > License. If you ever lose your license key, our self-service recovery page can look it up instantly using your purchase email."
   },
   {
-    question: "Does DiskWarren work offline?",
-    answer: "Yes. DiskWarren is a completely native Swift application that does not require an active internet connection to scan, visualize, or clean storage. License keys are cryptographically verified offline."
+    question: "Does DiskWarren scan external SSDs, USB drives, or SD cards?",
+    answer: "Yes. DiskWarren scans any mounted APFS, HFS+, or exFAT storage volume attached to your Mac, including external Thunderbolt drives, USB-C SSDs, and SD cards."
   },
   {
-    question: "Does DiskWarren support both Apple Silicon and Intel?",
-    answer: "Yes. The DiskWarren DMG contains a true Universal binary with native ARM64 slices for M1-M4 Macs and x86_64 slices for Intel Macs. It runs with zero Rosetta translation overhead."
+    question: "Does DiskWarren send any telemetry or code filenames off my Mac?",
+    answer: "Never. DiskWarren has zero analytics SDKs, zero telemetry servers, and zero cloud dependencies. It runs completely air-gapped. Your repository names, personal filenames, and drive structure never leave your machine's memory."
   },
   {
-    question: "Why does DiskWarren need Full Disk Access?",
-    answer: "macOS sandbox privacy rules prevent standard applications from measuring the contents of other apps' containers and caches (such as Xcode DerivedData or Docker VM virtual disks). Without Full Disk Access, macOS reports those folders as having 0 bytes, creating misleading storage reports. FDA gives DiskWarren read-only access to accurately calculate disk space."
+    question: "Is DiskWarren really a one-time purchase, or is there an annual fee?",
+    answer: "DiskWarren is strictly a one-time purchase of $9.99 for a lifetime license on your Mac. We do not do subscriptions. Free edition includes full drive scanning and treemap exploration for $0 forever."
   }
 ];
 
@@ -74,10 +74,10 @@ export default function MacFAQPage() {
           <span>Mac Help &amp; FAQ</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
-          Frequently Asked Questions for Mac
+          Frequently Asked Questions
         </h1>
         <p className="text-base text-slate-600 leading-relaxed">
-          Everything you need to know about Full Disk Access, Trash-first safety, APFS storage scanning, and developer cache intelligence.
+          Clear, straightforward answers about Full Disk Access, Trash-first safety, APFS storage scanning, and developer cache intelligence.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function MacFAQPage() {
                 />
               </button>
               {isOpen && (
-                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                <div className="px-6 pb-6 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/40">
                   {faq.answer}
                 </div>
               )}
@@ -111,24 +111,24 @@ export default function MacFAQPage() {
         })}
       </div>
 
-      {/* Help Banner */}
-      <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 sm:p-10 text-center space-y-4">
-        <h3 className="text-xl font-bold text-slate-900">Have a question not listed here?</h3>
-        <p className="text-sm text-slate-600 max-w-md mx-auto">
-          Our engineering team is happy to help with Full Disk Access setup, developer rules, or enterprise licenses.
+      {/* Still Have Questions Box */}
+      <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm text-center space-y-4">
+        <h3 className="text-xl font-bold text-slate-900">Have a specific question about your setup?</h3>
+        <p className="text-sm text-slate-600 max-w-xl mx-auto">
+          Need help with a custom developer toolchain or enterprise Mac deployment? Our engineering team responds directly.
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <div className="pt-2 flex justify-center gap-4">
           <Link
             href="/support"
-            className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors"
+            className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors"
           >
-            Contact Mac Support
+            Contact Engineering Support
           </Link>
           <Link
             href="/download"
-            className="px-5 py-2.5 rounded-xl border border-slate-300 hover:bg-white text-slate-700 font-bold text-xs transition-colors"
+            className="px-6 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-colors"
           >
-            Download Free Universal DMG
+            Download Free Scanner
           </Link>
         </div>
       </div>

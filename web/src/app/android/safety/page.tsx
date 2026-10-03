@@ -27,7 +27,7 @@ export default function AndroidSafetyPage() {
         </h1>
         <p className="text-lg text-slate-600 leading-relaxed">
           Most Android cleaners require dangerous root permissions or secretly shred memories. 
-          DiskWarren uses Android's native Scoped Storage and 30-day OS Trash so you never lose a precious photo.
+          DiskWarren uses Android&apos;s native Scoped Storage and 30-day OS Trash so you never lose a precious photo.
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export default function AndroidSafetyPage() {
           <h2 className="text-xl font-bold text-slate-900">1. Native 30-Day OS Trash</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
             On Android 11 through Android 15, DiskWarren dispatches deletions via <code className="text-slate-800 font-mono text-xs">MediaStore.createTrashRequest()</code>. 
-            Items are transferred directly to your Android device's native Trash. You can restore any photo or video from Google Photos or Samsung Gallery within 30 days.
+            Items are transferred directly to your Android device&apos;s native Trash. You can restore any photo or video from Google Photos or Samsung Gallery within 30 days.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function AndroidSafetyPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">2. Google Play Scoped Storage Compliant</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            DiskWarren strictly complies with Google's modern Scoped Storage privacy policies. We do not ask for all-files access permissions, nor do we attempt to read other applications' private databases.
+            DiskWarren strictly complies with Google&apos;s modern Scoped Storage privacy policies. We do not ask for all-files access permissions, nor do we attempt to read other applications&apos; private databases.
           </p>
         </div>
 
@@ -63,7 +63,7 @@ export default function AndroidSafetyPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">3. Mandatory System Confirmation</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            By leveraging Android's official MediaStore API, DiskWarren cannot silently erase files in the background. Whenever a cleanup is initiated, Android's official system sheet appears: <em>"Allow DiskWarren to move these items to Trash?"</em> You remain in total control.
+            By using Android&apos;s official MediaStore API, DiskWarren cannot silently erase files in the background. Whenever a cleanup is initiated, Android&apos;s official system confirmation appears: <em>&ldquo;Allow DiskWarren to move these items to Trash?&rdquo;</em> You remain in total control.
           </p>
         </div>
 
@@ -85,7 +85,7 @@ export default function AndroidSafetyPage() {
           <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">100% On-Device Local AI</span>
           <h3 className="text-2xl sm:text-3xl font-bold">Your Media Never Leaves Your Phone</h3>
           <p className="text-sm text-slate-300 leading-relaxed">
-            Perceptual duplicate photo comparison and video metadata analysis run exclusively on your phone's processor using Kotlin coroutines. 
+            Perceptual duplicate photo comparison and video metadata analysis run exclusively on your phone&apos;s processor using Kotlin coroutines. 
             No photos, videos, or personal chat files are ever uploaded to cloud servers.
           </p>
         </div>

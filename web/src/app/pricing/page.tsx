@@ -340,19 +340,19 @@ export default function PricingPage() {
               <tr>
                 <td className="py-3.5 px-4 font-medium text-slate-900">Developer Cleanup</td>
                 <td className="py-3.5 px-4 text-emerald-700 font-bold bg-cyan-50/30 border-x border-cyan-100 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Dedicated Rules (Xcode, Node, Cargo)
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Dedicated Rules (Xcode, Node, Cargo, Docker.raw)
                 </td>
                 <td className="py-3.5 px-4 text-slate-500">Manual navigation</td>
-                <td className="py-3.5 px-4 text-slate-500">See vendor documentation</td>
+                <td className="py-3.5 px-4 text-slate-500">General user caches only; no build artifact indexing</td>
                 <td className="py-3.5 px-4 text-slate-500">Manual navigation</td>
               </tr>
               <tr>
                 <td className="py-3.5 px-4 font-medium text-slate-900">AI-Model Detection</td>
                 <td className="py-3.5 px-4 text-emerald-700 font-bold bg-cyan-50/30 border-x border-cyan-100 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Automatic (Ollama, LM Studio, GGUF)
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Automatic (Ollama, LM Studio, GGUF, Hugging Face)
                 </td>
                 <td className="py-3.5 px-4 text-slate-500">Manual inspection</td>
-                <td className="py-3.5 px-4 text-slate-500">See vendor documentation</td>
+                <td className="py-3.5 px-4 text-slate-500">None; treated as generic unclassified files</td>
                 <td className="py-3.5 px-4 text-slate-500">Manual inspection</td>
               </tr>
               <tr>
@@ -361,7 +361,7 @@ export default function PricingPage() {
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Cryptographic SHA-256
                 </td>
                 <td className="py-3.5 px-4 text-slate-400">None</td>
-                <td className="py-3.5 px-4 text-slate-700">Included</td>
+                <td className="py-3.5 px-4 text-slate-700">Separate Gemini companion app</td>
                 <td className="py-3.5 px-4 text-slate-400">None</td>
               </tr>
               <tr>
@@ -392,9 +392,9 @@ export default function PricingPage() {
                 <td className="py-3.5 px-4 text-emerald-700 font-bold bg-cyan-50/30 border-x border-cyan-100 flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 100% Local (Zero Telemetry)
                 </td>
-                <td className="py-3.5 px-4">Local</td>
-                <td className="py-3.5 px-4">See vendor documentation</td>
-                <td className="py-3.5 px-4">Local (Open Source)</td>
+                <td className="py-3.5 px-4">100% Local</td>
+                <td className="py-3.5 px-4">Collects usage analytics and product telemetry</td>
+                <td className="py-3.5 px-4">100% Local (Open Source)</td>
               </tr>
             </tbody>
           </table>

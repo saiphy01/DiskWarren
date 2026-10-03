@@ -7,13 +7,12 @@ import {
   Layers, 
   Code2, 
   Copy, 
-  HardDrive, 
-  ShieldCheck, 
   Sparkles, 
   ArrowRight,
   Brain,
   Trash2,
-  Cpu
+  Cpu,
+  Download
 } from 'lucide-react';
 
 export default function MacFeaturesPage() {
@@ -29,7 +28,7 @@ export default function MacFeaturesPage() {
           Native Mac Storage Intelligence
         </h1>
         <p className="text-lg text-slate-600 leading-relaxed">
-          Engineered natively in Swift for Apple Silicon and macOS. DiskWarren moves beyond generic "junk cleaners" to deliver deep intelligence for developer caches, local AI weights, and uninstalled app leftovers.
+          Written in native Swift for Apple Silicon and modern Intel Macs. DiskWarren cuts through vague &ldquo;System Data&rdquo; warnings to deliver exact visibility into build caches, local AI weights, container storage, and uninstalled application remnants.
         </p>
       </div>
 
@@ -42,10 +41,10 @@ export default function MacFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">High-Speed APFS Storage Scanner</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Crawls your internal SSD with parallel Swift concurrency. DiskWarren understands APFS clone blocks, snapshot overhead, and purgeable disk space to report honest, accurate disk usage.
+            Crawls your internal SSD using parallel Swift concurrency. DiskWarren understands APFS copy-on-write clone blocks, local Time Machine snapshot reservations, and purgeable disk space to report true, actionable free space.
           </p>
           <div className="pt-2 text-xs font-mono text-cyan-700 bg-cyan-50/50 p-3 rounded-xl border border-cyan-100">
-            ✓ Universal binary for Apple Silicon (M1-M4) &amp; Intel Macs
+            ✓ Universal 2 binary for Apple Silicon (M1–M4) and Intel Macs
           </div>
         </div>
 
@@ -56,10 +55,10 @@ export default function MacFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Interactive Squarified Treemap</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Visualize your entire disk in proportional geometric tiles. Click into any directory to drill down smoothly, discover hidden system data hogs, and inspect file trees in real time.
+            See your filesystem as physical space. Proportional geometric tiles let you instantly spot runaway log files, multi-gigabyte build artifacts, and deep folder trees without clicking through endless Finder lists.
           </p>
           <div className="pt-2 text-xs font-mono text-blue-700 bg-blue-50/50 p-3 rounded-xl border border-blue-100">
-            ✓ Visualizes system partitions, user directories, and external drives
+            ✓ Visualizes system volumes, user directories, and external drives
           </div>
         </div>
 
@@ -68,15 +67,15 @@ export default function MacFeaturesPage() {
           <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
             <Code2 className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">Developer Storage Intelligence</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Developer Toolchain Intelligence</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Mac development tools secretly consume tens of gigabytes of hidden disk space. DiskWarren unearths:
+            Software development tools quietly hoard tens of gigabytes across your home directory. DiskWarren uncovers:
           </p>
           <ul className="text-xs text-slate-600 space-y-1.5 font-mono bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <li>• Xcode DerivedData, Archives &amp; iOS Simulators</li>
-            <li>• Docker images, containers &amp; buildx build caches</li>
-            <li>• node_modules, npm, pnpm, &amp; Yarn global stores</li>
-            <li>• Rust Cargo build targets, Go module cache &amp; Homebrew</li>
+            <li>• Xcode DerivedData, Archives &amp; old iOS simulator runtimes</li>
+            <li>• Docker images, stopped containers &amp; BuildKit layer stores</li>
+            <li>• node_modules trees, global npm/yarn/pnpm package caches</li>
+            <li>• Rust Cargo target/ folders, Go module caches &amp; Homebrew bottles</li>
           </ul>
         </div>
 
@@ -87,10 +86,10 @@ export default function MacFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Local AI Model Weight Cleaner</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Running LLMs and diffusion models locally quickly fills modern SSDs. DiskWarren detects and groups models from Ollama, LM Studio, Hugging Face (<code className="text-slate-800 font-mono">~/.cache/huggingface</code>), ComfyUI, and raw GGUF weights.
+            Running LLMs and diffusion models locally quickly fills high-speed SSDs. DiskWarren detects and correlates model weights from Ollama, LM Studio, Hugging Face (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">~/.cache/huggingface</code>), ComfyUI, and raw GGUF files.
           </p>
           <div className="pt-2 text-xs font-mono text-purple-700 bg-purple-50/50 p-3 rounded-xl border border-purple-100">
-            ✓ Displays model parameters (7B, 13B, 70B), quantizations, and size
+            ✓ Maps cryptic SHA hashes to human model tags (7B, 13B, 70B) &amp; quantizations
           </div>
         </div>
 
@@ -99,12 +98,12 @@ export default function MacFeaturesPage() {
           <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
             <Trash2 className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">Native Application Uninstaller</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Application Leftover Uninstaller</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Dragging an app to the Trash leaves behind gigabytes in <code className="text-slate-800 font-mono">~/Library/Application Support</code>, Caches, and LaunchAgents. DiskWarren maps all associated leftovers for clean, total uninstallation.
+            Dragging an app icon to the Trash leaves behind gigabytes in <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-xs">~/Library/Application Support</code>, Caches, Preferences, and background LaunchAgents. DiskWarren traces all orphaned remnants for complete removal.
           </p>
           <div className="pt-2 text-xs font-mono text-rose-700 bg-rose-50/50 p-3 rounded-xl border border-rose-100">
-            ✓ Trashes leftovers safely; restorable via macOS Trash
+            ✓ Trashes leftovers safely with Finder &ldquo;Put Back&rdquo; reversibility
           </div>
         </div>
 
@@ -115,7 +114,7 @@ export default function MacFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">APFS-Aware Duplicate Finder</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Finds identical files using a 3-step verification (exact byte size $\to$ 4KB header check $\to$ full SHA-256 hash). Differentiates APFS zero-cost copy-on-write clones from real duplicated disk blocks.
+            Finds true redundant files using three progressive verification gates: exact byte size &rarr; initial chunk hash &rarr; full SHA-256 confirmation. Differentiates zero-cost APFS copy-on-write clones from real duplicated disk blocks.
           </p>
           <div className="pt-2 text-xs font-mono text-amber-700 bg-amber-50/50 p-3 rounded-xl border border-amber-100">
             ✓ Prevents false space claims on cloned APFS files
@@ -125,9 +124,9 @@ export default function MacFeaturesPage() {
 
       {/* Bottom CTA */}
       <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 text-center space-y-6">
-        <h2 className="text-3xl font-bold">Reclaim Up to 50 GB on Your Mac</h2>
+        <h2 className="text-3xl font-bold">Take Back 40+ GB on Your Mac Today</h2>
         <p className="text-sm text-slate-300 max-w-xl mx-auto">
-          Scan your Mac in under 30 seconds. Free forever for storage visualization, treemap analysis, and duplicate detection.
+          Scan your drive in under 30 seconds. Free forever for storage visualization, treemap analysis, and developer cache inspection.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link
@@ -140,7 +139,7 @@ export default function MacFeaturesPage() {
             href="/pricing"
             className="px-6 py-3.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-200 font-bold text-sm transition-all"
           >
-            View Pricing ($9.99 Lifetime)
+            View Pro Pricing ($9.99 Lifetime)
           </Link>
         </div>
       </div>

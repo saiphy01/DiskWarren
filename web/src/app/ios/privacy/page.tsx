@@ -43,7 +43,7 @@ export default function IosPrivacyPage() {
               2. Apple PhotoKit &amp; Sandboxing
             </h2>
             <p>
-              DiskWarren operates within Apple’s strict iOS Application Sandbox. Access to your photo library is granted via Apple's native PhotoKit framework:
+              DiskWarren operates within Apple’s strict iOS Application Sandbox. Access to your photo library is granted via Apple&apos;s native PhotoKit framework:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
               <li>
@@ -86,10 +86,10 @@ export default function IosPrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-purple-600" />
-              4. Apple Photos "Recently Deleted" 30-Day Safety
+              4. Apple Photos &ldquo;Recently Deleted&rdquo; 30-Day Safety
             </h2>
             <p>
-              DiskWarren never permanently deletes photos directly. When you confirm cleanup of duplicate or burst photos, DiskWarren invokes <code className="text-purple-900 bg-purple-50 px-1 py-0.5 rounded font-mono text-xs">PHPhotoLibrary.shared().performChanges()</code>. The OS displays Apple’s standard confirmation sheet and moves media into your Photos app's **Recently Deleted** album. You retain 30 days to recover any item.
+              DiskWarren never permanently deletes photos directly. When you confirm cleanup of duplicate or burst photos, DiskWarren invokes <code className="text-purple-900 bg-purple-50 px-1 py-0.5 rounded font-mono text-xs">PHPhotoLibrary.shared().performChanges()</code>. The OS displays Apple&apos;s standard confirmation sheet and moves media into your Photos app&apos;s <strong>Recently Deleted</strong> album. You retain 30 days to recover any item.
             </p>
           </section>
 

@@ -66,7 +66,7 @@ export default function SecurityPage() {
           </div>
           <h3 className="text-lg font-bold text-slate-900">Offline Cryptographic Licensing</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            License keys are verified mathematically using on-device public-key cryptography (Ed25519). The application does not phone home to activate or validate licenses, ensuring seamless operation in classified, corporate, or offline environments.
+            License keys are verified mathematically using on-device public-key cryptography (Ed25519). The application does not phone home to activate or validate licenses, ensuring uninterrupted operation in classified, corporate, or offline air-gapped environments.
           </p>
         </div>
       </div>

@@ -18,10 +18,10 @@ export default function MacStorageAnalyzerPage() {
           macOS Storage Intelligence
         </span>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-          The Comprehensive Mac Storage Analyzer
+          See What is Really Taking Up Space on Your Mac
         </h1>
         <p className="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          macOS System Settings tells you that storage is full, but lumps gigabytes of vital data into an impenetrable &quot;System Data&quot; bar. DiskWarren decodes your entire APFS container into clear, actionable visual categories.
+          macOS System Settings tells you that storage is full, but dumps tens of gigabytes into an opaque &quot;System Data&quot; bar. DiskWarren maps your entire APFS container into clear, actionable visual categories.
         </p>
 
         <div className="pt-4 flex justify-center">

@@ -36,13 +36,13 @@ const faqs: FAQ[] = [
     id: 2,
     category: 'Safety',
     q: 'Where do deleted files go? Can I undo a cleanup action?',
-    a: 'DiskWarren employs a strict Trash-First safety architecture. Unless you specifically empty the macOS system trash yourself, all cleaned items are recycled to the native macOS Trash (~/.Trash or volume .Trashes). You can simply open Trash and click "Put Back" to restore any file instantly.'
+    a: 'DiskWarren employs a strict Trash-First safety architecture. Unless you specifically empty the macOS system trash yourself, all cleaned items are recycled to the native macOS Trash (~/.Trash or volume .Trashes). You can simply open Trash and click \u201cPut Back\u201d to restore any file instantly.'
   },
   {
     id: 3,
     category: 'Licensing',
     q: 'How do I activate or recover my Pro license key?',
-    a: 'Your Pro license key was emailed immediately upon checkout from our payment processor. In DiskWarren, click Settings > License, enter your key (formatted like WARREN-PRO-XXXXXX-XXXX), and click Activate. Keys work completely offline with no network ping required. If you misplaced your key, search your email for "DiskWarren License" or email support@diskwarren.com.'
+    a: 'Your Pro license key was emailed immediately upon checkout from our payment processor. In DiskWarren, click Settings > License, enter your key (formatted like WARREN-PRO-XXXXXX-XXXX), and click Activate. Keys work completely offline with no network ping required. If you misplaced your key, search your email for \u201cDiskWarren License\u201d or email support@diskwarren.com.'
   },
   {
     id: 4,

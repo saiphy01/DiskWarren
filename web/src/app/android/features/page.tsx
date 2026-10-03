@@ -41,7 +41,7 @@ export default function AndroidFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Internal Storage &amp; MicroSD Visualizer</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Gain immediate visibility into what is occupying your phone's memory. DiskWarren categorizes photos, 4K videos, audio clips, documents, and download caches across internal storage and removable SD cards.
+            Gain immediate visibility into what is occupying your phone&apos;s memory. DiskWarren categorizes photos, 4K videos, audio clips, documents, and download caches across internal storage and removable SD cards.
           </p>
           <div className="pt-2 text-xs font-mono text-emerald-700 bg-emerald-50/50 p-3 rounded-xl border border-emerald-100">
             ✓ Color-coded storage partitions with free/used breakdown
@@ -111,7 +111,7 @@ export default function AndroidFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Jetpack Compose &amp; Material 3 Design</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Fluid 120Hz scrolling, dynamic color theming that adapts to your phone's wallpaper (Material You), and full support for foldable screens and Android tablets.
+            Fluid 120Hz scrolling, dynamic color theming that adapts to your phone&apos;s wallpaper (Material You), and full support for foldable screens and Android tablets.
           </p>
           <div className="pt-2 text-xs font-mono text-cyan-700 bg-cyan-50/50 p-3 rounded-xl border border-cyan-100">
             ✓ Instant cold-start with zero splash screen delays

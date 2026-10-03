@@ -19,16 +19,12 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronUp,
-  AlertTriangle,
   FolderLock,
-  Terminal,
   RotateCcw,
   Container,
-  PackageCheck,
   Brain,
   Code2,
   FolderTree,
-  FileCode,
   ShieldAlert
 } from 'lucide-react';
 import SimulatedStorageAnalyzer from '@/components/SimulatedStorageAnalyzer';
@@ -42,44 +38,36 @@ export default function HomePage() {
 
   const faqs = [
     {
-      q: "Does DiskWarren request Full Disk Access?",
-      a: "Yes. macOS Transparency, Consent, and Control (TCC) restricts utilities from reading specific system directories, application caches, and developer build products (such as Xcode DerivedData in ~/Library/Developer). Full Disk Access allows DiskWarren to accurately calculate your true storage footprint and reveal hidden System Data bloat. DiskWarren remains fully functional with limited access if you choose not to grant it, and you retain complete control over this permission in macOS System Settings."
+      q: "Why does macOS show 80GB of mysterious 'System Data'?",
+      a: "When macOS doesn't have a neat label for a file, it dumps it into 'System Data'. In reality, that category is usually made of Xcode DerivedData, old iOS simulator runtimes, local Time Machine snapshots, Docker virtual disk files (Docker.raw), and unpruned package manager caches in your ~/Library folder. DiskWarren digs into those exact paths and shows you what is actually sitting on your drive."
     },
     {
-      q: "Can DiskWarren delete important system files?",
-      a: "DiskWarren is engineered with strict safeguards to prevent accidental deletions. Critical operating system directories (/System, /usr, /bin, keychains, and sealed APFS system snapshots) are permanently protected by hardcoded safety barriers. Furthermore, all user-approved cleanups route through the native macOS Trash where supported, allowing you to restore files instantly with native Put Back."
+      q: "Does DiskWarren need Full Disk Access to work?",
+      a: "Yes, if you want an accurate scan. Apple's Transparency, Consent, and Control (TCC) system locks down folders like ~/Library/Developer, Time Machine metadata, and application caches from standard apps. Without Full Disk Access, any storage tool will give you incomplete numbers. DiskWarren works 100% locally and you can revoke the permission in System Settings whenever you like."
     },
     {
-      q: "Which Macs and macOS versions are supported?",
-      a: "DiskWarren is built for macOS 14.0 Sonoma and macOS 15.0+ Sequoia. It runs as a native Universal 2 binary on all Apple Silicon chips (M1, M2, M3, M4) and supported 64-bit Intel Mac computers."
+      q: "Can this accidentally delete something macOS needs to boot?",
+      a: "No. Critical operating system directories (/System, /usr, /bin, keychains, and sealed APFS snapshots) are hard-locked in the code. Even if you tried, DiskWarren will never touch them. On top of that, everything you choose to delete gets sent to your native macOS Trash first—so you can always right-click and choose 'Put Back' if you change your mind."
     },
     {
-      q: "Does DiskWarren upload my files or telemetry?",
-      a: "Never. DiskWarren operates on a strict zero-knowledge architecture. All scanning, metadata parsing, size calculation, and duplicate matching execute 100% locally on your Mac's processor. No filenames, folder paths, or file contents are ever transmitted to any remote server or third-party analytics provider."
+      q: "Is DiskWarren really a one-time purchase, or is there a subscription?",
+      a: "There are zero subscriptions. We're developers ourselves and we hate paying monthly rent for utilities sitting in our menu bar. You can scan and explore your drive for free forever. If you want one-click batch recycling, the duplicate cleaner, and the uninstaller, DiskWarren Pro is a single $9.99 payment for life on your Mac."
     },
     {
-      q: "Does DiskWarren scan file contents?",
-      a: "No. DiskWarren scans filesystem metadata (file sizes, inode paths, modification timestamps, and APFS allocation blocks). In the duplicate finder module, cryptographic SHA-256 hashes are calculated strictly locally in memory to identify identical files, but file contents are never read for any other purpose or shared off-device."
+      q: "Does DiskWarren send any of my filenames or data to the cloud?",
+      a: "Never. Not a single byte leaves your machine. DiskWarren doesn't even have a telemetry or analytics server to talk to. Scanning, size calculations, and SHA-256 duplicate hashing all happen purely in memory on your Mac's CPU."
     },
     {
-      q: "Can I undo cleanup actions?",
-      a: "Yes. By default, DiskWarren recycles cleaned items directly to the native macOS Trash (~/.Trash). To restore any cleaned item to its exact original directory, simply open macOS Trash, right-click the item, and choose 'Put Back'."
+      q: "Does it work on Apple Silicon (M1/M2/M3/M4) and Intel Macs?",
+      a: "Yes. DiskWarren is compiled as a native Universal 2 binary for macOS 14 Sonoma and macOS 15 Sequoia. It runs at full hardware speed on Apple Silicon without Rosetta, and has full native support for 64-bit Intel Macs as well."
     },
     {
-      q: "Is DiskWarren a subscription?",
-      a: "No. DiskWarren is sold as a transparent, perpetual one-time purchase. Free Community Edition provides full storage analysis and treemap exploration for $0 forever. DiskWarren Pro is a one-time purchase of $9.99 for a single Mac lifetime license, or $14.99 for a 3-Mac family/workstation pack. There are no recurring monthly or annual subscription fees."
+      q: "How does it handle local AI models (Ollama, LM Studio)?",
+      a: "Local AI weights live in hidden folders—Ollama stores them in ~/.ollama/models/blobs as hexadecimal hashes rather than human-readable names. DiskWarren parses the manifest files to correlate each multi-gigabyte blob with its actual model name (e.g. Llama 3 8B, DeepSeek Coder 33B, Mistral 7B) so you know exactly which model to prune."
     },
     {
-      q: "Does DiskWarren work offline?",
-      a: "Yes. DiskWarren is completely air-gapped and requires zero internet connection to index your storage, visualize directories, or validate perpetual license keys. License verification uses on-device public-key cryptography (Ed25519) with zero server roundtrips."
-    },
-    {
-      q: "Does DiskWarren support Apple Silicon and Intel?",
-      a: "Yes. DiskWarren is distributed as a Universal 2 application package containing native machine code optimized for Apple Silicon (ARM64) and modern Intel (x86_64) Macs."
-    },
-    {
-      q: "Why does DiskWarren need Full Disk Access?",
-      a: "Modern versions of macOS place user library caches, Time Machine local snapshots, and package manager folders behind Apple TCC security barriers. Without Full Disk Access, macOS hides these directories from disk analyzers, misattributing them to mystery 'System Data'. Full Disk Access allows DiskWarren to illuminate where your space actually went."
+      q: "Does DiskWarren run in the background when I close it?",
+      a: "No background helpers, no menu bar daemons, no launch agents, and no startup nags. When you close DiskWarren, it's completely gone from memory and uses zero CPU or battery."
     }
   ];
 
@@ -95,12 +83,12 @@ export default function HomePage() {
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.1]">
           Your Mac is full. <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-600">
-            Find out why.
+            Find out what&apos;s actually taking the space.
           </span>
         </h1>
 
         <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
-          DiskWarren analyzes your Mac&apos;s storage, finds hidden space hogs and helps you reclaim space safely — including developer files, Xcode data, Docker, Node modules, local AI models, duplicates and application leftovers.
+          You bought a 512GB or 1TB SSD thinking it would last years. Now macOS says you have 14GB left, and half of it is lumped into &ldquo;System Data.&rdquo; DiskWarren unmasks the real culprits: Xcode build caches, Docker virtual disks, forgotten Ollama weights, dormant node_modules, and application leftovers.
         </p>
 
         {/* CTA Buttons */}
@@ -110,25 +98,25 @@ export default function HomePage() {
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-base transition-all shadow-md shadow-cyan-600/25 flex items-center justify-center gap-2 group active:scale-95 cursor-pointer"
           >
             <Download className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
-            <span>Scan Your Mac Free</span>
+            <span>Download Free for Mac</span>
           </Link>
 
           <a
             href="#simulator"
             className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
           >
-            <span>See How It Works</span>
+            <span>Try the Interactive Demo</span>
             <ArrowRight className="w-4 h-4 text-cyan-600" />
           </a>
         </div>
 
         {/* Trust Row */}
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-600 pt-4 font-medium">
-          <span className="flex items-center gap-1.5"><Lock className="w-4 h-4 text-emerald-600" /> Native macOS</span>
+          <span className="flex items-center gap-1.5"><Lock className="w-4 h-4 text-emerald-600" /> 100% Local &amp; Private</span>
           <span className="text-slate-300">•</span>
-          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-cyan-600" /> Privacy-first</span>
+          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-cyan-600" /> Recycles to Trash First</span>
           <span className="text-slate-300">•</span>
-          <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-amber-600" /> No subscription</span>
+          <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-amber-600" /> One-Time Purchase, No Subscriptions</span>
         </div>
       </section>
 
@@ -137,13 +125,13 @@ export default function HomePage() {
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold">
             <Layers className="w-3.5 h-3.5 text-cyan-600" />
-            <span>Live Storage Visualization Demo</span>
+            <span>Interactive Simulator</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
-            Interactive Storage Demo
+            See How DiskWarren Categorizes Your Drive
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto">
-            This demonstration uses synthetic storage data and does not access your Mac. Toggle between the macOS Radial Partition Ring (Pie) and Treemap matrix to inspect candidate items and test safe recycling to Trash.
+            Try the interactive sandbox below. Switch between the partition ring and the squarified treemap, inspect realistic developer files, and see how safe recycling to Trash works in real time.
           </p>
         </div>
         <SimulatedStorageAnalyzer />
@@ -152,12 +140,12 @@ export default function HomePage() {
       {/* 3. MAJOR SECTION: YOUR MAC ISN'T JUST FULL OF "JUNK" */}
       <section id="developer-ai" className="px-6 max-w-6xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center space-y-3">
-          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Beyond Traditional Cleaners</span>
+          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Built for Real Workstations</span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">
-            Your Mac Isn&apos;t Just Full of &quot;Junk.&quot;
+            Your Mac Isn&apos;t Full of Junk. It&apos;s Full of Tools.
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-base">
-            Modern workstations don&apos;t run out of space because of browser cookies. They are consumed by build caches, simulator runtimes, virtual environments, container images, and local AI weights.
+            Traditional disk cleaners search for browser cookies and language translation files to boast that they reclaimed 400MB. Real developer machines run out of space because our modern toolchains never clean up after themselves.
           </p>
         </div>
 
@@ -170,19 +158,19 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-slate-900">Xcode</h3>
-              <span className="text-xs text-cyan-700 font-mono">Typically 20 GB – 60 GB</span>
+              <span className="text-xs text-cyan-700 font-mono font-medium">Often 25 GB – 70 GB</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Dozens of gigabytes quietly accumulate from previous compilations, legacy iOS simulator runtimes, and intermediate module archives.
+              Every build dumps intermediate object files and index stores into <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">~/Library/Developer</code>. Add two forgotten watchOS simulator runtimes from last year, and Xcode is quietly holding onto 50GB of dead weight.
             </p>
             <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> DerivedData &amp; Module Caches</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Unused iOS &amp; watchOS Simulators</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Archived Builds &amp; Symbol Maps</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> DerivedData &amp; module compilation caches</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Unused iOS, watchOS &amp; tvOS simulator runtimes</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Archived release builds and dSYM symbol files</li>
             </ul>
             <div className="pt-1">
               <Link href="/xcode-storage" className="text-xs font-bold text-cyan-700 hover:underline inline-flex items-center gap-1">
-                <span>Inspect Xcode cleanup rules</span>
+                <span>See Xcode cleanup guide</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -194,20 +182,20 @@ export default function HomePage() {
               <Container className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900">Docker</h3>
-              <span className="text-xs text-blue-700 font-mono">Typically 15 GB – 50 GB</span>
+              <h3 className="text-xl font-bold text-slate-900">Docker Desktop</h3>
+              <span className="text-xs text-blue-700 font-mono font-medium">Often 20 GB – 60 GB</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Dangling layers, abandoned build caches, and unused containers inflate your virtual disk image (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">Docker.raw</code>).
+              Docker allocates a virtual disk (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">Docker.raw</code>) on macOS that inflates dynamically but rarely shrinks on its own, even after you prune unused containers and images.
             </p>
             <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Dangling &amp; Untagged Images</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Stoppped Container Overheads</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> BuildKit Intermediate Layer Caches</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Bloated virtual disk sparse files (Docker.raw)</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Dangling image layers from failed builds</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" /> BuildKit cache stores accumulating invisibly</li>
             </ul>
             <div className="pt-1">
               <Link href="/docker-storage-mac" className="text-xs font-bold text-blue-700 hover:underline inline-flex items-center gap-1">
-                <span>Inspect Docker storage analysis</span>
+                <span>See Docker storage guide</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -220,19 +208,19 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-slate-900">Node &amp; JavaScript</h3>
-              <span className="text-xs text-emerald-700 font-mono">Typically 10 GB – 40 GB</span>
+              <span className="text-xs text-emerald-700 font-mono font-medium">Often 15 GB – 50 GB</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Hundreds of thousands of nested files across archived project repositories and package manager tarball caches.
+              A standard Next.js or React repo can easily hold 50,000 files in <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">node_modules</code>. Across 20 client projects you haven&apos;t touched in six months, that&apos;s tens of gigabytes of duplicate dependencies.
             </p>
             <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Dormant node_modules Trees</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Global npm &amp; Yarn Cache Directories</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> pnpm Content-Addressable Stores</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Inactive node_modules folders grouped by last modified</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Global npm and Yarn cache tarballs</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Unreferenced pnpm content-addressable blobs</li>
             </ul>
             <div className="pt-1">
               <Link href="/node-modules-disk-space" className="text-xs font-bold text-emerald-700 hover:underline inline-flex items-center gap-1">
-                <span>Inspect Node storage rules</span>
+                <span>Clean node_modules safely</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -244,20 +232,20 @@ export default function HomePage() {
               <Brain className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900">Local AI &amp; LLMs</h3>
-              <span className="text-xs text-purple-700 font-mono">Typically 30 GB – 100+ GB</span>
+              <h3 className="text-xl font-bold text-slate-900">Local AI &amp; LLM Weights</h3>
+              <span className="text-xs text-purple-700 font-mono font-medium">Often 30 GB – 120 GB</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              7B, 13B, and 70B parameter weights, GGUF files, Hugging Face snapshots, and diffusion checkpoints eating internal SSD blocks.
+              Testing out Llama, DeepSeek, or Flux? A single 70B model checkpoint is 40GB. Ollama hides them under obscure SHA blob filenames in <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">~/.ollama/models</code>, making manual cleanup tedious.
             </p>
             <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Ollama SHA Blobs (~/.ollama/models)</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> LM Studio GGUF Weights</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Hugging Face Hub &amp; ComfyUI Models</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Correlates Ollama SHA blobs to actual model names</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> LM Studio downloaded GGUF weight files</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Hugging Face Hub snapshots and ComfyUI checkpoints</li>
             </ul>
             <div className="pt-1">
               <Link href="/ollama-storage" className="text-xs font-bold text-purple-700 hover:underline inline-flex items-center gap-1">
-                <span>Inspect AI model detection</span>
+                <span>Inspect local AI weight manager</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -269,21 +257,21 @@ export default function HomePage() {
               <Code2 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900">Modern Development Toolchains</h3>
-              <span className="text-xs text-amber-700 font-mono">Typically 15 GB – 45 GB</span>
+              <h3 className="text-xl font-bold text-slate-900">Rust, Python, Go &amp; Homebrew Toolchains</h3>
+              <span className="text-xs text-amber-700 font-mono font-medium">Often 15 GB – 45 GB</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every package manager and toolchain maintains local download tarballs and build targets across your home directory.
+              Every modern build tool keeps local archives. Rust Cargo stores gigabytes in <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">target/</code> per crate. Python wheels pile up in pip cache, and Homebrew keeps downloaded bottles in <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">~/Library/Caches/Homebrew</code>.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-xs text-slate-700">
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Rust Cargo target/ &amp; registry archives</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Go build caches &amp; module downloads</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Python pip wheel caches &amp; virtual environments</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Homebrew bottled package download caches</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Rust Cargo target/ and registry archives</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Go build caches and module downloads</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Python pip wheel cache and orphaned virtual environments</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" /> Homebrew downloaded bottles and formula caches</div>
             </div>
             <div className="pt-2">
               <Link href="/developer-cleanup-mac" className="text-xs font-bold text-amber-700 hover:underline inline-flex items-center gap-1">
-                <span>Explore all developer toolchain rules</span>
+                <span>View all supported toolchain rules</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -296,13 +284,13 @@ export default function HomePage() {
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Architecture &amp; Integrity</span>
+            <span>Engine Architecture</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">
-            Safety by Design: Built to Prevent Accidental Deletions
+            Safety by Design: We Never Break Your Mac
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-base">
-            Never fear running a disk utility again. DiskWarren is architected around transparent review, native macOS Trash routing, and permanent operating system safeguards.
+            Running a disk utility shouldn&apos;t feel like Russian roulette. DiskWarren is designed with strict guardrails so you always stay in control.
           </p>
         </div>
 
@@ -311,9 +299,9 @@ export default function HomePage() {
             <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
               <RotateCcw className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Trash-First Routing</h3>
+            <h3 className="text-base font-bold text-slate-900">Everything Goes to Trash</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              All cleaned items are recycled to the native macOS Trash where supported. Restore any file instantly with Finder&apos;s native &quot;Put Back&quot; command. Zero raw unlinks by default.
+              Cleaned items are moved to your native macOS Trash. If you ever realize you needed an old build or archive, just open Trash, right-click, and click &ldquo;Put Back.&rdquo; Zero immediate raw unlinks.
             </p>
           </div>
 
@@ -321,9 +309,9 @@ export default function HomePage() {
             <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
               <FolderLock className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Protected System Paths</h3>
+            <h3 className="text-base font-bold text-slate-900">Hardcoded System Locks</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Hardcoded engine barriers strictly protect macOS operating system folders (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/System</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/usr</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/bin</code>), keychains, and sealed APFS snapshots.
+              The engine explicitly refuses to touch core macOS directories (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/System</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/usr</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/bin</code>), keychains, and sealed APFS system snapshots.
             </p>
           </div>
 
@@ -331,9 +319,9 @@ export default function HomePage() {
             <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
               <ShieldAlert className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Three-Tier Risk Guidance</h3>
+            <h3 className="text-base font-bold text-slate-900">Three-Tier Risk Badges</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every candidate is classified as <strong className="text-emerald-700">Low Risk</strong> (rebuildable caches), <strong className="text-amber-700">Review Required</strong> (uninstalled app data), or <strong className="text-red-700">Restricted</strong>, with full preview before action.
+              Every folder is tagged: <strong className="text-emerald-700">Safe</strong> (rebuildable caches), <strong className="text-amber-700">Review</strong> (uninstalled app remnants), or <strong className="text-red-700">Restricted</strong> (system &amp; config files).
             </p>
           </div>
 
@@ -341,9 +329,9 @@ export default function HomePage() {
             <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
               <CheckCircle2 className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Explicit User Review</h3>
+            <h3 className="text-base font-bold text-slate-900">Zero Background Daemons</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              DiskWarren never runs background background deletion daemons or automated sweeps. Every operation requires your conscious inspection, selection, and confirmation.
+              No hidden services eating your battery or monitoring your filesystem. DiskWarren runs when you double-click it, and shuts down completely when you press Cmd+Q.
             </p>
           </div>
         </div>
@@ -354,27 +342,27 @@ export default function HomePage() {
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-mono font-semibold">
             <Layers className="w-3.5 h-3.5 text-cyan-600" />
-            <span>Interactive Treemap &amp; Uninstaller</span>
+            <span>Squarified Treemap &amp; Inspector</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 leading-tight">
-            See your filesystem as physical space. Zoom, inspect, and drill down.
+            See your disk as physical territory. Zoom into what matters.
           </h2>
           <p className="text-slate-600 text-sm leading-relaxed">
-            Our squarified treemap visualizes deep directory hierarchies and file density. Click into any directory to reveal exact storage density, locate runaway log files, or sweep away uninstalled application leftovers.
+            Finding lost space with nested Finder lists is like reading a phone book. DiskWarren maps your drive into an interactive squarified treemap where larger rectangles mean more disk consumed. Click into any folder to zoom down to the exact files eating your storage.
           </p>
           <div className="space-y-3 pt-2">
             <div className="flex items-start gap-3">
               <div className="p-1.5 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 mt-0.5"><Search className="w-4 h-4" /></div>
               <div>
                 <h4 className="text-sm font-semibold text-slate-900">Instant In-Memory Search</h4>
-                <p className="text-xs text-slate-500">Filter by filename, extension, or category with sub-millisecond response.</p>
+                <p className="text-xs text-slate-500">Filter millions of indexed files by name, extension, or size with instant keyboard response.</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="p-1.5 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 mt-0.5"><FileCheck className="w-4 h-4" /></div>
               <div>
-                <h4 className="text-sm font-semibold text-slate-900">Cryptographic Duplicate Finder</h4>
-                <p className="text-xs text-slate-500">Three-stage progressive filter: Size bucket &rarr; chunk hash &rarr; full SHA-256 confirmation.</p>
+                <h4 className="text-sm font-semibold text-slate-900">Cryptographic Duplicate Detection</h4>
+                <p className="text-xs text-slate-500">A three-stage filter (size bucket &rarr; chunk sample &rarr; full SHA-256) confirms duplicates with 100% mathematical certainty before you touch anything.</p>
               </div>
             </div>
           </div>
@@ -420,9 +408,9 @@ export default function HomePage() {
       {/* 6. TRANSPARENT PRICING SECTION */}
       <section id="pricing" className="px-6 max-w-4xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center space-y-3">
-          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Pricing</span>
-          <h2 className="text-3xl font-extrabold text-slate-900">Simple, Honest Pricing. No Subscriptions.</h2>
-          <p className="text-sm text-slate-600">Pay once, own it forever. Free updates for v1.x with 100% offline license support.</p>
+          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Fair Pricing</span>
+          <h2 className="text-3xl font-extrabold text-slate-900">Buy It Once. Keep It Forever.</h2>
+          <p className="text-sm text-slate-600">No monthly fees. No annual renewals. Offline cryptographic license key that never expires.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -430,7 +418,7 @@ export default function HomePage() {
           <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
             <div>
               <h3 className="text-lg font-bold text-slate-900">Free Edition</h3>
-              <p className="text-xs text-slate-500 mt-1">Full disk exploration &amp; storage intelligence</p>
+              <p className="text-xs text-slate-500 mt-1">Full disk exploration and storage intelligence</p>
               <div className="mt-4">
                 <span className="text-3xl font-extrabold text-slate-900 font-mono">$0</span>
                 <span className="text-xs text-slate-500 ml-1">forever</span>
@@ -438,11 +426,11 @@ export default function HomePage() {
             </div>
 
             <ul className="space-y-3 text-xs text-slate-600">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Full Filesystem Scanning</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Interactive Treemap Exploration</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Developer &amp; AI Storage Inspection</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Large Files Detector (&gt;100MB)</li>
-              <li className="flex items-center gap-2 text-slate-400"><span>• One-click safe batch cleanup (Pro)</span></li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Complete APFS and HFS+ drive scanning</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Interactive partition ring and treemap zoom</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Full breakdown of Xcode, Docker, Node, and AI models</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Large file finder (&gt;100MB) with Finder reveal</li>
+              <li className="flex items-center gap-2 text-slate-400"><span>• Automated batch recycling &amp; duplicates (Pro)</span></li>
             </ul>
 
             <Link
@@ -457,26 +445,26 @@ export default function HomePage() {
           <div className="p-8 rounded-2xl bg-gradient-to-b from-white to-cyan-50/60 border-2 border-cyan-500 shadow-lg shadow-cyan-500/10 space-y-6 relative">
             <div>
               <h3 className="text-lg font-bold text-slate-900">DiskWarren Pro</h3>
-              <p className="text-xs text-slate-500 mt-1">Unlimited safe cleanup, uninstaller &amp; duplicates</p>
+              <p className="text-xs text-slate-500 mt-1">Automated safe cleanup, deep uninstaller, and duplicate remover</p>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold text-cyan-700 font-mono">$9.99</span>
-                <span className="text-xs text-slate-500 ml-1">one-time payment</span>
+                <span className="text-xs text-slate-500 ml-1">single payment</span>
               </div>
             </div>
 
             <ul className="space-y-3 text-xs text-slate-700">
               <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Everything in Free Edition</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> One-Click Safe Batch Trash Cleanup</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Application Uninstaller &amp; Leftovers</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> SHA-256 Duplicate File Eliminator</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> No Monthly or Yearly Subscriptions</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> One-click safe batch recycling to Trash</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Deep application uninstaller that clears hidden Library leftovers</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Cryptographic SHA-256 duplicate file remover</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Lifetime license for your Mac with offline license key</li>
             </ul>
 
             <Link
               href="/pricing"
               className="w-full py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-600/25 block text-center cursor-pointer"
             >
-              Get Pro License ($9.99)
+              Get DiskWarren Pro ($9.99)
             </Link>
           </div>
         </div>
@@ -487,9 +475,9 @@ export default function HomePage() {
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
             <HelpCircle className="w-3.5 h-3.5 text-cyan-600" />
-            <span>Frequently Asked Questions</span>
+            <span>Clear Answers</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900">Questions &amp; Answers</h2>
+          <h2 className="text-3xl font-extrabold text-slate-900">Frequently Asked Questions</h2>
         </div>
 
         <div className="space-y-3">
@@ -533,7 +521,7 @@ export default function HomePage() {
           </h2>
 
           <p className="text-base text-slate-300 max-w-xl mx-auto">
-            Download the native macOS app and discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints.
+            Download the native macOS app and discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">

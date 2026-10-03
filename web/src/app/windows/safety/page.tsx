@@ -71,7 +71,7 @@ export default function WindowsSafetyPage() {
           </div>
           <h2 className="text-xl font-bold text-slate-900">3. Zero Registry Tampering</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Legacy PC cleaners gained a notorious reputation by aggressively deleting "unused" registry keys, breaking COM registrations and leading to Blue Screens of Death (BSOD). 
+            Legacy PC cleaners gained a notorious reputation by aggressively deleting &ldquo;unused&rdquo; registry keys, breaking COM registrations and leading to Blue Screens of Death (BSOD). 
             DiskWarren <strong>never modifies or deletes the Windows Registry</strong>. We strictly focus on multi-gigabyte build artifacts and orphaned developer caches.
           </p>
         </div>

@@ -56,7 +56,7 @@ export default function WindowsFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Interactive Squarified Treemap</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            See your entire drive laid out in proportional geometric tiles. Click into any folder block to drill down seamlessly, identify rogue ISOs, large game installs, and hidden virtual machines in real time.
+            See your entire drive laid out in proportional geometric tiles. Click into any folder block to drill down layer by layer, identify rogue ISOs, large game installs, and hidden virtual machines in real time.
           </p>
           <div className="pt-2 text-xs font-mono text-indigo-600 bg-indigo-50/50 p-3 rounded-xl border border-indigo-100">
             ✓ Color-coded by file category (Executables, Media, Code, Caches)
@@ -88,7 +88,7 @@ export default function WindowsFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Cryptographic Duplicate Finder</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Avoid simple name-based matching that causes false positives. DiskWarren uses a 3-tier verification pipeline: exact file size $\to$ 4KB header comparison $\to$ full cryptographic SHA-256 byte hashing.
+            Avoid simple name-based matching that causes false positives. DiskWarren uses a 3-tier verification pipeline: exact file size &rarr; 4KB header comparison &rarr; full cryptographic SHA-256 byte hashing.
           </p>
           <div className="pt-2 text-xs font-mono text-purple-600 bg-purple-50/50 p-3 rounded-xl border border-purple-100">
             ✓ Safe 1-click batch selection keeping newest or oldest original
@@ -116,7 +116,7 @@ export default function WindowsFeaturesPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Explorer Context Menu &amp; WinGet CLI</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Right-click any folder or drive directly in Windows File Explorer and select "Analyze with DiskWarren" for instant scoped audits. Supports silent deployment via WinGet and automation flags.
+            Right-click any folder or drive directly in Windows File Explorer and select &ldquo;Analyze with DiskWarren&rdquo; for instant scoped audits. Supports silent deployment via WinGet and automation flags.
           </p>
           <div className="pt-2 text-xs font-mono text-amber-600 bg-amber-50/50 p-3 rounded-xl border border-amber-100">
             ✓ Integrates with modern Windows 11 cascaded context menus

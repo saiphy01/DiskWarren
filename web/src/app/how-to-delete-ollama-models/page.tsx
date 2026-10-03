@@ -27,7 +27,7 @@ export default function DeleteOllamaModelsGuidePage() {
             How to Manage and Delete Local Ollama Models on Mac
           </h1>
           <p className="text-base text-slate-600 leading-relaxed">
-            Running local LLMs with Ollama is seamless, but model weights are huge. A single 70B quant is 40+ GB, and multiple models will rapidly fill even a 1TB SSD. Here is how Ollama organizes storage and how to prune it.
+            Running local LLMs with Ollama is convenient, but model weights are massive. A single 70B quant is 40+ GB, and a few experimental downloads will rapidly fill even a 1TB SSD. Here is how Ollama organizes storage and how to prune it.
           </p>
         </div>
 
