@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
                     StorageOverviewHeader(
                         totalUsedBytes = totalUsedBytes,
                         totalAvailableBytes = 0L,
+                        categories = categorySummaries,
                         onScanClicked = { refreshScan() }
                     )
                     CategorySummaryList(categories = categorySummaries)

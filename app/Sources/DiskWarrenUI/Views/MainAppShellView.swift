@@ -50,24 +50,29 @@ public struct MainAppShellView: View {
             // Sidebar
             VStack(alignment: .leading, spacing: 0) {
                 // Disk Header
-                HStack(spacing: 8) {
+                HStack(spacing: 10) {
                     Image(systemName: "internaldrive.fill")
+                        .font(.system(size: 18))
                         .foregroundColor(WarrenTheme.brandTeal)
                     
-                    VStack(alignment: .leading, spacing: 1) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Macintosh HD")
                             .font(WarrenTypography.body)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                            .foregroundColor(WarrenTheme.textPrimary)
                         Text("142.8 GB Free of 494 GB")
                             .font(WarrenTypography.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(WarrenTheme.textSecondary)
                     }
                     Spacer()
                 }
-                .padding(14)
-                .background(WarrenTheme.darkSurface)
+                .padding(12)
+                .background(WarrenTheme.cardBackground)
                 .cornerRadius(WarrenTheme.cornerSmall)
+                .overlay(
+                    RoundedRectangle(cornerRadius: WarrenTheme.cornerSmall)
+                        .stroke(WarrenTheme.subtleBorder, lineWidth: 1)
+                )
                 .padding(.horizontal, 12)
                 .padding(.top, 12)
                 .padding(.bottom, 8)

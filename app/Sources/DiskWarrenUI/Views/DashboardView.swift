@@ -26,116 +26,211 @@ public struct DashboardView: View {
         candidates.filter { $0.isSelected }.reduce(0) { $0 + $1.sizeBytes }
     }
     
+    private var donutItems: [DonutSliceItem] {
+        let used = max(0, volume.totalCapacityBytes - volume.freeBytes)
+        let toolchainBytes = max(Int64(Double(used) * 0.12), candidates.filter { $0.category == .developer }.reduce(0) { $0 + $1.sizeBytes })
+        let aiBytes = max(Int64(Double(used) * 0.10), candidates.filter { $0.category == .aiModels }.reduce(0) { $0 + $1.sizeBytes })
+        let appBytes = Int64(Double(used) * 0.32)
+        let sysBytes = Int64(Double(used) * 0.24)
+        let cacheBytes = max(Int64(Double(used) * 0.06), candidates.filter { $0.category == .caches }.reduce(0) { $0 + $1.sizeBytes })
+        let userDocBytes = max(0, used - toolchainBytes - aiBytes - appBytes - sysBytes - cacheBytes)
+        
+        return [
+            DonutSliceItem(
+                name: "Free Space",
+                sizeBytes: volume.freeBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: volume.freeBytes, countStyle: .file),
+                color: WarrenTheme.brandEmerald,
+                description: "Available APFS filesystem container capacity",
+                isReclaimable: false
+            ),
+            DonutSliceItem(
+                name: "Developer Toolchains",
+                sizeBytes: toolchainBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: toolchainBytes, countStyle: .file),
+                color: WarrenTheme.devCyan,
+                description: "DerivedData, npm-cache, Cargo, and package registries",
+                isReclaimable: true
+            ),
+            DonutSliceItem(
+                name: "Local AI Models",
+                sizeBytes: aiBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: aiBytes, countStyle: .file),
+                color: WarrenTheme.aiPurple,
+                description: "Ollama, LM Studio GGUF weights, and Hugging Face hub",
+                isReclaimable: true
+            ),
+            DonutSliceItem(
+                name: "Applications",
+                sizeBytes: appBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: appBytes, countStyle: .file),
+                color: WarrenTheme.appBlue,
+                description: "Installed macOS application bundles and binaries",
+                isReclaimable: false
+            ),
+            DonutSliceItem(
+                name: "System & Core OS",
+                sizeBytes: sysBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: sysBytes, countStyle: .file),
+                color: WarrenTheme.systemSlate,
+                description: "macOS Sealed System Volume (SSV) and kernel caches",
+                isReclaimable: false
+            ),
+            DonutSliceItem(
+                name: "Caches & Ephemeral Temp",
+                sizeBytes: cacheBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: cacheBytes, countStyle: .file),
+                color: WarrenTheme.tempRose,
+                description: "User cache leftovers and browser compilation buffers",
+                isReclaimable: true
+            ),
+            DonutSliceItem(
+                name: "User Documents & Repos",
+                sizeBytes: userDocBytes,
+                formattedSize: ByteCountFormatter.string(fromByteCount: userDocBytes, countStyle: .file),
+                color: Color(red: 217/255, green: 119/255, blue: 6/255),
+                description: "Personal workspaces, projects, and media archives",
+                isReclaimable: false
+            )
+        ]
+    }
+    
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // Header
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(volume.name)
-                            .font(WarrenTypography.title1)
-                            .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 20) {
+                // Header Bar with Volume Metadata & Quick Scan
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 8) {
+                            Text(volume.name)
+                                .font(WarrenTypography.title1)
+                                .foregroundColor(WarrenTheme.textPrimary)
+                            
+                            Text("APFS • macOS")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(WarrenTheme.brandTeal)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(WarrenTheme.brandTeal.opacity(0.12))
+                                .cornerRadius(6)
+                        }
                         
-                        Text("APFS Container • \(volume.formattedTotal) Total")
+                        Text("\(volume.formattedTotal) Total Capacity • \(volume.formattedUsed) Allocated (\(Int(volume.usedPercentage * 100))%)")
                             .font(WarrenTypography.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(WarrenTheme.textSecondary)
                     }
                     
                     Spacer()
                     
-                    WarrenButton("Scan Storage", icon: WarrenIcons.scan, style: .primary) {
-                        onStartScan()
-                    }
-                }
-                
-                // Top Storage Gauge & Metrics Card
-                WarrenCard(padding: 20) {
-                    HStack(spacing: 32) {
-                        WarrenStorageGauge(
-                            totalBytes: volume.totalCapacityBytes,
-                            usedBytes: volume.usedBytes,
-                            freeBytes: volume.freeBytes
-                        )
+                    HStack(spacing: 10) {
+                        WarrenButton("Review Candidates", icon: "checklist", style: .secondary) {
+                            onReviewCleanup()
+                        }
                         
-                        VStack(alignment: .leading, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Storage Utilization")
-                                    .font(WarrenTypography.headline)
-                                    .foregroundColor(.white)
-                                Text("\(volume.formattedUsed) used across applications, local AI models, and developer caches.")
-                                    .font(WarrenTypography.body)
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            // Reclaim banner
-                            HStack {
-                                Image(systemName: "sparkles")
-                                    .foregroundColor(WarrenTheme.brandTeal)
-                                
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("Reclaimable Space Found")
-                                        .font(WarrenTypography.caption)
-                                        .foregroundColor(.gray)
-                                    Text(ByteCountFormatter.string(fromByteCount: totalReclaimableBytes, countStyle: .file))
-                                        .font(WarrenTypography.metricMedium)
-                                        .foregroundColor(WarrenTheme.brandEmerald)
-                                }
-                                
-                                Spacer()
-                                
-                                WarrenButton("Review & Reclaim", style: .subtle) {
-                                    onReviewCleanup()
-                                }
-                            }
-                            .padding(12)
-                            .background(WarrenTheme.darkCard)
-                            .cornerRadius(WarrenTheme.cornerSmall)
+                        WarrenButton("Scan Storage", icon: WarrenIcons.scan, style: .primary) {
+                            onStartScan()
                         }
                     }
                 }
                 
-                // Distribution breakdown
-                WarrenCard(padding: 16) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Category Distribution")
-                            .font(WarrenTypography.headline)
-                            .foregroundColor(.white)
+                // Reclaimable Space Spotlight Capsule
+                HStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(WarrenTheme.brandEmerald.opacity(0.15))
+                            .frame(width: 44, height: 44)
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(WarrenTheme.brandEmerald)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("RECLAIMABLE STORAGE DETECTED")
+                            .font(.system(size: 10.5, weight: .bold))
+                            .foregroundColor(WarrenTheme.brandEmerald)
                         
-                        CategoryDistributionBar(
-                            segments: [
-                                .init(category: .system, sizeBytes: 110_000_000_000),
-                                .init(category: .applications, sizeBytes: 64_000_000_000),
-                                .init(category: .developer, sizeBytes: 48_000_000_000),
-                                .init(category: .aiModels, sizeBytes: 36_000_000_000),
-                                .init(category: .caches, sizeBytes: 18_000_000_000),
-                                .init(category: .duplicates, sizeBytes: 8_000_000_000),
-                                .init(category: .freeSpace, sizeBytes: volume.freeBytes)
-                            ],
-                            totalBytes: volume.totalCapacityBytes
+                        Text("\(ByteCountFormatter.string(fromByteCount: totalReclaimableBytes, countStyle: .file)) can be safely recycled")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(WarrenTheme.textPrimary)
+                    }
+                    
+                    Spacer()
+                    
+                    WarrenButton("Reclaim Space", icon: "trash", style: .subtle) {
+                        onReviewCleanup()
+                    }
+                }
+                .padding(14)
+                .background(WarrenTheme.cardBackground)
+                .cornerRadius(WarrenTheme.cornerMedium)
+                .overlay(
+                    RoundedRectangle(cornerRadius: WarrenTheme.cornerMedium)
+                        .stroke(WarrenTheme.brandEmerald.opacity(0.3), lineWidth: 1)
+                )
+                
+                // The Master Space Allocation Donut Card
+                WarrenCard(padding: 20) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Storage Allocation & Partition Donut")
+                                    .font(WarrenTypography.headline)
+                                    .foregroundColor(WarrenTheme.textPrimary)
+                                Text("Proportional capacity rings showing active container sectors.")
+                                    .font(WarrenTypography.caption)
+                                    .foregroundColor(WarrenTheme.textSecondary)
+                            }
+                            Spacer()
+                        }
+                        
+                        Divider()
+                            .background(WarrenTheme.subtleBorder)
+                        
+                        MasterSpaceDonutView(
+                            totalBytes: volume.totalCapacityBytes,
+                            freeBytes: volume.freeBytes,
+                            items: donutItems,
+                            onSelectSlice: { item in
+                                if let cat = StorageCategory(rawValue: item.name) {
+                                    onSelectCategory(cat)
+                                }
+                            },
+                            onStageItem: { item in
+                                onReviewCleanup()
+                            }
                         )
                     }
                 }
                 
-                // Reclaimable Candidates List
+                // Top Reclaim Opportunities
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Top Reclaim Opportunities")
-                        .font(WarrenTypography.headline)
-                        .foregroundColor(.white)
+                    HStack {
+                        Text("High-Impact Cleanup Candidates")
+                            .font(WarrenTypography.headline)
+                            .foregroundColor(WarrenTheme.textPrimary)
+                        Spacer()
+                        Text("\(candidates.count) items discovered")
+                            .font(WarrenTypography.caption)
+                            .foregroundColor(WarrenTheme.textSecondary)
+                    }
                     
                     ForEach(candidates.prefix(4)) { candidate in
-                        HStack(spacing: 12) {
+                        HStack(spacing: 14) {
                             Image(systemName: candidate.category.iconName)
+                                .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(WarrenTheme.color(for: candidate.category))
-                                .frame(width: 24)
+                                .frame(width: 32, height: 32)
+                                .background(WarrenTheme.color(for: candidate.category).opacity(0.12))
+                                .cornerRadius(8)
                             
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(candidate.title)
-                                    .font(WarrenTypography.body)
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(WarrenTheme.textPrimary)
                                 
                                 Text(candidate.itemDescription)
                                     .font(WarrenTypography.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(WarrenTheme.textSecondary)
                                     .lineLimit(1)
                             }
                             
@@ -144,11 +239,11 @@ public struct DashboardView: View {
                             RiskBadge(candidate.riskTier)
                             
                             Text(candidate.formattedSize)
-                                .font(WarrenTypography.metricSmall)
-                                .foregroundColor(.white)
+                                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                                .foregroundColor(WarrenTheme.textPrimary)
                         }
                         .padding(12)
-                        .background(WarrenTheme.darkSurface)
+                        .background(WarrenTheme.cardBackground)
                         .cornerRadius(WarrenTheme.cornerSmall)
                         .overlay(
                             RoundedRectangle(cornerRadius: WarrenTheme.cornerSmall)
@@ -159,93 +254,6 @@ public struct DashboardView: View {
             }
             .padding(24)
         }
-        .background(WarrenTheme.darkBackground)
-    }
-}
-
-public struct ScanProgressView: View {
-    public let currentPath: String
-    public let processedFiles: Int
-    public let processedBytes: Int64
-    public let progressFraction: Double
-    public let onCancel: () -> Void
-    
-    public init(
-        currentPath: String,
-        processedFiles: Int,
-        processedBytes: Int64,
-        progressFraction: Double,
-        onCancel: @escaping () -> Void
-    ) {
-        self.currentPath = currentPath
-        self.processedFiles = processedFiles
-        self.processedBytes = processedBytes
-        self.progressFraction = progressFraction
-        self.onCancel = onCancel
-    }
-    
-    public var body: some View {
-        VStack(spacing: 24) {
-            ZStack {
-                Circle()
-                    .stroke(WarrenTheme.darkCard, lineWidth: 8)
-                
-                Circle()
-                    .trim(from: 0, to: CGFloat(progressFraction))
-                    .stroke(WarrenTheme.brandTeal, style: StrokeStyle(lineWidth: 8, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                
-                Image(systemName: "sparkle.magnifyingglass")
-                    .font(.system(size: 32))
-                    .foregroundColor(WarrenTheme.brandTeal)
-            }
-            .frame(width: 100, height: 100)
-            
-            VStack(spacing: 6) {
-                Text("Analyzing Filesystem...")
-                    .font(WarrenTypography.title2)
-                    .foregroundColor(.white)
-                
-                Text(currentPath)
-                    .font(WarrenTypography.caption)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .frame(maxWidth: 420)
-            }
-            
-            HStack(spacing: 24) {
-                VStack(spacing: 2) {
-                    Text("\(processedFiles)")
-                        .font(WarrenTypography.metricMedium)
-                        .foregroundColor(.white)
-                    Text("Files Indexed")
-                        .font(WarrenTypography.caption)
-                        .foregroundColor(.gray)
-                }
-                
-                Divider().frame(height: 24)
-                
-                VStack(spacing: 2) {
-                    Text(ByteCountFormatter.string(fromByteCount: processedBytes, countStyle: .file))
-                        .font(WarrenTypography.metricMedium)
-                        .foregroundColor(.white)
-                    Text("Storage Measured")
-                        .font(WarrenTypography.caption)
-                        .foregroundColor(.gray)
-                }
-            }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 12)
-            .background(WarrenTheme.darkCard)
-            .cornerRadius(WarrenTheme.cornerSmall)
-            
-            WarrenButton("Cancel Scan", icon: "xmark", style: .secondary) {
-                onCancel()
-            }
-        }
-        .padding(32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(WarrenTheme.darkBackground)
+        .background(WarrenTheme.appBackground)
     }
 }

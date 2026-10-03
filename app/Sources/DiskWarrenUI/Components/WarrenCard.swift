@@ -22,12 +22,13 @@ public struct WarrenCard<Content: View>: View {
         .padding(padding)
         .background(
             RoundedRectangle(cornerRadius: cornerRadius)
-                .fill(WarrenTheme.darkSurface)
+                .fill(WarrenTheme.cardBackground)
         )
         .overlay(
             RoundedRectangle(cornerRadius: cornerRadius)
                 .stroke(WarrenTheme.subtleBorder, lineWidth: WarrenTheme.borderWidth)
         )
+        .shadow(color: Color.black.opacity(0.03), radius: 4, x: 0, y: 1)
     }
 }
 
@@ -93,7 +94,7 @@ public struct WarrenButton: View {
         case .primary:
             WarrenTheme.brandTeal
         case .secondary:
-            WarrenTheme.darkCard
+            WarrenTheme.surfaceSubtle
         case .danger:
             WarrenTheme.dangerCoral
         case .subtle:
@@ -104,9 +105,9 @@ public struct WarrenButton: View {
     private var foregroundColor: Color {
         switch style {
         case .primary:
-            return .black
-        case .secondary:
             return .white
+        case .secondary:
+            return WarrenTheme.textPrimary
         case .danger:
             return .white
         case .subtle:
