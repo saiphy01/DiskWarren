@@ -53,19 +53,43 @@ class MainActivity : ComponentActivity() {
                 refreshScan()
             }
 
+            val reclaimableBytes = categorySummaries
+                .filter { it.category == MediaCategory.DOWNLOADS }
+                .sumOf { it.totalSizeBytes }
+
+            fun clearReclaimable() {
+                lifecycleScope.launch {
+                    mediaItems = mediaItems.filter { it.category != MediaCategory.DOWNLOADS }
+                    totalUsedBytes = mediaItems.sumOf { it.sizeBytes }
+                    categorySummaries = categorySummaries.filter { it.category != MediaCategory.DOWNLOADS }
+                }
+            }
+
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF8FAFC))
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    StorageOverviewHeader(
-                        totalUsedBytes = totalUsedBytes,
-                        totalAvailableBytes = 0L,
-                        categories = categorySummaries,
-                        onScanClicked = { refreshScan() }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        StorageOverviewHeader(
+                            totalUsedBytes = totalUsedBytes,
+                            totalAvailableBytes = 0L,
+                            categories = categorySummaries,
+                            onScanClicked = { refreshScan() },
+                            onClearClicked = { clearReclaimable() }
+                        )
+                        CategorySummaryList(
+                            categories = categorySummaries,
+                            onClearCategoryClicked = { clearReclaimable() }
+                        )
+                    }
+
+                    BottomClearBar(
+                        reclaimableBytes = reclaimableBytes,
+                        onClearClicked = { clearReclaimable() },
+                        modifier = Modifier.align(Alignment.BottomCenter)
                     )
-                    CategorySummaryList(categories = categorySummaries)
                 }
             }
         }

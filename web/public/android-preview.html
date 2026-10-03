@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiskWarren Android — Interactive Device Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: radial-gradient(circle at 50% 10%, #1e293b 0%, #0f172a 100%);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #0f172a;
+    }
+    .preview-header {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #f8fafc;
+    }
+    .preview-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .preview-header p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Android Flagship Phone Hardware Shell */
+    .phone-chassis {
+      width: 412px;
+      height: 870px;
+      background: #020617;
+      border-radius: 52px;
+      padding: 12px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7),
+                  0 0 0 1px rgba(255, 255, 255, 0.12),
+                  inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Screen Glass */
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #f8fafc;
+      border-radius: 42px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Top Camera Hole Punch */
+    .camera-punch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 13px;
+      height: 13px;
+      background: #000;
+      border-radius: 50%;
+      z-index: 100;
+      box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      height: 38px;
+      padding: 10px 24px 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0f172a;
+      z-index: 90;
+      background: #f8fafc;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    /* App Content Scrollable View */
+    .app-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px 85px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: none;
+    }
+    .app-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Material 3 App Bar */
+    .m3-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+
+    .app-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title-group h2 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scoped-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #0891b2;
+      background: rgba(8, 145, 178, 0.12);
+      padding: 2px 7px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .subtitle {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    .btn-scan {
+      background: #0891b2;
+      color: #ffffff;
+      border: none;
+      padding: 7px 15px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(8, 145, 178, 0.25);
+      transition: all 0.15s ease;
+    }
+    .btn-scan:hover {
+      background: #0e7490;
+      transform: translateY(-1px);
+    }
+    .btn-scan:active {
+      transform: scale(0.96);
+    }
+
+    /* Spotlight Capsule */
+    .spotlight-capsule {
+      background: rgba(16, 185, 129, 0.09);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+    }
+    .spotlight-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .star-pod {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .spotlight-tag {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #10b981;
+      letter-spacing: 0.5px;
+    }
+    .spotlight-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Prominent Clear Space Button in Capsule */
+    .btn-clear-capsule {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-clear-capsule:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+    .btn-clear-capsule:active {
+      transform: scale(0.96);
+    }
+    .btn-clear-capsule.cleaned {
+      background: #64748b;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    /* Donut Canvas Container */
+    .donut-wrapper {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      margin: 18px auto 6px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      width: 230px;
+      height: 230px;
+      cursor: pointer;
+    }
+    .donut-telemetry {
+      position: absolute;
+      text-align: center;
+      pointer-events: none;
+    }
+    .tele-label {
+      font-size: 9px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+    .tele-size {
+      font-size: 22px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #0891b2;
+      line-height: 1.15;
+      margin: 2px 0;
+    }
+    .tele-sub {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    /* Categories List */
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      margin: 4px 0 2px 4px;
+    }
+    .category-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .cat-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 13px 15px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .cat-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+    .cat-card.active {
+      border-color: #0891b2;
+      background: #f0fdfa;
+    }
+    .cat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .cat-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .cat-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .cat-count {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .cat-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-metric {
+      text-align: right;
+    }
+    .cat-size {
+      font-size: 13.5px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #0f172a;
+    }
+    .cat-pct {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .btn-clear-cat {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-clear-cat:hover {
+      background: #059669;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: #f1f5f9;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Fixed Bottom Clear Space Dock */
+    .bottom-clear-dock {
+      position: absolute;
+      bottom: 26px;
+      left: 16px;
+      right: 16px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      z-index: 80;
+      transition: all 0.3s ease;
+    }
+    .bottom-clear-dock.dismissed {
+      transform: translateY(120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .dock-sub {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #10b981;
+      letter-spacing: 0.5px;
+    }
+    .dock-size {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #0f172a;
+    }
+    .btn-dock-clear {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+      transition: all 0.15s ease;
+    }
+    .btn-dock-clear:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+    .btn-dock-clear:active {
+      transform: scale(0.96);
+    }
+
+    /* Android Home Navigation Bar */
+    .home-pill-bar {
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8fafc;
+      z-index: 70;
+    }
+    .home-pill {
+      width: 72px;
+      height: 4px;
+      background: #0f172a;
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+
+    /* Floating Toast */
+    .android-toast {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 9px 20px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 200;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+    .android-toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-header">
+    <h1>DiskWarren Android — Live Device Simulation</h1>
+    <p>Jetpack Compose Material 3 UI • Canvas Storage Donut • Clear Space Actions</p>
+  </div>
+
+  <div class="phone-chassis">
+    <div class="phone-screen">
+      <!-- Camera Punch -->
+      <div class="camera-punch"></div>
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span id="statusBarTime">9:41</span>
+        <div class="status-icons">
+          <span>5G</span>
+          <span>●●●</span>
+          <span>98%</span>
+        </div>
+      </div>
+
+      <!-- App Main Scrollable Container -->
+      <div class="app-scroll">
+        <!-- Main M3 Dashboard Card -->
+        <div class="m3-card">
+          <div class="app-title-row">
+            <div class="title-group">
+              <h2>DiskWarren <span class="scoped-badge">Scoped Storage</span></h2>
+              <div class="subtitle">Real-time storage intelligence & safe photo scrub</div>
+            </div>
+            <button class="btn-scan" onclick="triggerScan()">
+              <span id="scanIcon">⚡</span>
+              <span id="scanBtnText">Scan</span>
+            </button>
+          </div>
+
+          <!-- Reclaimable Spotlight Capsule with Prominent Clear Action -->
+          <div class="spotlight-capsule" id="spotlightCapsule">
+            <div class="spotlight-left">
+              <div class="star-pod" id="starPod">★</div>
+              <div>
+                <div class="spotlight-tag" id="spotlightTag">RECLAIMABLE SPACE DETECTED</div>
+                <div class="spotlight-text" id="reclaimableText">14.2 GB can be safely cleaned</div>
+              </div>
+            </div>
+            <button class="btn-clear-capsule" id="btnCapsuleClear" onclick="executeClearSpace()">
+              <span>🗑️</span> <span id="btnCapsuleText">Clear 14.2 GB</span>
+            </button>
+          </div>
+
+          <!-- Master Storage Donut Chart -->
+          <div class="donut-wrapper">
+            <canvas id="androidDonutCanvas" width="460" height="460"></canvas>
+            <div class="donut-telemetry" id="donutTelemetry">
+              <div class="tele-label" id="teleLabel">STORAGE INDEX</div>
+              <div class="tele-size" id="teleSize">128.4 GB</div>
+              <div class="tele-sub" id="teleSub">4,821 Indexed Items</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="section-label">MEDIA & STORAGE BREAKDOWN</div>
+        <div class="category-cards" id="categoryCardsContainer"></div>
+      </div>
+
+      <!-- Persistent Bottom Clear Space Dock -->
+      <div class="bottom-clear-dock" id="bottomClearDock">
+        <div>
+          <div class="dock-sub">RECLAIMABLE STORAGE</div>
+          <div class="dock-size" id="dockReclaimSize">14.2 GB</div>
+        </div>
+        <button class="btn-dock-clear" onclick="executeClearSpace()">
+          <span>🗑️</span> Clear Space
+        </button>
+      </div>
+
+      <!-- Bottom Gesture Navigation Pill -->
+      <div class="home-pill-bar">
+        <div class="home-pill"></div>
+      </div>
+
+      <!-- Toast Pill -->
+      <div class="android-toast" id="androidToast">MediaStore Index Updated</div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Feedback
+    let audioCtx = null;
+    function playAudio(type) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'clean') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(freq, now + i * 0.05);
+            gain2.gain.setValueAtTime(0.09, now + i * 0.05);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.25);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(now + i * 0.05);
+            osc2.stop(now + i * 0.05 + 0.3);
+          });
+        }
+      } catch (e) {}
+    }
+
+    // Android Storage Data
+    let categories = [
+      { id: 'videos', title: 'Videos & Screen Recordings', sizeBytes: 51755106304, count: 457, color: '#2563eb', reclaimable: false },
+      { id: 'photos', title: 'Photos & Images', sizeBytes: 39084204032, count: 3372, color: '#0891b2', reclaimable: false },
+      { id: 'downloads', title: 'Public Downloads & APKs', sizeBytes: 15247130624, count: 184, color: '#f59e0b', reclaimable: true },
+      { id: 'audio', title: 'Audio & Voice Memos', sizeBytes: 8589934592, count: 215, color: '#8b5cf6', reclaimable: false },
+      { id: 'documents', title: 'Documents & Archives', sizeBytes: 6442450944, count: 593, color: '#d97706', reclaimable: false },
+      { id: 'apps', title: 'App Footprint', sizeBytes: 16106127360, count: 48, color: '#64748b', reclaimable: false }
+    ];
+
+    let isCleaned = false;
+    let selectedCategoryId = null;
+    let totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
+
+    function formatBytes(bytes) {
+      if (bytes <= 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    // Render Canvas Donut
+    const canvas = document.getElementById('androidDonutCanvas');
+    const ctx = canvas.getContext('2d');
+    let slicesMeta = [];
+
+    function drawDonut() {
+      const width = 460;
+      const height = 460;
+      const cx = width / 2;
+      const cy = height / 2;
+      const outerR = 175;
+      const strokeW = 44;
+      const innerR = outerR - strokeW;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Track ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR - strokeW / 2, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = strokeW;
+      ctx.stroke();
+
+      // Slices
+      let currentAngle = -Math.PI / 2;
+      const gap = 0.055;
+      slicesMeta = [];
+
+      categories.forEach(cat => {
+        const fraction = cat.sizeBytes / totalBytes;
+        const sweep = Math.max(0.01, fraction * 2 * Math.PI - gap);
+        const arcStart = currentAngle + gap / 2;
+        const arcEnd = arcStart + sweep;
+        const isSelected = selectedCategoryId === cat.id;
+
+        slicesMeta.push({
+          id: cat.id,
+          a1: arcStart,
+          a2: arcEnd,
+          r1: innerR,
+          r2: outerR,
+          cat: cat
+        });
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, (isSelected ? outerR + 5 : outerR) - strokeW / 2, arcStart, arcEnd);
+        ctx.strokeStyle = cat.color;
+        ctx.lineWidth = isSelected ? strokeW + 8 : strokeW;
+        ctx.lineCap = 'round';
+        if (isSelected) {
+          ctx.shadowColor = cat.color;
+          ctx.shadowBlur = 20;
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        currentAngle += fraction * 2 * Math.PI;
+      });
+
+      // Center Pod Background
+      ctx.beginPath();
+      ctx.arc(cx, cy, innerR - 2, 0, 2 * Math.PI);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(15, 23, 42, 0.06)';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+    }
+
+    // Update Telemetry Pod
+    function updateTelemetry() {
+      const teleLabel = document.getElementById('teleLabel');
+      const teleSize = document.getElementById('teleSize');
+      const teleSub = document.getElementById('teleSub');
+
+      if (selectedCategoryId) {
+        const cat = categories.find(c => c.id === selectedCategoryId);
+        if (cat) {
+          const pct = ((cat.sizeBytes / totalBytes) * 100).toFixed(1);
+          teleLabel.innerText = cat.title.toUpperCase();
+          teleLabel.style.color = cat.color;
+          teleSize.innerText = formatBytes(cat.sizeBytes);
+          teleSize.style.color = '#0f172a';
+          teleSub.innerText = `${pct}% ALLOCATED (${cat.count} items)`;
+          return;
+        }
+      }
+
+      teleLabel.innerText = isCleaned ? 'CLEANED & OPTIMIZED' : 'STORAGE INDEX';
+      teleLabel.style.color = isCleaned ? '#10b981' : '#64748b';
+      teleSize.innerText = formatBytes(totalBytes);
+      teleSize.style.color = isCleaned ? '#10b981' : '#0891b2';
+      const totalCount = categories.reduce((acc, c) => acc + c.count, 0);
+      teleSub.innerText = `${totalCount.toLocaleString()} Indexed Items`;
+    }
+
+    // Render Category Cards
+    function renderCategoryCards() {
+      const container = document.getElementById('categoryCardsContainer');
+      let html = '';
+
+      categories.forEach(cat => {
+        const pct = ((cat.sizeBytes / totalBytes) * 100).toFixed(1);
+        const isActive = selectedCategoryId === cat.id;
+
+        html += `
+          <div class="cat-card ${isActive ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+            <div class="cat-top">
+              <div class="cat-info">
+                <div class="cat-swatch" style="background:${cat.color};"></div>
+                <div>
+                  <div class="cat-title">${cat.title}</div>
+                  <div class="cat-count">${cat.count.toLocaleString()} items</div>
+                </div>
+              </div>
+              <div class="cat-actions">
+                <div class="cat-metric">
+                  <div class="cat-size">${formatBytes(cat.sizeBytes)}</div>
+                  <div class="cat-pct">${pct}%</div>
+                </div>
+                ${cat.reclaimable && !isCleaned ? `<button class="btn-clear-cat" onclick="event.stopPropagation(); executeClearSpace()">Clear</button>` : ''}
+              </div>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${pct}%; background:${cat.color};"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selectCategory(id) {
+      playAudio('click');
+      selectedCategoryId = (selectedCategoryId === id) ? null : id;
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+    }
+
+    // Canvas Hit Testing
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX - canvas.width / 2;
+      const y = (e.clientY - rect.top) * scaleY - canvas.height / 2;
+      const dist = Math.sqrt(x*x + y*y);
+      let angle = Math.atan2(y, x);
+      if (angle < -Math.PI / 2) angle += 2 * Math.PI;
+
+      const hit = slicesMeta.find(s => dist >= s.r1 - 10 && dist <= s.r2 + 10 && angle >= s.a1 && angle <= s.a2);
+      if (hit) {
+        selectCategory(hit.id);
+      } else {
+        selectedCategoryId = null;
+        drawDonut();
+        updateTelemetry();
+        renderCategoryCards();
+      }
+    });
+
+    // Toast
+    function showToast(msg) {
+      const toast = document.getElementById('androidToast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function triggerScan() {
+      playAudio('click');
+      const btn = document.getElementById('scanBtnText');
+      const icon = document.getElementById('scanIcon');
+      btn.innerText = 'Scanning...';
+      icon.innerText = '⏳';
+
+      setTimeout(() => {
+        btn.innerText = 'Scan';
+        icon.innerText = '⚡';
+        playAudio('clean');
+        showToast('MediaStore scan complete • 4,821 items indexed');
+      }, 700);
+    }
+
+    // Clear Space Execution
+    function executeClearSpace() {
+      if (isCleaned) {
+        showToast('Storage already cleaned and protected!');
+        return;
+      }
+
+      playAudio('clean');
+      isCleaned = true;
+
+      // Deduct 14.2 GB from downloads
+      const downloadsCat = categories.find(c => c.id === 'downloads');
+      if (downloadsCat) {
+        downloadsCat.sizeBytes = 0;
+        downloadsCat.count = 0;
+      }
+      categories = categories.filter(c => c.sizeBytes > 0);
+      totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
+
+      // Update UI elements
+      document.getElementById('spotlightTag').innerText = 'STORAGE OPTIMIZED';
+      document.getElementById('reclaimableText').innerText = '14.2 GB moved to 30-day OS Trash';
+      document.getElementById('starPod').innerText = '✓';
+      
+      const capsuleBtn = document.getElementById('btnCapsuleClear');
+      capsuleBtn.classList.add('cleaned');
+      document.getElementById('btnCapsuleText').innerText = 'Cleaned';
+
+      // Dismiss bottom dock
+      const bottomDock = document.getElementById('bottomClearDock');
+      bottomDock.classList.add('dismissed');
+
+      drawDonut();
+      updateTelemetry();
+      renderCategoryCards();
+      showToast('✨ 14.2 GB Cleared & Moved to Android OS Trash!');
+    }
+
+    // Live clock
+    function updateClock() {
+      const d = new Date();
+      let h = d.getHours();
+      let m = d.getMinutes();
+      m = m < 10 ? '0' + m : m;
+      document.getElementById('statusBarTime').innerText = `${h}:${m}`;
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Initial render
+    drawDonut();
+    updateTelemetry();
+    renderCategoryCards();
+  </script>
+</body>
+</html>

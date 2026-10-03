@@ -60,7 +60,8 @@ fun StorageOverviewHeader(
     totalUsedBytes: Long,
     totalAvailableBytes: Long = 0L,
     categories: List<CategorySummary> = emptyList(),
-    onScanClicked: () -> Unit
+    onScanClicked: () -> Unit,
+    onClearClicked: (() -> Unit)? = null
 ) {
     var selectedCategory by remember { mutableStateOf<MediaCategory?>(null) }
     val totalCapacity = maxOf(1L, totalUsedBytes + totalAvailableBytes)
@@ -135,28 +136,28 @@ fun StorageOverviewHeader(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Reclaimable Spotlight Capsule
+            // Reclaimable Spotlight Capsule with Prominent Clear Action
             if (reclaimableBytes > 0) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(ColorEmeraldSafe.copy(alpha = 0.10f))
-                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(34.dp)
                                 .clip(CircleShape)
                                 .background(ColorEmeraldSafe.copy(alpha = 0.20f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "★",
-                                fontSize = 14.sp,
+                                fontSize = 15.sp,
                                 color = ColorEmeraldSafe,
                                 fontWeight = FontWeight.Bold
                             )
@@ -170,7 +171,7 @@ fun StorageOverviewHeader(
                                 color = ColorEmeraldSafe
                             )
                             Text(
-                                text = "${MediaItem.formatBytes(reclaimableBytes)} can be safely cleaned",
+                                text = "${MediaItem.formatBytes(reclaimableBytes)} safe to clean",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = ColorTextPrimary
@@ -178,12 +179,19 @@ fun StorageOverviewHeader(
                         }
                     }
 
-                    Text(
-                        text = "Review",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = ColorEmeraldSafe
-                    )
+                    Button(
+                        onClick = { onClearClicked?.invoke() },
+                        colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = "Clear Space",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color.White
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(18.dp))
@@ -320,7 +328,8 @@ fun StorageDonutChart(
 @Composable
 fun CategorySummaryList(
     categories: List<CategorySummary>,
-    onCategoryClicked: ((MediaCategory) -> Unit)? = null
+    onCategoryClicked: ((MediaCategory) -> Unit)? = null,
+    onClearCategoryClicked: ((MediaCategory) -> Unit)? = null
 ) {
     val totalBytes = maxOf(1L, categories.sumOf { it.totalSizeBytes })
 
@@ -343,6 +352,7 @@ fun CategorySummaryList(
         items(categories) { cat ->
             val color = getCategoryColor(cat.category)
             val pct = (cat.totalSizeBytes.toDouble() / totalBytes.toDouble() * 100)
+            val isReclaimable = cat.category == MediaCategory.DOWNLOADS
 
             Card(
                 modifier = Modifier
@@ -383,20 +393,42 @@ fun CategorySummaryList(
                             }
                         }
 
-                        Column(horizontalAlignment = Alignment.End) {
-                            Text(
-                                text = cat.formattedSize,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace,
-                                color = ColorTextPrimary
-                            )
-                            Text(
-                                text = String.format("%.1f%%", pct),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = ColorTextSecondary
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(
+                                    text = cat.formattedSize,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace,
+                                    color = ColorTextPrimary
+                                )
+                                Text(
+                                    text = String.format("%.1f%%", pct),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = ColorTextSecondary
+                                )
+                            }
+
+                            if (isReclaimable) {
+                                Button(
+                                    onClick = { onClearCategoryClicked?.invoke(cat.category) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                                    shape = RoundedCornerShape(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
+                                    modifier = Modifier.height(28.dp)
+                                ) {
+                                    Text(
+                                        text = "Clear",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -423,7 +455,64 @@ fun CategorySummaryList(
         }
 
         item {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+fun BottomClearBar(
+    reclaimableBytes: Long,
+    onClearClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (reclaimableBytes <= 0) return
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        color = ColorCardLight,
+        shape = RoundedCornerShape(18.dp),
+        shadowElevation = 8.dp,
+        border = androidx.compose.foundation.BorderStroke(1.dp, ColorBorderLight)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "RECLAIMABLE STORAGE",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ColorEmeraldSafe
+                )
+                Text(
+                    text = MediaItem.formatBytes(reclaimableBytes),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontFamily = FontFamily.Monospace,
+                    color = ColorTextPrimary
+                )
+            }
+
+            Button(
+                onClick = onClearClicked,
+                colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = "Clear Space",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White
+                )
+            }
         }
     }
 }
