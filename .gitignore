@@ -21,6 +21,8 @@ obj/
 *.userosscache
 *.sln.docstates
 .vs/
+windows/publish/
+windows/publish_ui/
 
 # Android / Gradle / Java
 .gradle/
