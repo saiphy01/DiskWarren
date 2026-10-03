@@ -143,8 +143,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href={getUrl('')} onClick={closeMobileMenu} className="flex items-center gap-2.5 group">
-          <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${brand.gradientBg} flex items-center justify-center shadow-md ${brand.shadowColor} group-hover:scale-105 transition-transform`}>
-            {brand.icon}
+          <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-md shadow-cyan-900/15 group-hover:scale-105 group-hover:shadow-cyan-500/25 transition-all">
+            <img src="/logo-icon.svg" alt="DiskWarren Logo" className="w-full h-full object-cover" />
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-xl font-bold tracking-tight text-slate-900">

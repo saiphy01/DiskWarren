@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <style>
+      .bg-chassis { fill: #0B0F19; stroke: #06B6D4; stroke-width: 2.5; }
+      .platter-arc { stroke: url(#favCyanBlue); stroke-width: 9; stroke-linecap: round; fill: none; }
+      .warren-w { stroke: url(#favCyanBlue); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .emerald-core { fill: #10B981; }
+      .spark-white { fill: #FFFFFF; }
+
+      @media (prefers-color-scheme: light) {
+        .bg-chassis { fill: #090D16; stroke: #2563EB; stroke-width: 3; }
+        .platter-arc { stroke: url(#favCyanBlue); }
+      }
+    </style>
+
+    <linearGradient id="favCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="40%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+
+    <linearGradient id="favEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- High-contrast Chassis Base (Crisp on both light and dark browser tabs) -->
+  <rect class="bg-chassis" x="6" y="6" width="116" height="116" rx="30"/>
+
+  <!-- Platter Storage Arc Sweep -->
+  <path class="platter-arc" d="M 36 94 A 42 42 0 1 1 98 80" />
+
+  <!-- The Interlocking "W" Warren Vector -->
+  <path class="warren-w" d="M 38 62 L 51 92 L 64 68 L 77 92 L 90 62" />
+
+  <!-- Center Emerald Reclaim Diamond Spark -->
+  <path class="emerald-core" d="M 64 48 Q 64 58 74 58 Q 64 58 64 68 Q 64 58 54 58 Q 64 58 64 48 Z" />
+  <circle class="spark-white" cx="64" cy="58" r="2"/>
+
+  <!-- Telemetry Dot -->
+  <circle cx="98" cy="80" r="3" fill="#22D3EE"/>
+</svg>

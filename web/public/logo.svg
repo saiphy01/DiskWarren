@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" width="340" height="64">
+  <defs>
+    <!-- Brand Gradients -->
+    <linearGradient id="logoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="logoBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#2563EB" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <linearGradient id="logoCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+
+    <linearGradient id="logoTextWarren" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0891B2"/>
+      <stop offset="60%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+
+    <linearGradient id="logoEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left: Iconic Emblem Pod (52x52) -->
+  <g transform="translate(6, 6)">
+    <rect x="0" y="0" width="52" height="52" rx="14" fill="url(#logoBg)" stroke="url(#logoBorder)" stroke-width="1.5"/>
+    
+    <!-- Concentric Platter Arc -->
+    <path d="M 15 38 A 18 18 0 1 1 42 32" fill="none" stroke="url(#logoCyanBlue)" stroke-width="3.5" stroke-linecap="round"/>
+
+    <!-- Warren "W" Shape -->
+    <path d="M 16 26 L 22 38 L 27 28 L 32 38 L 38 26" fill="none" stroke="url(#logoCyanBlue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Emerald Core Spark -->
+    <path d="M 27 19 Q 27 23 31 23 Q 27 23 27 27 Q 27 23 23 23 Q 27 23 27 19 Z" fill="url(#logoEmerald)"/>
+  </g>
+
+  <!-- Right: Typography Cluster -->
+  <g transform="translate(70, 0)">
+    <!-- Wordmark Title -->
+    <text x="0" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI Variable', 'Segoe UI', Inter, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.03em">
+      <tspan fill="#0F172A">Disk</tspan><tspan fill="url(#logoTextWarren)">Warren</tspan>
+    </text>
+
+    <!-- Green Safe Spark Dot above Warren -->
+    <circle cx="168" cy="18" r="3.5" fill="#10B981"/>
+
+    <!-- Enterprise Subtitle Badge -->
+    <text x="1" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI Variable', 'Segoe UI', Inter, sans-serif" font-size="8.5" font-weight="800" fill="#64748B" letter-spacing="0.22em">
+      STORAGE INTELLIGENCE
+    </text>
+  </g>
+</svg>

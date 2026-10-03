@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- Group scaled to guarantee zero clipping inside OEM circular & squircle masks -->
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.80"
+        android:scaleY="0.80">
+
+        <!-- Outer Precision Storage Platter Arc (Cyan to Blue) -->
+        <path
+            android:pathData="M 140,372 A 166,166 0 1,1 396,320"
+            android:strokeColor="#06B6D4"
+            android:strokeWidth="28"
+            android:strokeLineCap="round" />
+
+        <!-- Inner Concentric Vault Arc (Indigo) -->
+        <path
+            android:pathData="M 148,188 A 122,122 0 0,1 364,212"
+            android:strokeColor="#6366F1"
+            android:strokeWidth="18"
+            android:strokeLineCap="round" />
+
+        <!-- Interlocking "W" Warren Vector (Dynamic Storage Fold & Clean Wings) -->
+        <path
+            android:pathData="M 148,244 L 202,362 L 256,270 L 310,362 L 364,244"
+            android:strokeColor="#22D3EE"
+            android:strokeWidth="24"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- Central Apex Upward Reclaim Triangle Fill -->
+        <path
+            android:pathData="M 256,220 L 292,274 L 220,274 Z"
+            android:fillColor="#2806B6D4" />
+
+        <!-- Core Emerald Reclaim Spark Halo -->
+        <path
+            android:pathData="M 256,226 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0"
+            android:fillColor="#3310B981" />
+
+        <!-- Precision 4-Point Emerald Spark Aperture -->
+        <path
+            android:pathData="M 256,196 Q 256,226 286,226 Q 256,226 256,256 Q 256,226 226,226 Q 256,226 256,196 Z"
+            android:fillColor="#10B981" />
+
+        <!-- Center Spark Micro Core -->
+        <path
+            android:pathData="M 256,226 m -4.5,0 a 4.5,4.5 0 1,0 9,0 a 4.5,4.5 0 1,0 -9,0"
+            android:fillColor="#FFFFFF" />
+
+        <!-- Micro Status Telemetry Node -->
+        <path
+            android:pathData="M 396,320 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0"
+            android:fillColor="#22D3EE" />
+    </group>
+</vector>

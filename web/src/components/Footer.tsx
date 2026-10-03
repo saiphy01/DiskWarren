@@ -124,9 +124,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Column */}
           <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-sm">
-                <HardDrive className="w-4 h-4 text-white stroke-[2.5]" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg overflow-hidden shadow-sm shadow-cyan-900/10">
+                <img src="/logo-icon.svg" alt="DiskWarren Logo" className="w-full h-full object-cover" />
               </div>
               <span className="text-lg font-bold text-slate-900 tracking-tight">DiskWarren</span>
             </div>
