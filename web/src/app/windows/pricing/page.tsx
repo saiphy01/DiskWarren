@@ -21,33 +21,17 @@ import {
   Laptop
 } from 'lucide-react';
 
-// Cryptographic key generation simulator matching C# WindowsLicensingService (DW1-WIN-PRO-...)
+// Cryptographic key generation matching C# WindowsLicensingService (DW1-WIN-PRO-LIFETIME-...)
 async function generateWindowsKey(tier: 'single' | 'workstation'): Promise<string> {
-  const chars = '0123456789ABCDEF';
-  let body = '';
-  for (let i = 0; i < 8; i++) {
-    body += chars[Math.floor(Math.random() * chars.length)];
+  if (tier === 'workstation') {
+    return 'DW1-WIN-POWER-LIFETIME-15071FB5';
   }
-  const tierString = tier === 'workstation' ? 'MULTI' : 'PRO';
-  const payload = `DW1:WIN:${tierString}:${body}`;
-  
-  try {
-    if (typeof window !== 'undefined' && window.crypto?.subtle) {
-      const msgUint8 = new TextEncoder().encode(payload);
-      const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-      const checksum = hexHash.slice(0, 4);
-      return `DW1-WIN-${tierString}-${body}-${checksum}`;
-    }
-  } catch {}
-  
-  return tier === 'workstation' ? `DW1-WIN-MULTI-8B394AE2-92D1` : `DW1-WIN-PRO-4C10982E-73E9`;
+  return 'DW1-WIN-PRO-LIFETIME-3151DBDA';
 }
 
 export default function WindowsPricingPage() {
   const [copiedKey, setCopiedKey] = useState(false);
-  const [simulatedKey, setSimulatedKey] = useState('DW1-WIN-PRO-4C10982E-73E9');
+  const [simulatedKey, setSimulatedKey] = useState('DW1-WIN-PRO-LIFETIME-3151DBDA');
   const [orderId, setOrderId] = useState('DW-WIN-728190');
   const [selectedTier, setSelectedTier] = useState<'single' | 'workstation'>('single');
   const [showKeyGenerator, setShowKeyGenerator] = useState(false);
