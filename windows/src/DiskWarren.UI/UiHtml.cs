@@ -168,12 +168,119 @@ public static class UiHtml
       font-weight: 700;
     }
 
+    /* Top Cleanable Space Capsule */
+    .top-clear-capsule {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 8px;
+      background: rgba(5, 150, 105, 0.08);
+      border: 1.5px solid rgba(5, 150, 105, 0.28);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .top-clear-capsule:hover {
+      background: rgba(5, 150, 105, 0.14);
+      border-color: rgba(5, 150, 105, 0.45);
+      transform: translateY(-1px);
+    }
+    .clear-icon-glow {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(5, 150, 105, 0.18);
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .clear-text-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .clear-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: var(--accent-emerald);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .clear-value {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: monospace;
+      line-height: 1.2;
+    }
+    .btn-clear-pill {
+      background: var(--accent-emerald);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 2px;
+      transition: all 0.15s ease;
+    }
+    .btn-clear-pill:hover {
+      filter: brightness(1.1);
+      transform: scale(1.04);
+    }
+
+    /* Windows Caption Controls */
+    .win-caption-controls {
+      display: flex;
+      align-items: center;
+      height: 64px;
+      margin-left: 4px;
+      margin-right: -24px;
+    }
+    .win-btn {
+      width: 46px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background-color 0.12s ease, color 0.12s ease;
+      outline: none;
+    }
+    .win-btn:hover {
+      background: var(--surface-subtle);
+      color: var(--text-main);
+    }
+    .win-btn.win-close:hover {
+      background: #E81123 !important;
+      color: #FFFFFF !important;
+    }
+    .win-btn svg {
+      pointer-events: none;
+    }
+
+    /* View Header Clear Hero Badge */
+    .top-clean-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+      border-radius: 8px;
+      padding: 6px 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
     /* Toolstrip */
     .toolstrip {
       display: flex;
       align-items: center;
       gap: 8px;
-      min-width: 220px;
       justify-content: flex-end;
     }
 
@@ -818,7 +925,7 @@ public static class UiHtml
 <body>
 
   <!-- Precision Header -->
-  <header class=""app-header"">
+  <header class=""app-header"" onmousedown=""handleHeaderMouseDown(event)"">
     <div class=""brand-group"">
       <div class=""brand-logo"">
         <svg width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#FFFFFF"" stroke-width=""2.5"" stroke-linecap=""round"" stroke-linejoin=""round"">
@@ -855,18 +962,45 @@ public static class UiHtml
 
     <!-- Toolstrip -->
     <div class=""toolstrip"">
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openSafetyModal()"">
-        🛡️ Air-Gap &amp; Safety
+      <!-- Prominent Clean Space Pill On Top -->
+      <div class=""top-clear-capsule"" onclick=""stageAllLowRiskTargets()"" title=""Click to stage all cleanable items"">
+        <div class=""clear-icon-glow"">
+          <svg width=""13"" height=""13"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""3 6 5 6 21 6""/><path d=""M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2""/></svg>
+        </div>
+        <div class=""clear-text-group"">
+          <span class=""clear-label"">CLEANABLE</span>
+          <strong class=""clear-value"" id=""topClearableSize"">0 B</strong>
+        </div>
+        <button class=""btn-clear-pill"" onclick=""event.stopPropagation(); stageAllLowRiskTargets();"">
+          Stage All
+        </button>
+      </div>
+
+      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""openSafetyModal()"">
+        🛡️ Air-Gap
       </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 11px; font-size:11.5px;"" onclick=""openLicenseModal()"">
-        ★ Pro Edition
+      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""openLicenseModal()"">
+        ★ Pro
       </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
+      <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px;"" onclick=""toggleSound()"" id=""soundToggleBtn"">
         🔊 Sound On
       </button>
-      <button class=""btn btn-secondary"" style=""padding:5px 10px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
+      <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"">
         ☀️ Light
       </button>
+
+      <!-- Windows Caption Controls (Minimize, Maximize, Close) -->
+      <div class=""win-caption-controls"">
+        <button class=""win-btn win-min"" title=""Minimize"" onclick=""sendWindowAction('minimize')"">
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 1""><rect width=""10"" height=""1"" fill=""currentColor""/></svg>
+        </button>
+        <button class=""win-btn win-max"" id=""winMaxBtn"" title=""Maximize"" onclick=""sendWindowAction('maximize')"">
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><rect fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" width=""8"" height=""8"" x=""1"" y=""1"" rx=""1""/></svg>
+        </button>
+        <button class=""win-btn win-close"" title=""Close"" onclick=""sendWindowAction('close')"">
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><path fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" d=""M1 1l8 8M9 1L1 9""/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -877,7 +1011,15 @@ public static class UiHtml
     <section id=""view-dashboard"">
       <div class=""view-header"">
         <div>
-          <h1 class=""view-title"">System Volume Allocation &amp; Space Pie</h1>
+          <div style=""display:flex; align-items:center; gap:12px; margin-bottom:4px;"">
+            <h1 class=""view-title"" style=""margin-bottom:0;"">System Volume Allocation &amp; Space Pie</h1>
+            <div class=""top-clean-hero-badge"">
+              <span class=""pulse-dot"" style=""background:#059669; box-shadow:0 0 6px #059669;""></span>
+              <span style=""font-size:12px; font-weight:600; color:var(--text-muted);"">Reclaimable:</span>
+              <strong style=""font-size:13.5px; font-weight:800; color:var(--accent-emerald); font-family:monospace;"" id=""heroClearableSize"">0 B</strong>
+              <button class=""btn btn-stage"" style=""padding:2px 8px; font-size:11px;"" onclick=""stageAllLowRiskTargets()"">+ Stage All</button>
+            </div>
+          </div>
           <p class=""view-subtitle"">High-precision filesystem telemetry, partition cluster analysis, and disposable package caches.</p>
         </div>
         <button class=""btn btn-primary"" onclick=""triggerStorageRefresh()"">
@@ -1238,6 +1380,50 @@ public static class UiHtml
       soundEnabled = !soundEnabled;
       document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Sound On' : '🔇 Mute';
       if (soundEnabled) playSound('click');
+    }
+
+    // Windows Caption Controls & Window Drag
+    function sendWindowAction(act) {
+      playSound('click');
+      if (window.chrome && window.chrome.webview) {
+        if (act === 'minimize') window.chrome.webview.postMessage({ action: 'windowMinimize' });
+        else if (act === 'maximize') window.chrome.webview.postMessage({ action: 'windowMaximize' });
+        else if (act === 'close') window.chrome.webview.postMessage({ action: 'windowClose' });
+      }
+    }
+
+    function handleHeaderMouseDown(e) {
+      if (e.target.closest('button') || e.target.closest('.tab-item') || e.target.closest('.top-clear-capsule') || e.target.closest('input')) {
+        return;
+      }
+      if (e.detail === 2) {
+        sendWindowAction('maximize');
+        return;
+      }
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ action: 'windowDrag' });
+      }
+    }
+
+    window.onWindowStateChanged = function(isMaximized) {
+      const maxBtn = document.getElementById('winMaxBtn');
+      if (maxBtn) {
+        maxBtn.innerHTML = isMaximized
+          ? '<svg width=""10"" height=""10"" viewBox=""0 0 10 10""><path fill=""none"" stroke=""currentColor"" stroke-width=""1.1"" d=""M3 1h6v6H3zM1 3h6v6H1z""/></svg>'
+          : '<svg width=""10"" height=""10"" viewBox=""0 0 10 10""><rect fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" width=""8"" height=""8"" x=""1"" y=""1"" rx=""1""/></svg>';
+        maxBtn.title = isMaximized ? 'Restore' : 'Maximize';
+      }
+    };
+
+    function updateTopClearableMetric() {
+      const clearableBytes = rules.filter(r => r.safety === 0).reduce((acc, r) => acc + r.sizeBytes, 0);
+      const formatted = formatBytes(clearableBytes);
+      const topEl = document.getElementById('topClearableSize');
+      const heroEl = document.getElementById('heroClearableSize');
+      const reclaimHeadEl = document.getElementById('reclaimableHeadlineSize');
+      if (topEl) topEl.innerText = formatted;
+      if (heroEl) heroEl.innerText = formatted;
+      if (reclaimHeadEl) reclaimHeadEl.innerText = formatted;
     }
 
     // Modal Operations
@@ -1940,6 +2126,7 @@ public static class UiHtml
       renderTreemap();
       renderToolchainsRegistry();
       renderSunburst();
+      updateTopClearableMetric();
     };
 
     window.onSunburstDataReceived = function(tree) {

@@ -9,7 +9,11 @@
         Height="820" Width="1200"
         MinHeight="680" MinWidth="980"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
         Background="#F8FAFC">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
     <Grid Background="#F8FAFC">
         <wv2:WebView2 x:Name="WebViewControl" DefaultBackgroundColor="#F8FAFC" />
     </Grid>
