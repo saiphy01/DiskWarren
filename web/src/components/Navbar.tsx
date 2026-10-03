@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { HardDrive, Download, Menu, X, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { HardDrive, Download, Menu, X, ArrowRight, ShieldCheck, Zap, ChevronDown, Laptop, Smartphone } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [platformsOpen, setPlatformsOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -13,6 +14,7 @@ export default function Navbar() {
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
+    setPlatformsOpen(false);
   };
 
   return (
@@ -30,6 +32,70 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+          {/* Platforms Dropdown */}
+          <div className="relative group">
+            <button
+              onClick={() => setPlatformsOpen(!platformsOpen)}
+              className="flex items-center gap-1 hover:text-cyan-600 transition-colors cursor-pointer py-2"
+            >
+              <span>Platforms</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-600 transition-transform group-hover:rotate-180" />
+            </button>
+            <div className="absolute top-full left-0 w-64 p-2 bg-white border border-slate-200 rounded-xl shadow-xl shadow-slate-200/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 space-y-1">
+              <Link
+                href="/"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-md bg-cyan-50 text-cyan-600 flex items-center justify-center">
+                  <Laptop className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-900 block">Macintosh HD</span>
+                  <span className="text-[11px] text-slate-500 block">macOS Monterey to Sequoia</span>
+                </div>
+              </Link>
+
+              <Link
+                href="/windows"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <HardDrive className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-900 block">Windows PC</span>
+                  <span className="text-[11px] text-slate-500 block">Drive analysis &amp; developer caches</span>
+                </div>
+              </Link>
+
+              <Link
+                href="/android"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-900 block">Android Mobile</span>
+                  <span className="text-[11px] text-slate-500 block">Scoped storage &amp; large media</span>
+                </div>
+              </Link>
+
+              <Link
+                href="/ios"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-900 block">iPhone &amp; iPad</span>
+                  <span className="text-[11px] text-slate-500 block">4K videos &amp; photo duplicates</span>
+                </div>
+              </Link>
+            </div>
+          </div>
+
           <Link href="/#simulator" className="hover:text-cyan-600 transition-colors">Interactive Demo</Link>
           <Link href="/#developer-ai" className="hover:text-cyan-600 transition-colors">Developer &amp; AI</Link>
           <Link href="/#safety" className="hover:text-cyan-600 transition-colors">Safety by Design</Link>
@@ -71,8 +137,26 @@ export default function Navbar() {
 
       {/* Mobile Slide-down Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 px-6 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200">
-          <div className="flex flex-col space-y-3 text-sm font-medium text-slate-700">
+        <div className="md:hidden bg-white border-b border-slate-200 px-6 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-200 max-h-[85vh] overflow-y-auto">
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 block">Platforms</span>
+            <div className="grid grid-cols-2 gap-2 pt-1 pb-2">
+              <Link href="/" onClick={closeMobileMenu} className="p-2.5 rounded-lg bg-slate-50 text-xs font-bold text-slate-800 flex items-center gap-2">
+                <Laptop className="w-3.5 h-3.5 text-cyan-600" /> Mac
+              </Link>
+              <Link href="/windows" onClick={closeMobileMenu} className="p-2.5 rounded-lg bg-slate-50 text-xs font-bold text-slate-800 flex items-center gap-2">
+                <HardDrive className="w-3.5 h-3.5 text-blue-600" /> Windows
+              </Link>
+              <Link href="/android" onClick={closeMobileMenu} className="p-2.5 rounded-lg bg-slate-50 text-xs font-bold text-slate-800 flex items-center gap-2">
+                <Smartphone className="w-3.5 h-3.5 text-emerald-600" /> Android
+              </Link>
+              <Link href="/ios" onClick={closeMobileMenu} className="p-2.5 rounded-lg bg-slate-50 text-xs font-bold text-slate-800 flex items-center gap-2">
+                <Smartphone className="w-3.5 h-3.5 text-purple-600" /> iPhone
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-2 text-sm font-medium text-slate-700 pt-2 border-t border-slate-100">
             <Link 
               href="/#simulator" 
               onClick={closeMobileMenu}
@@ -110,7 +194,7 @@ export default function Navbar() {
               onClick={closeMobileMenu}
               className="py-2 px-3 rounded-lg hover:bg-slate-50 hover:text-cyan-600 transition-colors flex items-center justify-between"
             >
-              <span>macOS Storage Guides</span>
+              <span>Storage Guides</span>
               <ArrowRight className="w-4 h-4 text-slate-400" />
             </Link>
             <Link 
@@ -135,7 +219,7 @@ export default function Navbar() {
             <div className="flex items-center justify-center gap-3 text-[11px] text-slate-500 pt-1">
               <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-cyan-600" /> 100% Local Privacy</span>
               <span>•</span>
-              <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-amber-500" /> macOS 14 &amp; 15+</span>
+              <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5 text-amber-500" /> Mac • Windows • Mobile</span>
             </div>
           </div>
         </div>

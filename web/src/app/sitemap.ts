@@ -9,6 +9,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/download', priority: 0.95, changeFrequency: 'weekly' as const },
     { path: '/pricing', priority: 0.95, changeFrequency: 'weekly' as const },
 
+    // Cross-Platform Family
+    { path: '/windows', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/android', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/ios', priority: 0.95, changeFrequency: 'weekly' as const },
+
     // Primary SEO Capabilities
     { path: '/mac-storage-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/mac-disk-space-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },
