@@ -18,7 +18,11 @@ import {
   FileCheck, 
   HelpCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  AlertTriangle,
+  FolderLock,
+  Terminal,
+  RotateCcw
 } from 'lucide-react';
 import SimulatedStorageAnalyzer from '@/components/SimulatedStorageAnalyzer';
 
@@ -49,7 +53,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-24 pb-20">
+    <div className="space-y-28 pb-20">
       {/* Hero Section */}
       <section className="relative pt-12 md:pt-20 px-6 max-w-6xl mx-auto text-center space-y-8">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold uppercase tracking-wider shadow-xs">
@@ -93,75 +97,183 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Interactive Simulation Section */}
+      {/* SECTION 1: Interactive CDO Storage Demo */}
       <section id="simulator" className="px-6 max-w-7xl mx-auto space-y-6 scroll-mt-24">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Experience DiskWarren Live</h2>
-          <p className="text-sm text-slate-600">Interact with a simulated macOS volume to see how intelligence categorization works.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold">
+            <Layers className="w-3.5 h-3.5 text-cyan-600" />
+            <span>Live Interactive CDO Visualizer</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Experience DiskWarren Live on Your Mac</h2>
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto">
+            Interact with a simulated 500 GB APFS volume. Toggle between the macOS Radial Partition Ring (Pie Chart) and Treemap matrix to inspect candidate files and simulate safe recycling to Trash.
+          </p>
         </div>
         <SimulatedStorageAnalyzer />
       </section>
 
-      {/* Core Differentiator Grid */}
-      <section id="features" className="px-6 max-w-6xl mx-auto space-y-16 scroll-mt-24">
+      {/* SECTION 2: Core Architecture & Features */}
+      <section id="features" className="px-6 max-w-6xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center space-y-3">
-          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Why DiskWarren</span>
+          <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Core Architecture</span>
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Engineered for the Modern Mac</h2>
-          <p className="text-slate-600 max-w-xl mx-auto text-sm">Traditional disk cleaners look for 10-year-old browser caches. DiskWarren targets the actual culprits devouring modern SSDs.</p>
+          <p className="text-slate-600 max-w-xl mx-auto text-sm">
+            Traditional disk cleaners look for 10-year-old browser caches. DiskWarren was engineered ground-up in native Swift for high-speed APFS storage intelligence.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Card 1: Developer Cleanup */}
-          <div id="developer" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-cyan-300 hover:shadow-md transition-all scroll-mt-24">
-            <div className="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
-              <Hammer className="w-6 h-6" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 hover:border-cyan-300 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
+              <Zap className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">Developer Ecosystems</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Detect and reclaim Xcode DerivedData, archived simulators, stale <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">node_modules</code> trees, Cargo target directories, pip wheel caches, and Docker desktop images.
+            <h3 className="text-lg font-bold text-slate-900">12,000+ Files / Sec APFS Scanner</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Multi-threaded inode traversal scans your entire internal SSD in under 30 seconds with minimal memory footprint and zero CPU thrashing.
             </p>
-            <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600" /> Xcode DerivedData &amp; Simulators</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600" /> Rust target &amp; Go build caches</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-600" /> Homebrew bottled package archives</li>
-            </ul>
           </div>
 
-          {/* Card 2: AI Storage */}
-          <div id="ai" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-purple-300 hover:shadow-md transition-all scroll-mt-24">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
-              <Cpu className="w-6 h-6" />
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 hover:border-emerald-300 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+              <Lock className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">Local AI Storage Intelligence</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Local LLMs are SSD monsters. DiskWarren tracks Ollama model blobs, LM Studio GGUF weight files, Hugging Face Hub snapshots, and ComfyUI diffusion checkpoints.
+            <h3 className="text-lg font-bold text-slate-900">100% Local &amp; Zero Telemetry</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Completely air-gapped indexing. No file names, directory paths, or disk metrics ever leave your machine. Zero analytics beacons.
             </p>
-            <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600" /> Ollama (~/.ollama/models)</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600" /> LM Studio &amp; Hugging Face Hub</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-600" /> Standalone GGUF &amp; Safetensors weights</li>
-            </ul>
           </div>
 
-          {/* Card 3: Safety Architecture */}
-          <div id="safety" className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:border-emerald-300 hover:shadow-md transition-all scroll-mt-24">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 hover:border-purple-300 transition-all">
+            <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
+              <HardDrive className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900">Trash-First Safety Engine</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Never worry about accidental deletion. DiskWarren categorizes all items into Low, Review, and Restricted tiers. Purged files move to the macOS Trash for instant restoration.
+            <h3 className="text-lg font-bold text-slate-900">APFS Container Transparency</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Reveals hidden Time Machine local snapshots, purgeable blocks, and raw container overhead that standard macOS System Settings hides.
             </p>
-            <ul className="text-xs text-slate-600 space-y-2 pt-2 border-t border-slate-100">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Zero permanent unlinks by default</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Permanent blacklist on /System &amp; /usr</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Full Put Back support via macOS Trash</li>
-            </ul>
           </div>
         </div>
       </section>
 
-      {/* Visual Treemap & Uninstaller Showcase */}
+      {/* SECTION 3: Dedicated Developer & AI Intelligence Section */}
+      <section id="developer" className="px-6 max-w-6xl mx-auto space-y-12 scroll-mt-24">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-semibold">
+            <Hammer className="w-3.5 h-3.5 text-cyan-600" />
+            <span>Developer &amp; AI Intelligence</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+            Targeting the Culprits Devouring Modern SSDs
+          </h2>
+          <p className="text-slate-600 max-w-2xl mx-auto text-sm">
+            Xcode projects, Docker containers, and local LLM checkpoints eat hundreds of gigabytes. DiskWarren classifies them with specialized domain rules.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Card 1: Developer Cleanup */}
+          <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5 hover:border-cyan-300 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
+              <Hammer className="w-6 h-6" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900">Developer Ecosystems</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Detect and reclaim Xcode DerivedData, archived simulators, stale <code className="text-cyan-800 bg-cyan-50 px-1 py-0.5 rounded font-mono text-xs border border-cyan-200/60">node_modules</code> trees, Cargo target directories, pip wheel caches, and Docker desktop images.
+            </p>
+            <ul className="text-xs text-slate-700 space-y-2.5 pt-2 border-t border-slate-100">
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Xcode DerivedData, Module Caches &amp; Simulators</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Rust target &amp; Go build cache directories</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Stale dormant node_modules trees in ~/Projects</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Homebrew bottled package download archives</li>
+            </ul>
+            <div className="pt-2">
+              <Link 
+                href="/mac-cleaner-for-developers" 
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 hover:text-cyan-600"
+              >
+                <span>Explore Developer Cleaner features</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 2: AI Storage */}
+          <div id="ai" className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5 hover:border-purple-300 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
+              <Cpu className="w-6 h-6" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900">Local AI Storage Intelligence</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Local LLMs are SSD monsters. A single 70B quant is 40+ GB. DiskWarren tracks Ollama model blobs, LM Studio GGUF weight files, Hugging Face Hub snapshots, and ComfyUI diffusion checkpoints.
+            </p>
+            <ul className="text-xs text-slate-700 space-y-2.5 pt-2 border-t border-slate-100">
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-purple-600" /> Ollama (~/.ollama/models) blob translation</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-purple-600" /> LM Studio &amp; Hugging Face Hub revisions</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-purple-600" /> Duplicate quant detection (e.g. Q4_K_M vs Q8_0)</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-purple-600" /> ComfyUI checkpoints &amp; LoRA adapter inspection</li>
+            </ul>
+            <div className="pt-2">
+              <Link 
+                href="/mac-ai-storage-cleaner" 
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 hover:text-purple-600"
+              >
+                <span>Explore AI Storage Cleaner features</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: Dedicated Safety First Architecture Section */}
+      <section id="safety" className="px-6 max-w-6xl mx-auto space-y-12 scroll-mt-24">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Trash-First Architecture</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+            Safety First: Zero Accidental Deletions
+          </h2>
+          <p className="text-slate-600 max-w-2xl mx-auto text-sm">
+            Never fear running a disk cleaner again. DiskWarren is architected around the macOS Trash with full Put Back restoration and strict system directory blacklists.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+              <RotateCcw className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">Native macOS Trash Integration</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              All cleaned files are recycled to the native macOS Trash. If you ever need a file back, simply open Trash and click <strong className="text-slate-900">Put Back</strong>. Zero raw <code className="text-red-700 bg-red-50 px-1 py-0.5 rounded font-mono text-[11px]">rm -rf</code> by default.
+            </p>
+          </div>
+
+          <div className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
+              <FolderLock className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">Permanent System Blacklist</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Hardcoded engine barriers strictly protect macOS operating system folders (<code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/System</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/usr</code>, <code className="text-slate-800 bg-slate-100 px-1 py-0.5 rounded font-mono text-[11px]">/bin</code>), keychains, and sealed APFS snapshots.
+            </p>
+          </div>
+
+          <div className="p-7 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">Three-Tier Risk Guidance</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Every candidate file is tagged as <strong className="text-emerald-700">Low Risk</strong> (safe caches), <strong className="text-amber-700">Review Required</strong> (uninstalled app data), or <strong className="text-red-700">Restricted</strong>, with full preview before action.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5: Visual Treemap & Uninstaller Showcase */}
       <section id="uninstaller" className="px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center scroll-mt-24">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs font-mono font-semibold">
@@ -229,7 +341,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Transparent Pricing Section */}
+      {/* SECTION 6: Transparent Pricing Section */}
       <section id="pricing" className="px-6 max-w-4xl mx-auto space-y-12 scroll-mt-24">
         <div className="text-center space-y-3">
           <span className="text-xs font-semibold text-cyan-700 uppercase tracking-widest">Pricing</span>
@@ -298,7 +410,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section with Interactive Accordions */}
+      {/* SECTION 7: FAQ Section with Interactive Accordions */}
       <section className="px-6 max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
