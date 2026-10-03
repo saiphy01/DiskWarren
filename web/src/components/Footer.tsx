@@ -1,7 +1,123 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { HardDrive, ShieldCheck, Lock, Laptop, Smartphone } from 'lucide-react';
 
+type Platform = 'mac' | 'windows' | 'android' | 'ios';
+
 export default function Footer() {
+  const pathname = usePathname();
+  const [platform, setPlatform] = useState<Platform>('mac');
+  const [isSubdomain, setIsSubdomain] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const host = window.location.hostname;
+      if (host.startsWith('windows.')) {
+        setPlatform('windows');
+        setIsSubdomain(true);
+        return;
+      }
+      if (host.startsWith('android.')) {
+        setPlatform('android');
+        setIsSubdomain(true);
+        return;
+      }
+      if (host.startsWith('ios.')) {
+        setPlatform('ios');
+        setIsSubdomain(true);
+        return;
+      }
+    }
+
+    if (pathname.startsWith('/windows')) {
+      setPlatform('windows');
+      setIsSubdomain(false);
+    } else if (pathname.startsWith('/android')) {
+      setPlatform('android');
+      setIsSubdomain(false);
+    } else if (pathname.startsWith('/ios')) {
+      setPlatform('ios');
+      setIsSubdomain(false);
+    } else {
+      setPlatform('mac');
+      setIsSubdomain(false);
+    }
+  }, [pathname]);
+
+  const getUrl = (subpath: string) => {
+    if (platform === 'mac' || isSubdomain) {
+      return subpath === '' ? '/' : `/${subpath}`;
+    }
+    return subpath === '' ? `/${platform}` : `/${platform}/${subpath}`;
+  };
+
+  const getPlatformDetails = () => {
+    switch (platform) {
+      case 'windows':
+        return {
+          title: 'DiskWarren for Windows',
+          description: 'Intelligent NTFS storage analysis and reversible Win32 Recycle Bin cleanup for Windows 10 and 11. Built natively in .NET 8.',
+          badge: 'Windows PC',
+          features: [
+            { label: 'NTFS Metadata Traversal', url: getUrl('features') },
+            { label: 'Squarified Treemap (C: & D:)', url: getUrl('features') },
+            { label: 'Visual Studio & NuGet Cleaner', url: getUrl('features') },
+            { label: 'WSL2 Docker Compaction', url: getUrl('features') },
+            { label: 'Recycle Bin Reversibility', url: getUrl('safety') },
+            { label: 'Explorer Context Menu', url: getUrl('features') },
+          ]
+        };
+      case 'android':
+        return {
+          title: 'DiskWarren for Android',
+          description: 'Modern Scoped Storage intelligence for Android phones and tablets. Reversible cleanup via native 30-day OS Trash.',
+          badge: 'Android Mobile',
+          features: [
+            { label: 'Internal Storage & SD Card', url: getUrl('features') },
+            { label: 'WhatsApp & Telegram Cleaner', url: getUrl('features') },
+            { label: 'Perceptual Duplicate Photos', url: getUrl('features') },
+            { label: '4K Video Inspector', url: getUrl('features') },
+            { label: '30-Day OS Trash Safety', url: getUrl('safety') },
+            { label: 'Google Play Family Sharing', url: getUrl('pricing') },
+          ]
+        };
+      case 'ios':
+        return {
+          title: 'DiskWarren for iOS',
+          description: 'PhotoKit storage intelligence and 4K ProRes video discovery for iPhone and iPad. 100% on-device neural processing.',
+          badge: 'iPhone & iPad',
+          features: [
+            { label: 'PhotoKit Duplicate Finder', url: getUrl('features') },
+            { label: 'Similar Burst Photos Clustering', url: getUrl('features') },
+            { label: '4K & ProRes Video Inspector', url: getUrl('features') },
+            { label: 'iCloud Photos Optimization', url: getUrl('features') },
+            { label: 'Recently Deleted 30-Day Safety', url: getUrl('safety') },
+            { label: 'Apple Family Sharing', url: getUrl('pricing') },
+          ]
+        };
+      case 'mac':
+      default:
+        return {
+          title: 'DiskWarren for Mac',
+          description: 'Native Mac storage intelligence and safe cleanup. Deep analysis for Xcode, Docker, Node.js, and local AI weights.',
+          badge: 'Macintosh HD',
+          features: [
+            { label: 'APFS Storage Analyzer', url: '/mac-storage-analyzer' },
+            { label: 'Disk Space Analyzer', url: '/mac-disk-space-analyzer' },
+            { label: 'Developer Cache Cleanup', url: '/developer-cleanup-mac' },
+            { label: 'Local AI Weight Cleaner', url: '/mac-ai-storage-cleaner' },
+            { label: 'App Uninstaller & Leftovers', url: '/mac-app-uninstaller' },
+            { label: 'APFS Duplicate Finder', url: '/mac-duplicate-finder' },
+          ]
+        };
+    }
+  };
+
+  const details = getPlatformDetails();
+
   return (
     <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-12 text-slate-600 transition-colors">
       <div className="max-w-7xl mx-auto px-6">
@@ -15,51 +131,65 @@ export default function Footer() {
               <span className="text-lg font-bold text-slate-900 tracking-tight">DiskWarren</span>
             </div>
             <p className="text-xs leading-relaxed text-slate-600">
-              The cross-platform native storage intelligence family. Reclaim gigabytes across developer caches, virtual disks, local AI weights, and media safely with zero cloud telemetry.
+              {details.description}
             </p>
             <div className="flex flex-col gap-1 text-[11px] text-slate-500 font-medium">
-              <span>Mac • Windows • Android • iOS</span>
+              <span className="font-semibold text-slate-700">{details.badge} Edition</span>
               <span>No Subscriptions • Perpetual Licenses</span>
             </div>
           </div>
 
-          {/* Platforms */}
+          {/* Independent Native Platforms Switcher */}
           <div>
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Native Platforms</h4>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Independent Platforms</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/" className="hover:text-cyan-600 transition-colors font-medium">macOS Storage Intelligence</Link></li>
-              <li><Link href="/windows" className="hover:text-cyan-600 transition-colors font-medium">Windows Storage Intelligence</Link></li>
-              <li><Link href="/android" className="hover:text-cyan-600 transition-colors font-medium">Android Storage Intelligence</Link></li>
-              <li><Link href="/ios" className="hover:text-cyan-600 transition-colors font-medium">iPhone Storage Intelligence</Link></li>
-              <li><Link href="/pricing" className="hover:text-cyan-600 transition-colors font-medium">Cross-Platform Power Pack</Link></li>
+              <li>
+                <Link href="https://diskwarren.com/" className={`transition-colors font-medium ${platform === 'mac' ? 'text-cyan-600 font-bold' : 'hover:text-slate-900'}`}>
+                  macOS Storage Intelligence
+                </Link>
+              </li>
+              <li>
+                <Link href="https://windows.diskwarren.com/" className={`transition-colors font-medium ${platform === 'windows' ? 'text-blue-600 font-bold' : 'hover:text-slate-900'}`}>
+                  Windows Storage Intelligence
+                </Link>
+              </li>
+              <li>
+                <Link href="https://android.diskwarren.com/" className={`transition-colors font-medium ${platform === 'android' ? 'text-emerald-600 font-bold' : 'hover:text-slate-900'}`}>
+                  Android Storage Intelligence
+                </Link>
+              </li>
+              <li>
+                <Link href="https://ios.diskwarren.com/" className={`transition-colors font-medium ${platform === 'ios' ? 'text-purple-600 font-bold' : 'hover:text-slate-900'}`}>
+                  iPhone &amp; iPad Intelligence
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Core Features */}
+          {/* Current Platform's Standalone Pages */}
           <div>
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Storage Utilities</h4>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">{details.badge} Navigation</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/mac-storage-analyzer" className="hover:text-cyan-600 transition-colors">Mac Storage Analyzer</Link></li>
-              <li><Link href="/mac-disk-space-analyzer" className="hover:text-cyan-600 transition-colors">Disk Space Analyzer</Link></li>
-              <li><Link href="/mac-large-files" className="hover:text-cyan-600 transition-colors">Large Files Discovery</Link></li>
-              <li><Link href="/mac-cleaner" className="hover:text-cyan-600 transition-colors">Mac Cleaner</Link></li>
-              <li><Link href="/mac-app-uninstaller" className="hover:text-cyan-600 transition-colors">App Uninstaller &amp; Leftovers</Link></li>
-              <li><Link href="/mac-duplicate-finder" className="hover:text-cyan-600 transition-colors">Duplicate File Finder</Link></li>
+              <li><Link href={getUrl('features')} className="hover:text-slate-900 transition-colors">Features &amp; Specs</Link></li>
+              <li><Link href={getUrl('safety')} className="hover:text-slate-900 transition-colors">Safety Architecture</Link></li>
+              <li><Link href={getUrl('pricing')} className="hover:text-slate-900 transition-colors">Pricing &amp; Licenses</Link></li>
+              <li><Link href={getUrl('download')} className="hover:text-slate-900 transition-colors">Download {details.badge}</Link></li>
+              <li><Link href={getUrl('faq')} className="hover:text-slate-900 transition-colors">Frequently Asked Questions</Link></li>
+              <li><Link href={getUrl('system-requirements')} className="hover:text-slate-900 transition-colors">System Requirements</Link></li>
             </ul>
           </div>
 
-          {/* Developer & AI */}
+          {/* Platform Feature Capabilities */}
           <div>
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Developer &amp; AI</h4>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">{details.badge} Capabilities</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/developer-cleanup-mac" className="hover:text-cyan-600 transition-colors">Developer Cleanup</Link></li>
-              <li><Link href="/xcode-storage" className="hover:text-cyan-600 transition-colors">Xcode Storage &amp; DerivedData</Link></li>
-              <li><Link href="/docker-storage-mac" className="hover:text-cyan-600 transition-colors">Docker Storage on Mac</Link></li>
-              <li><Link href="/node-modules-disk-space" className="hover:text-cyan-600 transition-colors">node_modules Disk Space</Link></li>
-              <li><Link href="/ollama-storage" className="hover:text-cyan-600 transition-colors">Ollama Model Storage</Link></li>
-              <li><Link href="/lm-studio-storage" className="hover:text-cyan-600 transition-colors">LM Studio &amp; GGUF Weights</Link></li>
-              <li><Link href="/huggingface-cache-mac" className="hover:text-cyan-600 transition-colors">Hugging Face Cache</Link></li>
-              <li><Link href="/comfyui-storage" className="hover:text-cyan-600 transition-colors">ComfyUI Diffusion Storage</Link></li>
+              {details.features.map((feat, idx) => (
+                <li key={idx}>
+                  <Link href={feat.url} className="hover:text-slate-900 transition-colors">
+                    {feat.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -67,25 +197,22 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Trust &amp; Legal</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/pricing" className="hover:text-cyan-600 transition-colors">Pricing &amp; Perpetual License</Link></li>
-              <li><Link href="/download" className="hover:text-cyan-600 transition-colors">Download DiskWarren</Link></li>
-              <li><Link href="/security" className="hover:text-cyan-600 transition-colors">Security Architecture</Link></li>
-              <li><Link href="/privacy" className="hover:text-cyan-600 transition-colors">Zero-Telemetry Privacy</Link></li>
-              <li><Link href="/terms" className="hover:text-cyan-600 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/refund-policy" className="hover:text-cyan-600 transition-colors">30-Day Refund Policy</Link></li>
-              <li><Link href="/system-requirements" className="hover:text-cyan-600 transition-colors">System Requirements</Link></li>
-              <li><Link href="/release-notes" className="hover:text-cyan-600 transition-colors">Release Notes (v1.0.0)</Link></li>
-              <li><Link href="/support" className="hover:text-cyan-600 transition-colors">Support &amp; Contact</Link></li>
+              <li><Link href="/security" className="hover:text-slate-900 transition-colors">Security Architecture</Link></li>
+              <li><Link href="/privacy" className="hover:text-slate-900 transition-colors">Zero-Telemetry Privacy</Link></li>
+              <li><Link href="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-slate-900 transition-colors">30-Day Refund Policy</Link></li>
+              <li><Link href="/release-notes" className="hover:text-slate-900 transition-colors">Release Notes (v1.0.0)</Link></li>
+              <li><Link href="/support" className="hover:text-slate-900 transition-colors">Support &amp; Contact</Link></li>
             </ul>
           </div>
         </div>
 
         {/* Bottom copyright & badges */}
         <div className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} DiskWarren Team. All rights reserved. Native desktop &amp; mobile storage intelligence.</p>
+          <p>© {new Date().getFullYear()} DiskWarren Team. All rights reserved. {details.title}.</p>
           <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5 text-emerald-600" /> On-Device Only</span>
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-cyan-600" /> Safe-by-Design</span>
+            <span className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5 text-emerald-600" /> 100% On-Device Local</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-blue-600" /> Reversible Safety</span>
           </div>
         </div>
       </div>

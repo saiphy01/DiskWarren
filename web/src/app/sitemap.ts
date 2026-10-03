@@ -4,17 +4,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://diskwarren.com';
 
   const routes = [
-    // Core Navigation & Conversion
+    // Core Mac Navigation & Conversion
     { path: '', priority: 1.0, changeFrequency: 'daily' as const },
     { path: '/download', priority: 0.95, changeFrequency: 'weekly' as const },
     { path: '/pricing', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/safety', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/features', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/faq', priority: 0.85, changeFrequency: 'weekly' as const },
 
-    // Cross-Platform Family
+    // Windows Standalone Website
     { path: '/windows', priority: 0.95, changeFrequency: 'weekly' as const },
-    { path: '/android', priority: 0.95, changeFrequency: 'weekly' as const },
-    { path: '/ios', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/windows/download', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/windows/pricing', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/windows/safety', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/windows/features', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/windows/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/windows/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
 
-    // Primary SEO Capabilities
+    // Android Standalone Website
+    { path: '/android', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/android/download', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/android/pricing', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/android/safety', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/android/features', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/android/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/android/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
+
+    // iOS Standalone Website
+    { path: '/ios', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/ios/download', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/ios/pricing', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/ios/safety', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/ios/features', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/ios/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/ios/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
+
+    // Primary SEO Capabilities (Mac)
     { path: '/mac-storage-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/mac-disk-space-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/mac-large-files', priority: 0.9, changeFrequency: 'weekly' as const },
@@ -34,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/mac-cleaner-for-developers', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/mac-ai-storage-cleaner', priority: 0.85, changeFrequency: 'weekly' as const },
 
-    // Competitor Alternatives (Objective & Sourced)
+    // Competitor Alternatives
     { path: '/cleanmymac-alternative', priority: 0.85, changeFrequency: 'monthly' as const },
     { path: '/daisydisk-alternative', priority: 0.85, changeFrequency: 'monthly' as const },
 

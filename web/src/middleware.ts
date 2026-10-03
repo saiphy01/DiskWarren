@@ -9,30 +9,46 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
+    pathname.startsWith('/downloads') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
   }
 
-  // Windows Subdomain
+  // Helper to rewrite paths for subdomains
+  const getSubdomainRewrite = (platformPrefix: 'windows' | 'android' | 'ios') => {
+    // If the path already has the prefix (e.g., /windows or /windows/download), don't double-prefix
+    if (pathname.startsWith(`/${platformPrefix}`)) {
+      return NextResponse.next();
+    }
+    
+    // Rewrite root to platform root
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL(`/${platformPrefix}`, request.url));
+    }
+
+    // Rewrite subpages (e.g., /download -> /windows/download)
+    return NextResponse.rewrite(new URL(`/${platformPrefix}${pathname}`, request.url));
+  };
+
+  // Windows Subdomain: windows.diskwarren.com
   if (host.startsWith('windows.diskwarren.com') || host.startsWith('windows.localhost')) {
-    if (pathname === '/') {
-      return NextResponse.rewrite(new URL('/windows', request.url));
-    }
+    return getSubdomainRewrite('windows');
   }
 
-  // Android Subdomain
+  // Android Subdomain: android.diskwarren.com
   if (host.startsWith('android.diskwarren.com') || host.startsWith('android.localhost')) {
-    if (pathname === '/') {
-      return NextResponse.rewrite(new URL('/android', request.url));
-    }
+    return getSubdomainRewrite('android');
   }
 
-  // iOS Subdomain
+  // iOS Subdomain: ios.diskwarren.com
   if (host.startsWith('ios.diskwarren.com') || host.startsWith('ios.localhost')) {
-    if (pathname === '/') {
-      return NextResponse.rewrite(new URL('/ios', request.url));
-    }
+    return getSubdomainRewrite('ios');
+  }
+
+  // Mac Subdomain (optional alias: mac.diskwarren.com)
+  if (host.startsWith('mac.diskwarren.com') || host.startsWith('mac.localhost')) {
+    return NextResponse.next();
   }
 
   return NextResponse.next();
