@@ -92,51 +92,53 @@ fun StorageOverviewHeader(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "DiskWarren Android",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Bold,
+                            text = "DiskWarren",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
                             color = ColorTextPrimary
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(ColorBrandCyan.copy(alpha = 0.12f))
+                                .background(ColorBrandCyan.copy(alpha = 0.10f))
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = "Scoped Storage",
-                                fontSize = 10.sp,
+                                fontSize = 9.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = ColorBrandCyan
                             )
                         }
                     }
                     Text(
-                        text = "Real-time storage intelligence & safe photo scrub",
-                        fontSize = 11.5.sp,
+                        text = "Internal Storage • 256 GB",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
                         color = ColorTextSecondary
                     )
                 }
 
-                Button(
+                OutlinedButton(
                     onClick = onScanClicked,
-                    colors = ButtonDefaults.buttonColors(containerColor = ColorBrandCyan),
                     shape = RoundedCornerShape(10.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorTextPrimary),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, ColorBorderLight)
                 ) {
                     Text(
                         text = "Scan",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        color = ColorTextPrimary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // Reclaimable Spotlight Capsule with Prominent Clear Action
+            // Reclaimable Space Banner (Clean, Focused, Zero Redundancy)
             if (reclaimableBytes > 0) {
                 Row(
                     modifier = Modifier
@@ -147,54 +149,70 @@ fun StorageOverviewHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Box(
                             modifier = Modifier
                                 .size(34.dp)
-                                .clip(CircleShape)
+                                .clip(RoundedCornerShape(10.dp))
                                 .background(ColorEmeraldSafe.copy(alpha = 0.20f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "★",
-                                fontSize = 15.sp,
-                                color = ColorEmeraldSafe,
-                                fontWeight = FontWeight.Bold
+                                text = "✨",
+                                fontSize = 15.sp
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "RECLAIMABLE SPACE DETECTED",
+                                text = "RECLAIMABLE SPACE",
                                 fontSize = 9.5.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = ColorEmeraldSafe
-                            )
-                            Text(
-                                text = "${MediaItem.formatBytes(reclaimableBytes)} safe to clean",
-                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = ColorTextPrimary
+                                color = ColorEmeraldSafe,
+                                letterSpacing = 0.5.sp
                             )
+                            Row(verticalAlignment = Alignment.Baseline) {
+                                Text(
+                                    text = MediaItem.formatBytes(reclaimableBytes),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontFamily = FontFamily.Monospace,
+                                    color = ColorTextPrimary
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "safe to clean in Downloads",
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = ColorTextSecondary,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
                         }
                     }
+
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     Button(
                         onClick = { onClearClicked?.invoke() },
                         colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(10.dp),
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "Clear Space",
+                            text = "Clean Space",
                             fontSize = 12.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(14.dp))
             }
 
             // The Master Storage Allocation Donut Chart
@@ -302,22 +320,24 @@ fun StorageDonutChart(
                 )
             } else {
                 Text(
-                    text = "STORAGE INDEX",
-                    fontSize = 9.sp,
+                    text = "USED",
+                    fontSize = 9.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = ColorTextSecondary
+                    color = ColorTextSecondary,
+                    letterSpacing = 0.8.sp
                 )
                 Text(
                     text = MediaItem.formatBytes(totalUsedBytes),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
                     fontFamily = FontFamily.Monospace,
-                    color = ColorBrandCyan
+                    color = ColorTextPrimary
                 )
+                val usedPct = (totalUsedBytes.toDouble() / totalCapacityBytes.toDouble() * 100).coerceIn(0.0, 100.0)
                 Text(
-                    text = "${nonZeroCategories.sumOf { it.itemCount }} Indexed Items",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    text = String.format("%.1f%% of %s", usedPct, MediaItem.formatBytes(totalCapacityBytes)),
+                    fontSize = 10.5.sp,
+                    fontWeight = FontWeight.Medium,
                     color = ColorTextSecondary
                 )
             }
@@ -340,13 +360,27 @@ fun CategorySummaryList(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
-            Text(
-                text = "MEDIA & STORAGE BREAKDOWN",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = ColorTextSecondary,
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp, horizontal = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "MEDIA & STORAGE ALLOCATION",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ColorTextSecondary,
+                    letterSpacing = 0.6.sp
+                )
+                Text(
+                    text = "${categories.sumOf { it.itemCount }} items",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = ColorTextSecondary.copy(alpha = 0.7f)
+                )
+            }
         }
 
         items(categories) { cat ->
@@ -370,29 +404,61 @@ fun CategorySummaryList(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Left Cluster: Icon + Title + Cleanable Tag + Items
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
                             Box(
                                 modifier = Modifier
-                                    .size(10.dp)
-                                    .clip(CircleShape)
-                                    .background(color)
-                            )
+                                    .size(28.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(color.copy(alpha = 0.12f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                )
+                            }
                             Spacer(modifier = Modifier.width(10.dp))
                             Column {
-                                Text(
-                                    text = cat.category.title,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ColorTextPrimary
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = cat.category.title,
+                                        fontSize = 13.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = ColorTextPrimary
+                                    )
+                                    if (isReclaimable) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(4.dp))
+                                                .background(ColorEmeraldSafe.copy(alpha = 0.12f))
+                                                .padding(horizontal = 5.dp, vertical = 1.dp)
+                                        ) {
+                                            Text(
+                                                text = "Cleanable",
+                                                fontSize = 9.5.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = ColorEmeraldSafe
+                                            )
+                                        }
+                                    }
+                                }
                                 Text(
                                     text = "${cat.itemCount} items",
                                     fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
                                     color = ColorTextSecondary
                                 )
                             }
                         }
 
+                        // Right Cluster: Metrics strictly right-aligned with uniform accessory slot
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -400,7 +466,7 @@ fun CategorySummaryList(
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
                                     text = cat.formattedSize,
-                                    fontSize = 14.sp,
+                                    fontSize = 13.5.sp,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = FontFamily.Monospace,
                                     color = ColorTextPrimary
@@ -412,23 +478,11 @@ fun CategorySummaryList(
                                     color = ColorTextSecondary
                                 )
                             }
-
-                            if (isReclaimable) {
-                                Button(
-                                    onClick = { onClearCategoryClicked?.invoke(cat.category) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = ColorEmeraldSafe),
-                                    shape = RoundedCornerShape(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
-                                    modifier = Modifier.height(28.dp)
-                                ) {
-                                    Text(
-                                        text = "Clear",
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
-                                    )
-                                }
-                            }
+                            Text(
+                                text = "›",
+                                fontSize = 16.sp,
+                                color = ColorTextSecondary.copy(alpha = 0.5f)
+                            )
                         }
                     }
 
@@ -445,7 +499,7 @@ fun CategorySummaryList(
                         progress = { animatedProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(6.dp)
+                            .height(5.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = color,
                         trackColor = ColorBorderLight

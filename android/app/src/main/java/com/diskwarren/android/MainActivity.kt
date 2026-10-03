@@ -70,25 +70,17 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(Color(0xFFF8FAFC))
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        StorageOverviewHeader(
-                            totalUsedBytes = totalUsedBytes,
-                            totalAvailableBytes = 0L,
-                            categories = categorySummaries,
-                            onScanClicked = { refreshScan() },
-                            onClearClicked = { clearReclaimable() }
-                        )
-                        CategorySummaryList(
-                            categories = categorySummaries,
-                            onClearCategoryClicked = { clearReclaimable() }
-                        )
-                    }
-
-                    BottomClearBar(
-                        reclaimableBytes = reclaimableBytes,
-                        onClearClicked = { clearReclaimable() },
-                        modifier = Modifier.align(Alignment.BottomCenter)
+                Column(modifier = Modifier.fillMaxSize()) {
+                    StorageOverviewHeader(
+                        totalUsedBytes = totalUsedBytes,
+                        totalAvailableBytes = 0L,
+                        categories = categorySummaries,
+                        onScanClicked = { refreshScan() },
+                        onClearClicked = { clearReclaimable() }
+                    )
+                    CategorySummaryList(
+                        categories = categorySummaries,
+                        onClearCategoryClicked = { clearReclaimable() }
                     )
                 }
             }

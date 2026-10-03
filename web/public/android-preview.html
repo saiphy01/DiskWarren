@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DiskWarren Android — Interactive Device Preview</title>
+  <title>DiskWarren Android — Executive Device Preview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -28,11 +28,11 @@
     }
     .preview-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       color: #f8fafc;
     }
     .preview-header h1 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #38bdf8, #818cf8);
@@ -40,7 +40,7 @@
       -webkit-text-fill-color: transparent;
     }
     .preview-header p {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #94a3b8;
       margin-top: 4px;
     }
@@ -110,142 +110,172 @@
     .app-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 14px 16px 85px 16px;
+      padding: 12px 16px 24px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       scrollbar-width: none;
     }
     .app-scroll::-webkit-scrollbar {
       display: none;
     }
 
-    /* Material 3 App Bar */
+    /* Material 3 Main Dashboard Card */
     .m3-card {
       background: #ffffff;
       border-radius: 20px;
       padding: 18px;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
       border: 1px solid #e2e8f0;
     }
 
+    /* Header Row */
     .app-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .title-group h2 {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
+      letter-spacing: -0.4px;
       color: #0f172a;
+    }
+    .subtitle-row {
       display: flex;
       align-items: center;
       gap: 6px;
+      margin-top: 3px;
+    }
+    .device-info {
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
     }
     .scoped-badge {
       font-size: 9.5px;
-      font-weight: 800;
+      font-weight: 700;
       color: #0891b2;
-      background: rgba(8, 145, 178, 0.12);
-      padding: 2px 7px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-    .subtitle {
-      font-size: 11.5px;
-      color: #64748b;
-      margin-top: 3px;
+      background: rgba(8, 145, 178, 0.09);
+      padding: 1.5px 6px;
+      border-radius: 5px;
+      letter-spacing: 0.3px;
     }
 
+    /* Sleek Outline Scan Button */
     .btn-scan {
-      background: #0891b2;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      padding: 6px 13px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .btn-scan:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .btn-scan:active {
+      transform: scale(0.96);
+    }
+    .scan-icon {
+      font-size: 12px;
+      color: #0891b2;
+    }
+
+    /* Executive Reclaimable Space Banner */
+    .clean-banner {
+      background: linear-gradient(135deg, rgba(236, 253, 245, 0.9) 0%, rgba(240, 253, 250, 0.9) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      transition: all 0.3s ease;
+    }
+    .clean-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .spark-pod {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #059669;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .clean-meta {
+      display: flex;
+      flex-direction: column;
+    }
+    .clean-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: #059669;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .clean-headline {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+    .clean-headline .clean-amount {
+      font-size: 15px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #0f172a;
+    }
+    .clean-headline .clean-desc {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    /* Unmistakable Clean Space Pill Button */
+    .btn-clean-action {
+      background: #10b981;
       color: #ffffff;
       border: none;
       padding: 7px 15px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
-      box-shadow: 0 2px 6px rgba(8, 145, 178, 0.25);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
-    .btn-scan:hover {
-      background: #0e7490;
-      transform: translateY(-1px);
-    }
-    .btn-scan:active {
-      transform: scale(0.96);
-    }
-
-    /* Spotlight Capsule */
-    .spotlight-capsule {
-      background: rgba(16, 185, 129, 0.09);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 16px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 14px;
-    }
-    .spotlight-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .star-pod {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #10b981;
-      font-size: 15px;
-      font-weight: bold;
-    }
-    .spotlight-tag {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: #10b981;
-      letter-spacing: 0.5px;
-    }
-    .spotlight-text {
-      font-size: 13px;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    /* Prominent Clear Space Button in Capsule */
-    .btn-clear-capsule {
-      background: #10b981;
-      color: #ffffff;
-      border: none;
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.35);
-      transition: all 0.15s ease;
-    }
-    .btn-clear-capsule:hover {
+    .btn-clean-action:hover {
       background: #059669;
       transform: translateY(-1px);
     }
-    .btn-clear-capsule:active {
+    .btn-clean-action:active {
       transform: scale(0.96);
     }
-    .btn-clear-capsule.cleaned {
-      background: #64748b;
+    .btn-clean-action.cleaned {
+      background: #e2e8f0;
+      color: #64748b;
       cursor: default;
       box-shadow: none;
     }
@@ -253,64 +283,82 @@
     /* Donut Canvas Container */
     .donut-wrapper {
       position: relative;
-      width: 230px;
-      height: 230px;
-      margin: 18px auto 6px auto;
+      width: 220px;
+      height: 220px;
+      margin: 16px auto 4px auto;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     canvas {
-      width: 230px;
-      height: 230px;
+      width: 220px;
+      height: 220px;
       cursor: pointer;
     }
     .donut-telemetry {
       position: absolute;
       text-align: center;
       pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .tele-label {
-      font-size: 9px;
-      font-weight: 800;
+      font-size: 9.5px;
+      font-weight: 700;
       color: #64748b;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
     }
     .tele-size {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
-      color: #0891b2;
+      color: #0f172a;
       line-height: 1.15;
-      margin: 2px 0;
+      margin: 1px 0;
+      letter-spacing: -0.5px;
     }
     .tele-sub {
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 10.5px;
+      font-weight: 600;
       color: #64748b;
     }
 
     /* Categories List */
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+      margin-top: 4px;
+    }
     .section-label {
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       color: #64748b;
-      letter-spacing: 0.5px;
-      margin: 4px 0 2px 4px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
     }
+    .section-hint {
+      font-size: 11px;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+
     .category-cards {
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 8px;
     }
     .cat-card {
       background: #ffffff;
       border-radius: 14px;
-      padding: 13px 15px;
+      padding: 12px 14px;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
     }
     .cat-card:hover {
       border-color: #cbd5e1;
@@ -320,37 +368,72 @@
       border-color: #0891b2;
       background: #f0fdfa;
     }
+
+    /* Harmonized 3-Zone Card Layout with Strict Alignment */
     .cat-top {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 8px;
     }
-    .cat-info {
+    .cat-left {
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
+      flex: 1;
     }
-    .cat-swatch {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+    .cat-icon-pod {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .cat-titles {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .cat-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .cat-title {
       font-size: 13.5px;
       font-weight: 700;
       color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cleanable-chip {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #059669;
+      background: rgba(16, 185, 129, 0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.2px;
     }
     .cat-count {
       font-size: 11px;
+      font-weight: 500;
       color: #64748b;
     }
-    .cat-actions {
+
+    /* Fixed Metrics Column (ALWAYS strictly right-aligned) */
+    .cat-right-cluster {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      flex-shrink: 0;
     }
-    .cat-metric {
+    .cat-metrics {
       text-align: right;
     }
     .cat-size {
@@ -358,6 +441,7 @@
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: #0f172a;
+      line-height: 1.2;
     }
     .cat-pct {
       font-size: 11px;
@@ -365,89 +449,27 @@
       color: #64748b;
     }
 
-    .btn-clear-cat {
-      background: #10b981;
-      color: #ffffff;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .btn-clear-cat:hover {
-      background: #059669;
+    /* Row Accessory Slot (chevron or clean trigger) */
+    .cat-accessory {
+      width: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 14px;
     }
 
     .progress-track {
       width: 100%;
-      height: 5px;
+      height: 4px;
       background: #f1f5f9;
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
     }
     .progress-fill {
       height: 100%;
-      border-radius: 3px;
+      border-radius: 2px;
       transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Fixed Bottom Clear Space Dock */
-    .bottom-clear-dock {
-      position: absolute;
-      bottom: 26px;
-      left: 16px;
-      right: 16px;
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 12px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      z-index: 80;
-      transition: all 0.3s ease;
-    }
-    .bottom-clear-dock.dismissed {
-      transform: translateY(120%);
-      opacity: 0;
-      pointer-events: none;
-    }
-    .dock-sub {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: #10b981;
-      letter-spacing: 0.5px;
-    }
-    .dock-size {
-      font-size: 16px;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: #0f172a;
-    }
-    .btn-dock-clear {
-      background: #10b981;
-      color: #ffffff;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-      transition: all 0.15s ease;
-    }
-    .btn-dock-clear:hover {
-      background: #059669;
-      transform: translateY(-1px);
-    }
-    .btn-dock-clear:active {
-      transform: scale(0.96);
     }
 
     /* Android Home Navigation Bar */
@@ -470,15 +492,15 @@
     /* Floating Toast */
     .android-toast {
       position: absolute;
-      bottom: 90px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       background: #1e293b;
       color: #f8fafc;
-      padding: 9px 20px;
-      border-radius: 24px;
+      padding: 8px 18px;
+      border-radius: 20px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
@@ -494,8 +516,8 @@
 <body>
 
   <div class="preview-header">
-    <h1>DiskWarren Android — Live Device Simulation</h1>
-    <p>Jetpack Compose Material 3 UI • Canvas Storage Donut • Clear Space Actions</p>
+    <h1>DiskWarren Android — Executive Design Preview</h1>
+    <p>Material 3 Jetpack Compose Architecture • Precision Alignment • Zero Text Redundancy</p>
   </div>
 
   <div class="phone-chassis">
@@ -515,58 +537,56 @@
 
       <!-- App Main Scrollable Container -->
       <div class="app-scroll">
-        <!-- Main M3 Dashboard Card -->
+        <!-- Main Dashboard Card -->
         <div class="m3-card">
           <div class="app-title-row">
             <div class="title-group">
-              <h2>DiskWarren <span class="scoped-badge">Scoped Storage</span></h2>
-              <div class="subtitle">Real-time storage intelligence & safe photo scrub</div>
+              <h2>DiskWarren</h2>
+              <div class="subtitle-row">
+                <span class="device-info">Internal Storage • 256 GB</span>
+                <span class="scoped-badge">Scoped Storage</span>
+              </div>
             </div>
             <button class="btn-scan" onclick="triggerScan()">
-              <span id="scanIcon">⚡</span>
+              <span class="scan-icon" id="scanIcon">↻</span>
               <span id="scanBtnText">Scan</span>
             </button>
           </div>
 
-          <!-- Reclaimable Spotlight Capsule with Prominent Clear Action -->
-          <div class="spotlight-capsule" id="spotlightCapsule">
-            <div class="spotlight-left">
-              <div class="star-pod" id="starPod">★</div>
-              <div>
-                <div class="spotlight-tag" id="spotlightTag">RECLAIMABLE SPACE DETECTED</div>
-                <div class="spotlight-text" id="reclaimableText">14.2 GB can be safely cleaned</div>
+          <!-- Cleanable Space Executive Banner (Zero Redundancy) -->
+          <div class="clean-banner" id="cleanBanner">
+            <div class="clean-left">
+              <div class="spark-pod" id="sparkPod">✨</div>
+              <div class="clean-meta">
+                <span class="clean-tag" id="cleanTag">Reclaimable Space</span>
+                <div class="clean-headline">
+                  <span class="clean-amount" id="cleanAmount">14.2 GB</span>
+                  <span class="clean-desc" id="cleanDesc">safe to clean in Downloads</span>
+                </div>
               </div>
             </div>
-            <button class="btn-clear-capsule" id="btnCapsuleClear" onclick="executeClearSpace()">
-              <span>🗑️</span> <span id="btnCapsuleText">Clear 14.2 GB</span>
+            <button class="btn-clean-action" id="btnCleanAction" onclick="executeClearSpace()">
+              <span>Clean Space</span>
             </button>
           </div>
 
           <!-- Master Storage Donut Chart -->
           <div class="donut-wrapper">
-            <canvas id="androidDonutCanvas" width="460" height="460"></canvas>
+            <canvas id="androidDonutCanvas" width="440" height="440"></canvas>
             <div class="donut-telemetry" id="donutTelemetry">
-              <div class="tele-label" id="teleLabel">STORAGE INDEX</div>
+              <div class="tele-label" id="teleLabel">USED</div>
               <div class="tele-size" id="teleSize">128.4 GB</div>
-              <div class="tele-sub" id="teleSub">4,821 Indexed Items</div>
+              <div class="tele-sub" id="teleSub">50.1% of 256 GB</div>
             </div>
           </div>
         </div>
 
         <!-- Category Breakdown -->
-        <div class="section-label">MEDIA & STORAGE BREAKDOWN</div>
-        <div class="category-cards" id="categoryCardsContainer"></div>
-      </div>
-
-      <!-- Persistent Bottom Clear Space Dock -->
-      <div class="bottom-clear-dock" id="bottomClearDock">
-        <div>
-          <div class="dock-sub">RECLAIMABLE STORAGE</div>
-          <div class="dock-size" id="dockReclaimSize">14.2 GB</div>
+        <div class="section-header-row">
+          <span class="section-label">Media & Storage Allocation</span>
+          <span class="section-hint" id="itemCountHint">4,821 items</span>
         </div>
-        <button class="btn-dock-clear" onclick="executeClearSpace()">
-          <span>🗑️</span> Clear Space
-        </button>
+        <div class="category-cards" id="categoryCardsContainer"></div>
       </div>
 
       <!-- Bottom Gesture Navigation Pill -->
@@ -593,24 +613,24 @@
         gain.connect(audioCtx.destination);
         if (type === 'click') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(600, now);
-          osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.frequency.setValueAtTime(560, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.04);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
           osc.start(now);
-          osc.stop(now + 0.05);
+          osc.stop(now + 0.04);
         } else if (type === 'clean') {
           [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
             const osc2 = audioCtx.createOscillator();
             const gain2 = audioCtx.createGain();
             osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(freq, now + i * 0.05);
-            gain2.gain.setValueAtTime(0.09, now + i * 0.05);
-            gain2.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.25);
+            osc2.frequency.setValueAtTime(freq, now + i * 0.04);
+            gain2.gain.setValueAtTime(0.07, now + i * 0.04);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.22);
             osc2.connect(gain2);
             gain2.connect(audioCtx.destination);
-            osc2.start(now + i * 0.05);
-            osc2.stop(now + i * 0.05 + 0.3);
+            osc2.start(now + i * 0.04);
+            osc2.stop(now + i * 0.04 + 0.25);
           });
         }
       } catch (e) {}
@@ -618,14 +638,15 @@
 
     // Android Storage Data
     let categories = [
-      { id: 'videos', title: 'Videos & Screen Recordings', sizeBytes: 51755106304, count: 457, color: '#2563eb', reclaimable: false },
-      { id: 'photos', title: 'Photos & Images', sizeBytes: 39084204032, count: 3372, color: '#0891b2', reclaimable: false },
-      { id: 'downloads', title: 'Public Downloads & APKs', sizeBytes: 15247130624, count: 184, color: '#f59e0b', reclaimable: true },
-      { id: 'audio', title: 'Audio & Voice Memos', sizeBytes: 8589934592, count: 215, color: '#8b5cf6', reclaimable: false },
-      { id: 'documents', title: 'Documents & Archives', sizeBytes: 6442450944, count: 593, color: '#d97706', reclaimable: false },
-      { id: 'apps', title: 'App Footprint', sizeBytes: 16106127360, count: 48, color: '#64748b', reclaimable: false }
+      { id: 'videos', title: 'Videos & Screen Records', icon: '🎬', sizeBytes: 51755106304, count: 457, color: '#2563eb', reclaimable: false },
+      { id: 'photos', title: 'Photos & Images', icon: '📷', sizeBytes: 39084204032, count: 3372, color: '#0891b2', reclaimable: false },
+      { id: 'downloads', title: 'Public Downloads & APKs', icon: '📥', sizeBytes: 15247130624, count: 184, color: '#f59e0b', reclaimable: true },
+      { id: 'audio', title: 'Audio & Voice Memos', icon: '🎵', sizeBytes: 8589934592, count: 215, color: '#8b5cf6', reclaimable: false },
+      { id: 'documents', title: 'Documents & Archives', icon: '📄', sizeBytes: 6442450944, count: 593, color: '#d97706', reclaimable: false },
+      { id: 'apps', title: 'App Footprint', icon: '📦', sizeBytes: 16106127360, count: 48, color: '#64748b', reclaimable: false }
     ];
 
+    const totalDriveBytes = 256 * 1024 * 1024 * 1024; // 256 GB device
     let isCleaned = false;
     let selectedCategoryId = null;
     let totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
@@ -644,12 +665,12 @@
     let slicesMeta = [];
 
     function drawDonut() {
-      const width = 460;
-      const height = 460;
+      const width = 440;
+      const height = 440;
       const cx = width / 2;
       const cy = height / 2;
-      const outerR = 175;
-      const strokeW = 44;
+      const outerR = 170;
+      const strokeW = 40;
       const innerR = outerR - strokeW;
 
       ctx.clearRect(0, 0, width, height);
@@ -657,13 +678,13 @@
       // Track ring
       ctx.beginPath();
       ctx.arc(cx, cy, outerR - strokeW / 2, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#e2e8f0';
+      ctx.strokeStyle = '#f1f5f9';
       ctx.lineWidth = strokeW;
       ctx.stroke();
 
       // Slices
       let currentAngle = -Math.PI / 2;
-      const gap = 0.055;
+      const gap = 0.045;
       slicesMeta = [];
 
       categories.forEach(cat => {
@@ -684,13 +705,13 @@
 
         ctx.save();
         ctx.beginPath();
-        ctx.arc(cx, cy, (isSelected ? outerR + 5 : outerR) - strokeW / 2, arcStart, arcEnd);
+        ctx.arc(cx, cy, (isSelected ? outerR + 4 : outerR) - strokeW / 2, arcStart, arcEnd);
         ctx.strokeStyle = cat.color;
-        ctx.lineWidth = isSelected ? strokeW + 8 : strokeW;
+        ctx.lineWidth = isSelected ? strokeW + 6 : strokeW;
         ctx.lineCap = 'round';
         if (isSelected) {
           ctx.shadowColor = cat.color;
-          ctx.shadowBlur = 20;
+          ctx.shadowBlur = 18;
         }
         ctx.stroke();
         ctx.restore();
@@ -702,8 +723,8 @@
       ctx.beginPath();
       ctx.arc(cx, cy, innerR - 2, 0, 2 * Math.PI);
       ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = 'rgba(15, 23, 42, 0.06)';
-      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'rgba(15, 23, 42, 0.05)';
+      ctx.shadowBlur = 8;
       ctx.fill();
     }
 
@@ -721,20 +742,20 @@
           teleLabel.style.color = cat.color;
           teleSize.innerText = formatBytes(cat.sizeBytes);
           teleSize.style.color = '#0f172a';
-          teleSub.innerText = `${pct}% ALLOCATED (${cat.count} items)`;
+          teleSub.innerText = `${pct}% • ${cat.count.toLocaleString()} files`;
           return;
         }
       }
 
-      teleLabel.innerText = isCleaned ? 'CLEANED & OPTIMIZED' : 'STORAGE INDEX';
+      const drivePct = ((totalBytes / totalDriveBytes) * 100).toFixed(1);
+      teleLabel.innerText = isCleaned ? 'CLEANED & PROTECTED' : 'USED';
       teleLabel.style.color = isCleaned ? '#10b981' : '#64748b';
       teleSize.innerText = formatBytes(totalBytes);
-      teleSize.style.color = isCleaned ? '#10b981' : '#0891b2';
-      const totalCount = categories.reduce((acc, c) => acc + c.count, 0);
-      teleSub.innerText = `${totalCount.toLocaleString()} Indexed Items`;
+      teleSize.style.color = '#0f172a';
+      teleSub.innerText = `${drivePct}% of 256 GB`;
     }
 
-    // Render Category Cards
+    // Render Category Cards (Strict Right-Aligned Column Flow)
     function renderCategoryCards() {
       const container = document.getElementById('categoryCardsContainer');
       let html = '';
@@ -746,19 +767,25 @@
         html += `
           <div class="cat-card ${isActive ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
             <div class="cat-top">
-              <div class="cat-info">
-                <div class="cat-swatch" style="background:${cat.color};"></div>
-                <div>
-                  <div class="cat-title">${cat.title}</div>
-                  <div class="cat-count">${cat.count.toLocaleString()} items</div>
+              <div class="cat-left">
+                <div class="cat-icon-pod" style="background:${cat.color}1a; color:${cat.color}">
+                  ${cat.icon}
+                </div>
+                <div class="cat-titles">
+                  <div class="cat-title-row">
+                    <span class="cat-title">${cat.title}</span>
+                    ${cat.reclaimable && !isCleaned ? `<span class="cleanable-chip">Cleanable</span>` : ''}
+                  </div>
+                  <span class="cat-count">${cat.count.toLocaleString()} items</span>
                 </div>
               </div>
-              <div class="cat-actions">
-                <div class="cat-metric">
+
+              <div class="cat-right-cluster">
+                <div class="cat-metrics">
                   <div class="cat-size">${formatBytes(cat.sizeBytes)}</div>
                   <div class="cat-pct">${pct}%</div>
                 </div>
-                ${cat.reclaimable && !isCleaned ? `<button class="btn-clear-cat" onclick="event.stopPropagation(); executeClearSpace()">Clear</button>` : ''}
+                <div class="cat-accessory">›</div>
               </div>
             </div>
             <div class="progress-track">
@@ -769,6 +796,8 @@
       });
 
       container.innerHTML = html;
+      const totalCount = categories.reduce((acc, c) => acc + c.count, 0);
+      document.getElementById('itemCountHint').innerText = `${totalCount.toLocaleString()} items`;
     }
 
     function selectCategory(id) {
@@ -806,7 +835,7 @@
       const toast = document.getElementById('androidToast');
       toast.innerText = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2800);
+      setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
     function triggerScan() {
@@ -818,16 +847,16 @@
 
       setTimeout(() => {
         btn.innerText = 'Scan';
-        icon.innerText = '⚡';
+        icon.innerText = '↻';
         playAudio('clean');
         showToast('MediaStore scan complete • 4,821 items indexed');
-      }, 700);
+      }, 600);
     }
 
     // Clear Space Execution
     function executeClearSpace() {
       if (isCleaned) {
-        showToast('Storage already cleaned and protected!');
+        showToast('Storage already optimized!');
         return;
       }
 
@@ -843,23 +872,22 @@
       categories = categories.filter(c => c.sizeBytes > 0);
       totalBytes = categories.reduce((acc, c) => acc + c.sizeBytes, 0);
 
-      // Update UI elements
-      document.getElementById('spotlightTag').innerText = 'STORAGE OPTIMIZED';
-      document.getElementById('reclaimableText').innerText = '14.2 GB moved to 30-day OS Trash';
-      document.getElementById('starPod').innerText = '✓';
+      // Update Banner with executive calm state
+      document.getElementById('cleanTag').innerText = 'Storage Optimized';
+      document.getElementById('cleanTag').style.color = '#059669';
+      document.getElementById('cleanAmount').innerText = '14.2 GB';
+      document.getElementById('cleanDesc').innerText = 'freed & moved to OS Trash';
+      document.getElementById('sparkPod').innerText = '✓';
+      document.getElementById('sparkPod').style.background = 'rgba(16, 185, 129, 0.25)';
       
-      const capsuleBtn = document.getElementById('btnCapsuleClear');
-      capsuleBtn.classList.add('cleaned');
-      document.getElementById('btnCapsuleText').innerText = 'Cleaned';
-
-      // Dismiss bottom dock
-      const bottomDock = document.getElementById('bottomClearDock');
-      bottomDock.classList.add('dismissed');
+      const cleanBtn = document.getElementById('btnCleanAction');
+      cleanBtn.classList.add('cleaned');
+      cleanBtn.innerHTML = '<span>Cleaned ✓</span>';
 
       drawDonut();
       updateTelemetry();
       renderCategoryCards();
-      showToast('✨ 14.2 GB Cleared & Moved to Android OS Trash!');
+      showToast('14.2 GB cleaned and moved to Android Trash');
     }
 
     // Live clock
