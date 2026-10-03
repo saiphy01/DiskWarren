@@ -38,11 +38,12 @@ export default function Footer() {
 
           {/* Guides / Problem Pages */}
           <div>
-            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Storage Guides</h4>
+            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Guides &amp; Compare</h4>
             <ul className="space-y-2.5 text-sm">
+              <li><Link href="/cleanmymac-alternative" className="hover:text-cyan-600 transition-colors font-medium text-cyan-800">vs CleanMyMac ($9.99 vs Sub)</Link></li>
+              <li><Link href="/daisydisk-alternative" className="hover:text-cyan-600 transition-colors font-medium text-cyan-800">vs DaisyDisk ($9.99 vs $9.99)</Link></li>
               <li><Link href="/blog/how-to-delete-xcode-deriveddata" className="hover:text-cyan-600 transition-colors">Clear Xcode DerivedData</Link></li>
               <li><Link href="/how-to-delete-ollama-models" className="hover:text-cyan-600 transition-colors">Manage Ollama &amp; GGUF Models</Link></li>
-              <li><Link href="/how-to-clear-system-data-mac" className="hover:text-cyan-600 transition-colors">Demystify macOS System Data</Link></li>
               <li><Link href="/blog/delete-node-modules-recursively" className="hover:text-cyan-600 transition-colors">Find Stale node_modules</Link></li>
             </ul>
           </div>

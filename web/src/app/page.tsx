@@ -380,14 +380,15 @@ export default function HomePage() {
           {/* Pro Lifetime Tier */}
           <div className="p-8 rounded-2xl bg-gradient-to-b from-white to-cyan-50/60 border-2 border-cyan-500 shadow-lg shadow-cyan-500/10 space-y-6 relative">
             <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-cyan-600 text-white font-bold text-[10px] uppercase tracking-wider shadow-xs">
-              Lifetime License
+              Special Launch Offer
             </div>
 
             <div>
               <h3 className="text-lg font-bold text-slate-900">DiskWarren Pro</h3>
               <p className="text-xs text-slate-500 mt-1">Unlimited safe cleanup, uninstaller &amp; duplicates</p>
-              <div className="mt-4">
-                <span className="text-3xl font-extrabold text-cyan-700 font-mono">$29</span>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-3xl font-extrabold text-cyan-700 font-mono">$9.99</span>
+                <span className="text-xs text-slate-400 line-through font-mono">$29.00</span>
                 <span className="text-xs text-slate-500 ml-1">one-time payment</span>
               </div>
             </div>
@@ -397,14 +398,14 @@ export default function HomePage() {
               <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> One-Click Safe Batch Trash Cleanup</li>
               <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Application Uninstaller &amp; Leftovers</li>
               <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> SHA-256 Duplicate File Eliminator</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> Use on up to 3 Personal Macs</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-cyan-600" /> No Monthly or Yearly Subscriptions</li>
             </ul>
 
             <Link
               href="/pricing"
               className="w-full py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all shadow-md shadow-cyan-600/25 block text-center cursor-pointer"
             >
-              Get Pro License ($29)
+              Get Pro License ($9.99)
             </Link>
           </div>
         </div>

@@ -20,6 +20,7 @@ ROUTES = [
     "/blog/how-to-delete-xcode-deriveddata",
     "/blog/delete-node-modules-recursively",
     "/daisydisk-alternative",
+    "/cleanmymac-alternative",
     "/download",
     "/how-to-clear-system-data-mac",
     "/how-to-delete-ollama-models",

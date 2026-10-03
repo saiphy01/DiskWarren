@@ -216,7 +216,7 @@ export default function DownloadPage() {
 
       {/* Support & Pricing Callout */}
       <div className="text-center text-sm text-slate-500 pt-4 flex flex-wrap items-center justify-center gap-4">
-        <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($29)</Link></span>
+        <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($9.99 Special)</Link></span>
         <span>•</span>
         <span>Questions? Visit <Link href="/support" className="text-cyan-600 hover:underline font-semibold">Support &amp; Help Center</Link></span>
         <span>•</span>
