@@ -111,7 +111,7 @@ export default function HomePage() {
         </div>
 
         <p className="text-xs text-slate-500 pt-1 font-medium">
-          Available for <Link href="/download" className="text-cyan-700 underline font-semibold">macOS (Universal DMG)</Link> and <Link href="/windows/download" className="text-blue-700 underline font-semibold">Windows (1-Click Installer)</Link>
+          Available for <Link href="/download" className="text-cyan-700 underline font-semibold">macOS 14+ (Universal DMG for Apple Silicon &amp; Intel)</Link>
         </p>
 
         {/* Trust Row */}
@@ -525,7 +525,7 @@ export default function HomePage() {
           </h2>
 
           <p className="text-base text-slate-300 max-w-xl mx-auto">
-            Download DiskWarren natively for macOS or Windows. Discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints in seconds.
+            Download DiskWarren natively for macOS. Discover gigabytes of hidden caches, old simulator runtimes, and local AI checkpoints in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -534,12 +534,12 @@ export default function HomePage() {
               className="px-8 py-3.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-400/25 flex items-center gap-2 cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              <span>Download DiskWarren (macOS &amp; Windows)</span>
+              <span>Download DiskWarren (macOS Universal DMG)</span>
             </Link>
           </div>
 
           <div className="text-xs text-slate-400 pt-2 font-medium">
-            macOS Universal DMG • Windows MSI Installer • 100% Local Privacy
+            macOS Universal DMG • Apple Silicon &amp; Intel • 100% Local Privacy
           </div>
         </div>
       </section>
