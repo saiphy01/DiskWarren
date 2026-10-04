@@ -14,7 +14,6 @@ import {
   Info, 
   HardDrive,
   Laptop,
-  FolderArchive,
   Cpu,
   Zap,
   RotateCcw
@@ -26,9 +25,7 @@ export default function DownloadPage() {
   // macOS Checksum
   const sha256Mac = "f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303";
   // Windows Checksums
-  const sha256WindowsMsi = "1868057cae96ef4665079895a2a5bf55e055b9c2c93db35d36f0f7aabe4d85f9";
   const sha256WindowsExe = "7362425d5a1f624fdc5f4c1692996c7d05d0f18f7a046a01583730f7788706c2";
-  const sha256WindowsZip = "8e6ceb7580cd9974d17b7512a2fcf05aa82f83e0525574493e41e1d245c5d943";
 
   const [copiedMac, setCopiedMac] = useState(false);
   const [copiedWinMsi, setCopiedWinMsi] = useState(false);
@@ -144,33 +141,15 @@ export default function DownloadPage() {
                 </span>
               </div>
 
-              <div className="pt-2 space-y-3">
+              <div className="pt-2">
                 <a
                   href="/downloads/DiskWarren-Setup-1.0.0.exe"
                   download="DiskWarren-Setup-1.0.0.exe"
-                  className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base transition-all shadow-md shadow-blue-600/25 active:scale-95 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base transition-all shadow-md shadow-blue-600/25 active:scale-95 w-full sm:w-auto cursor-pointer"
                 >
                   <Download className="w-5 h-5 stroke-[2.5]" />
                   <span>Download DiskWarren-Setup.exe</span>
                 </a>
-
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
-                  <a
-                    href="/downloads/DiskWarren-Setup-1.0.0.msi"
-                    download="DiskWarren-Setup-1.0.0.msi"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
-                  >
-                    <span>Download Windows Installer (.msi, ~61.8 MB)</span>
-                  </a>
-                  <a
-                    href="/downloads/DiskWarren-v1.0.0-win-x64-portable.zip"
-                    download="DiskWarren-v1.0.0-win-x64-portable.zip"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
-                  >
-                    <FolderArchive className="w-3.5 h-3.5" />
-                    <span>Portable (.zip, ~63.4 MB)</span>
-                  </a>
-                </div>
               </div>
 
               <p className="text-xs text-slate-500">
