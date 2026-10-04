@@ -48,27 +48,100 @@ def render_svg(svg_path: str, size: int) -> Image.Image:
     img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
     return img.resize((size, size), Image.Resampling.LANCZOS)
 
+import struct
+import io
+
+def image_to_ico_dib(img: Image.Image) -> bytes:
+    """Converts a PIL RGBA image to a standard Win32 DIB icon chunk (BITMAPINFOHEADER + BGRA + 1-bit AND mask)."""
+    w, h = img.size
+    img_rgba = img.convert('RGBA')
+    xor_size = w * h * 4
+    and_row_bytes = ((w + 31) // 32) * 4
+    and_size = and_row_bytes * h
+    
+    header = struct.pack(
+        '<IIIHHIIIIII',
+        40,                  # biSize
+        w,                   # biWidth
+        h * 2,               # biHeight (XOR mask + AND mask)
+        1,                   # biPlanes
+        32,                  # biBitCount
+        0,                   # biCompression (BI_RGB)
+        xor_size + and_size, # biSizeImage
+        0, 0, 0, 0           # XPels, YPels, ClrUsed, ClrImportant
+    )
+    
+    xor_data = bytearray()
+    and_data = bytearray()
+    for y in range(h - 1, -1, -1):
+        row_bits = 0
+        bit_pos = 7
+        and_row = bytearray()
+        for x in range(w):
+            r, g, b, a = img_rgba.getpixel((x, y))
+            xor_data.extend([b, g, r, a])
+            if a < 16:
+                row_bits |= (1 << bit_pos)
+            bit_pos -= 1
+            if bit_pos < 0:
+                and_row.append(row_bits)
+                row_bits = 0
+                bit_pos = 7
+        if bit_pos != 7:
+            and_row.append(row_bits)
+        while len(and_row) < and_row_bytes:
+            and_row.append(0)
+        and_data.extend(and_row)
+        
+    return header + xor_data + and_data
+
+def pack_ico(images_dict: dict, output_path: str):
+    """Packs images into an authentic Windows .ico file with DIB for sizes < 256 and PNG for 256."""
+    entries = []
+    blobs = []
+    sorted_sizes = sorted(images_dict.keys())
+    for s in sorted_sizes:
+        im = images_dict[s]
+        if s >= 256:
+            buf = io.BytesIO()
+            im.convert('RGBA').save(buf, format='PNG')
+            blob = buf.getvalue()
+        else:
+            blob = image_to_ico_dib(im)
+        blobs.append(blob)
+        w_b = 0 if s == 256 else s
+        h_b = 0 if s == 256 else s
+        entries.append({'w': w_b, 'h': h_b, 'size': len(blob)})
+    
+    header = struct.pack('<HHH', 0, 1, len(entries))
+    offset = 6 + len(entries) * 16
+    dir_entries = []
+    for e in entries:
+        dir_entries.append(struct.pack('<BBBBHHII', e['w'], e['h'], 0, 0, 1, 32, e['size'], offset))
+        offset += e['size']
+    
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    with open(output_path, 'wb') as f:
+        f.write(header)
+        for de in dir_entries:
+            f.write(de)
+        for blob in blobs:
+            f.write(blob)
+    print(f"Generated multi-resolution Windows ICO ({len(entries)} layers: {sorted_sizes}): {output_path}")
+
 def create_windows_ico(favicon_svg: str, logo_svg: str, output_path: str):
     """Generates a high-precision multi-layer Windows .ico.
     - Small sizes (16, 20, 24, 30, 32): Rendered from favicon.svg for high-contrast taskbar/titlebar legibility.
-    - Large sizes (40, 48, 64, 96, 128, 256): Rendered from logo-icon.svg for rich desktop and Start Menu fidelity.
+    - Medium & Large sizes (40, 48, 64, 96, 128, 256): Rendered from logo-icon.svg for rich desktop and Start Menu fidelity.
     """
+    images = {}
     fav_sizes = [16, 20, 24, 30, 32]
     logo_sizes = [40, 48, 64, 96, 128, 256]
-
-    layers = []
     for s in fav_sizes:
-        layers.append(render_svg(favicon_svg, s))
+        images[s] = render_svg(favicon_svg, s)
     for s in logo_sizes:
-        layers.append(render_svg(logo_svg, s))
-
-    layers_sorted = sorted(layers, key=lambda im: im.size[0])
-    first = layers_sorted[-1]  # 256x256
-    rest = layers_sorted[:-1]
-
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    first.save(output_path, format="ICO", append_images=rest)
-    print(f"Generated multi-resolution Windows ICO ({len(layers)} layers): {output_path}")
+        images[s] = render_svg(logo_svg, s)
+    pack_ico(images, output_path)
 
 def main():
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -96,15 +169,15 @@ def main():
     shutil.copy2(fav_svg, os.path.join(web_dir, "icon.svg"))
 
     # Multi-resolution favicon.ico (16, 24, 32, 48, 64) for web browsers
-    web_fav_layers = [
-        render_svg(fav_svg, 16),
-        render_svg(fav_svg, 24),
-        render_svg(fav_svg, 32),
-        render_svg(fav_svg, 48),
-        render_svg(logo_svg, 64),
-    ]
+    web_fav_dict = {
+        16: render_svg(fav_svg, 16),
+        24: render_svg(fav_svg, 24),
+        32: render_svg(fav_svg, 32),
+        48: render_svg(fav_svg, 48),
+        64: render_svg(logo_svg, 64),
+    }
     web_fav_path = os.path.join(web_dir, "favicon.ico")
-    web_fav_layers[-1].save(web_fav_path, format="ICO", append_images=web_fav_layers[:-1])
+    pack_ico(web_fav_dict, web_fav_path)
     print(f"Generated multi-res Web favicon.ico: {web_fav_path}")
     
     # 3. Windows Application Icons (.ico) across all Windows project directories

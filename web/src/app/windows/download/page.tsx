@@ -19,7 +19,7 @@ import {
 import CodeBlock from '@/components/CodeBlock';
 
 export default function WindowsDownloadPage() {
-  const sha256Installer = "7362425d5a1f624fdc5f4c1692996c7d05d0f18f7a046a01583730f7788706c2";
+  const sha256Installer = "3d59ca353a2f0f76ef65f75ab02e31ee8ad7fca7ff0615311872dae72e2d0add";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
 
   const handleCopyInstaller = () => {
@@ -73,7 +73,7 @@ export default function WindowsDownloadPage() {
               64-bit (x64) &amp; ARM64
             </span>
             <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-              Size: ~62.9 MB EXE
+              Digitally Signed Authenticode
             </span>
           </div>
 
@@ -86,6 +86,22 @@ export default function WindowsDownloadPage() {
               <Download className="w-5 h-5 stroke-[2.5]" />
               <span>Download DiskWarren-Setup.exe</span>
             </a>
+          </div>
+
+          {/* Smart App Control / SmartScreen Help Banner */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs text-slate-600">
+            <div className="flex items-center gap-2 font-semibold text-slate-800">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <span>Windows Smart App Control &amp; SmartScreen Note</span>
+            </div>
+            <p>
+              DiskWarren is digitally signed. If Windows 11 Smart App Control or SmartScreen displays a warning on first launch (common for newly released software before Microsoft builds global cloud download telemetry):
+            </p>
+            <ol className="list-decimal list-inside space-y-1 text-slate-700 font-medium pl-1">
+              <li>Right-click <code className="text-slate-900 font-mono font-semibold">DiskWarren-Setup-1.0.0.exe</code> &rarr; select <strong>Properties</strong>.</li>
+              <li>At the bottom of the <em>General</em> tab, check the box labeled <strong>Unblock</strong> &rarr; click <strong>OK</strong>.</li>
+              <li>Double-click to install smoothly!</li>
+            </ol>
           </div>
 
           <p className="text-xs text-slate-500">

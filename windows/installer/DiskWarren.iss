@@ -31,6 +31,10 @@ WizardStyle=modern
 CloseApplications=force
 RestartApplications=no
 ArchitecturesInstallIn64BitMode=x64compatible
+VersionInfoCompany=DiskWarren Software
+VersionInfoDescription=DiskWarren Setup & Storage Intelligence Installer
+VersionInfoVersion=1.0.0.0
+VersionInfoCopyright=Copyright (C) 2026 DiskWarren Software
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
