@@ -131,6 +131,7 @@ export default function AndroidDownloadPage() {
             <div className="pt-2">
               <a
                 href="/downloads/DiskWarren-v1.0.0.apk"
+                download="DiskWarren-v1.0.0.apk"
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base shadow-lg shadow-emerald-600/25 transition-all active:scale-[0.98] cursor-pointer"
               >
                 <Download className="w-5 h-5" />

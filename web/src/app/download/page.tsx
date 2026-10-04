@@ -27,7 +27,7 @@ export default function DownloadPage() {
   const sha256Mac = "f38922e895d9b1f5cc8c34ca7f46a2c82f364da6540fa19d07adf9769ef64303";
   // Windows Checksums
   const sha256WindowsMsi = "1868057cae96ef4665079895a2a5bf55e055b9c2c93db35d36f0f7aabe4d85f9";
-  const sha256WindowsExe = "a7b196718749b74beb84c9fe06d2852492073cf0d5b625d28b72c823f2d9979f";
+  const sha256WindowsExe = "7362425d5a1f624fdc5f4c1692996c7d05d0f18f7a046a01583730f7788706c2";
   const sha256WindowsZip = "8e6ceb7580cd9974d17b7512a2fcf05aa82f83e0525574493e41e1d245c5d943";
 
   const [copiedMac, setCopiedMac] = useState(false);
@@ -128,7 +128,7 @@ export default function DownloadPage() {
                   Ready to Install • 1-Click Setup
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  DiskWarren Setup Installer (.msi)
+                  DiskWarren Setup (.exe)
                 </h2>
               </div>
               
@@ -140,34 +140,41 @@ export default function DownloadPage() {
                   64-bit (x64) &amp; ARM64
                 </span>
                 <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
-                  Size: ~61.8 MB
+                  Size: ~62.9 MB EXE
                 </span>
               </div>
 
               <div className="pt-2 space-y-3">
                 <a
-                  href="/downloads/DiskWarren-Setup-1.0.0.msi"
-                  download="DiskWarren-Setup-1.0.0.msi"
+                  href="/downloads/DiskWarren-Setup-1.0.0.exe"
+                  download="DiskWarren-Setup-1.0.0.exe"
                   className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base transition-all shadow-md shadow-blue-600/25 active:scale-95 cursor-pointer"
                 >
                   <Download className="w-5 h-5 stroke-[2.5]" />
-                  <span>Download Windows Installer (.msi)</span>
+                  <span>Download DiskWarren-Setup.exe</span>
                 </a>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+                  <a
+                    href="/downloads/DiskWarren-Setup-1.0.0.msi"
+                    download="DiskWarren-Setup-1.0.0.msi"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    <span>Download Windows Installer (.msi, ~61.8 MB)</span>
+                  </a>
                   <a
                     href="/downloads/DiskWarren-v1.0.0-win-x64-portable.zip"
                     download="DiskWarren-v1.0.0-win-x64-portable.zip"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs transition-colors cursor-pointer"
                   >
                     <FolderArchive className="w-3.5 h-3.5" />
-                    <span>Download Portable Edition (.zip, ~63.4 MB)</span>
+                    <span>Portable (.zip, ~63.4 MB)</span>
                   </a>
                 </div>
               </div>
 
               <p className="text-xs text-slate-500">
-                Installation starts immediately upon opening. Automatically creates Desktop and Start Menu shortcuts.
+                Starts installation immediately upon opening. Automatically detects and cleanly uninstalls any previous version before installing.
               </p>
             </div>
 
@@ -176,13 +183,13 @@ export default function DownloadPage() {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-blue-600" />
-                  Cryptographic SHA-256 Checksum Verification (.msi)
+                  Cryptographic SHA-256 Checksum Verification (.exe)
                 </span>
                 <button
-                  onClick={() => handleCopy(sha256WindowsMsi, 'winMsi')}
+                  onClick={() => handleCopy(sha256WindowsExe, 'winExe')}
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
                 >
-                  {copiedWinMsi ? (
+                  {copiedWinExe ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
                       <span className="text-emerald-700 font-semibold">Copied!</span>
@@ -196,10 +203,10 @@ export default function DownloadPage() {
                 </button>
               </div>
               <div className="p-3 bg-slate-900 rounded-lg border border-slate-800 font-mono text-xs text-blue-400 break-all select-all shadow-inner">
-                {sha256WindowsMsi}
+                {sha256WindowsExe}
               </div>
               <p className="text-[11px] text-slate-500 mt-2 font-mono">
-                Verify integrity in PowerShell: <code className="text-blue-800 bg-blue-50 px-1 py-0.5 rounded border border-blue-200/60">Get-FileHash DiskWarren-Setup-1.0.0.msi -Algorithm SHA256</code>
+                Verify integrity in PowerShell: <code className="text-blue-800 bg-blue-50 px-1 py-0.5 rounded border border-blue-200/60">Get-FileHash DiskWarren-Setup-1.0.0.exe -Algorithm SHA256</code>
               </p>
             </div>
           </div>
