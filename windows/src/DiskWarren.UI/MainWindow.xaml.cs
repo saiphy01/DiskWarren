@@ -27,9 +27,21 @@ public partial class MainWindow : Window
         StateChanged += MainWindow_StateChanged;
     }
 
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        MaxHeight = SystemParameters.WorkArea.Height;
+        MaxWidth = SystemParameters.WorkArea.Width;
+    }
+
     private void MainWindow_StateChanged(object? sender, EventArgs e)
     {
         bool isMaximized = WindowState == WindowState.Maximized;
+        if (WindowBorder != null)
+        {
+            WindowBorder.BorderThickness = isMaximized ? new Thickness(0) : new Thickness(1);
+            WindowBorder.CornerRadius = isMaximized ? new CornerRadius(0) : new CornerRadius(8);
+        }
         _ = WebViewControl.CoreWebView2?.ExecuteScriptAsync($"window.onWindowStateChanged?.({(isMaximized ? "true" : "false")});");
     }
 
@@ -135,6 +147,23 @@ public partial class MainWindow : Window
                             await SendInitialDataAsync();
                         });
                     });
+                    break;
+
+                case "cleanCategory":
+                    if (root.TryGetProperty("category", out var catElem))
+                    {
+                        string cat = catElem.GetString() ?? "all";
+                        _ = Task.Run(async () =>
+                        {
+                            var res = await CleanCategoryAsync(cat);
+                            string resJson = JsonSerializer.Serialize(res, JsonOpts);
+                            await Dispatcher.InvokeAsync(async () =>
+                            {
+                                await WebViewControl.CoreWebView2.ExecuteScriptAsync($"window.onCategoryCleanCompleted?.({resJson});");
+                                await SendInitialDataAsync();
+                            });
+                        });
+                    }
                     break;
 
                 case "recycleFile":
@@ -451,6 +480,129 @@ public partial class MainWindow : Window
                 WindowsRecycleBin.MoveToRecycleBin(rule.Path);
             }
         }
+    }
+
+    private static async Task<object> CleanCategoryAsync(string category)
+    {
+        long totalReclaimed = 0;
+        int itemsCleaned = 0;
+
+        await Task.Run(() =>
+        {
+            if (category == "app" || category == "all")
+            {
+                var rules = WindowsDeveloperRules.DiscoverDeveloperAndAICandidates();
+                foreach (var rule in rules.Where(r => r.Domain == "app" && r.Safety == SafetyClassification.LowRisk))
+                {
+                    if (Directory.Exists(rule.Path))
+                    {
+                        try
+                        {
+                            var dir = new DirectoryInfo(rule.Path);
+                            foreach (var f in dir.EnumerateFiles("*", SearchOption.TopDirectoryOnly))
+                            {
+                                try
+                                {
+                                    long sz = f.Length;
+                                    var r = WindowsRecycleBin.MoveToRecycleBin(f.FullName, false, false);
+                                    if (r.Succeeded)
+                                    {
+                                        totalReclaimed += sz;
+                                        itemsCleaned++;
+                                    }
+                                }
+                                catch { }
+                            }
+                            foreach (var d in dir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly))
+                            {
+                                try
+                                {
+                                    var r = WindowsRecycleBin.MoveToRecycleBin(d.FullName, false, false);
+                                    if (r.Succeeded)
+                                    {
+                                        itemsCleaned++;
+                                    }
+                                }
+                                catch { }
+                            }
+                        }
+                        catch { }
+                    }
+                }
+            }
+
+            if (category == "system" || category == "all")
+            {
+                string tempPath = Path.GetTempPath();
+                if (Directory.Exists(tempPath))
+                {
+                    try
+                    {
+                        var tempDir = new DirectoryInfo(tempPath);
+                        foreach (var f in tempDir.EnumerateFiles("*", SearchOption.TopDirectoryOnly))
+                        {
+                            try
+                            {
+                                long sz = f.Length;
+                                var r = WindowsRecycleBin.MoveToRecycleBin(f.FullName, false, false);
+                                if (r.Succeeded)
+                                {
+                                    totalReclaimed += sz;
+                                    itemsCleaned++;
+                                }
+                            }
+                            catch { }
+                        }
+                        foreach (var d in tempDir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly))
+                        {
+                            try
+                            {
+                                var r = WindowsRecycleBin.MoveToRecycleBin(d.FullName, false, false);
+                                if (r.Succeeded)
+                                {
+                                    itemsCleaned++;
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+                }
+
+                string crashDumps = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CrashDumps");
+                if (Directory.Exists(crashDumps))
+                {
+                    try
+                    {
+                        var dumpDir = new DirectoryInfo(crashDumps);
+                        foreach (var f in dumpDir.EnumerateFiles("*", SearchOption.TopDirectoryOnly))
+                        {
+                            try
+                            {
+                                long sz = f.Length;
+                                var r = WindowsRecycleBin.MoveToRecycleBin(f.FullName, false, false);
+                                if (r.Succeeded)
+                                {
+                                    totalReclaimed += sz;
+                                    itemsCleaned++;
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+                }
+            }
+        });
+
+        return new
+        {
+            category,
+            success = true,
+            itemsCleaned,
+            bytesReclaimed = totalReclaimed,
+            formattedSize = VolumeInfo.FormatBytes(totalReclaimed)
+        };
     }
 
     private sealed record TreemapItemDto(

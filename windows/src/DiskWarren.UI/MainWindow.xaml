@@ -6,16 +6,18 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="DiskWarren — Native Storage Intelligence &amp; Safe Cleanup"
-        Height="820" Width="1200"
-        MinHeight="680" MinWidth="980"
+        Height="800" Width="1180"
+        MinHeight="640" MinWidth="940"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Icon="app.ico"
         Background="#F8FAFC">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="8" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
-    <Grid Background="#F8FAFC">
-        <wv2:WebView2 x:Name="WebViewControl" DefaultBackgroundColor="#F8FAFC" />
-    </Grid>
+    <Border x:Name="WindowBorder" BorderThickness="1" BorderBrush="#CBD5E1" CornerRadius="8" SnapsToDevicePixels="True" Background="#F8FAFC">
+        <Grid Background="#F8FAFC" ClipToBounds="True">
+            <wv2:WebView2 x:Name="WebViewControl" DefaultBackgroundColor="#F8FAFC" />
+        </Grid>
+    </Border>
 </Window>
