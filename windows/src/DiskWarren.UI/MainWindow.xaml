@@ -10,7 +10,7 @@
         MinHeight="640" MinWidth="940"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        Icon="app.ico"
+        Icon="pack://application:,,,/app.ico"
         Background="#F8FAFC">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="8" GlassFrameThickness="0" UseAeroCaptionButtons="False" />

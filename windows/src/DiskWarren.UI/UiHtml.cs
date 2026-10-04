@@ -8,6 +8,8 @@ public static class UiHtml
   <meta charset=""UTF-8"">
   <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
   <title>DiskWarren — Storage Intelligence &amp; Safe Cleanup</title>
+  <link rel=""icon"" type=""image/png"" sizes=""32x32"" href=""data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABO0lEQVR42u2XS0oDQRCGv85kQOINVMgdFLJNQBduPITHMB7GQ3gCt0Jc5QKCeANFGDvlYqpDqdM+4vT0ICkoZujH//9UVz8Kmq2gfWvEdJGBXvumwBEw2pD0GVgAN4AY7G9VnupEackXivlldEPHpZnogeqP7g3ePCYiNMx14Kt6WxGweBcfRYSfEx1QAasWyYOvFFuAY8vtgBJYGrWSyAP2EhjaTTAzay6JPXDMAAYqYGLClNrC8k6sgJ3ImZDKnHKuBQjdm1gB2WwrYCvgnwtwDoqi/kZsmHanC3ifIQKuhi0PxuxdXVPuj9+19yoH0iyB1Hda9XDP4/nZp/amCLgMSehsBF6SXEjxJBTlXEfgVhUNOtr6TjnpxZMs+6M0+7O8F4VJttLsJ8XpIbC7YcY/AXe/KU47L8/fAJ/AOgn4cZ3/AAAAAElFTkSuQmCC"">
+  <link rel=""apple-touch-icon"" href=""data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABO0lEQVR42u2XS0oDQRCGv85kQOINVMgdFLJNQBduPITHMB7GQ3gCt0Jc5QKCeANFGDvlYqpDqdM+4vT0ICkoZujH//9UVz8Kmq2gfWvEdJGBXvumwBEw2pD0GVgAN4AY7G9VnupEackXivlldEPHpZnogeqP7g3ePCYiNMx14Kt6WxGweBcfRYSfEx1QAasWyYOvFFuAY8vtgBJYGrWSyAP2EhjaTTAzay6JPXDMAAYqYGLClNrC8k6sgJ3ImZDKnHKuBQjdm1gB2WwrYCvgnwtwDoqi/kZsmHanC3ifIQKuhi0PxuxdXVPuj9+19yoH0iyB1Hda9XDP4/nZp/amCLgMSehsBF6SXEjxJBTlXEfgVhUNOtr6TjnpxZMs+6M0+7O8F4VJttLsJ8XpIbC7YcY/AXe/KU47L8/fAJ/AOgn4cZ3/AAAAAElFTkSuQmCC"">
   <style>
     :root {
       --bg: #F8FAFC;

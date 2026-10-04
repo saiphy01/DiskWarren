@@ -132,10 +132,7 @@ public static class InstallerLogic
             shortcut.TargetPath = targetPath;
             shortcut.WorkingDirectory = Path.GetDirectoryName(targetPath);
             shortcut.Description = description;
-            if (File.Exists(iconPath))
-            {
-                shortcut.IconLocation = iconPath + ",0";
-            }
+            shortcut.IconLocation = File.Exists(iconPath) ? (iconPath + ",0") : (targetPath + ",0");
             shortcut.Save();
         }
         catch (Exception ex)

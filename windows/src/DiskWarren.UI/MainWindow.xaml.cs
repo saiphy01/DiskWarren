@@ -1,7 +1,9 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using DiskWarren.Core.Duplicates;
 using DiskWarren.Core.Licensing;
 using DiskWarren.Core.Models;
@@ -14,6 +16,12 @@ namespace DiskWarren.UI;
 
 public partial class MainWindow : Window
 {
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    private static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -32,6 +40,26 @@ public partial class MainWindow : Window
         base.OnSourceInitialized(e);
         MaxHeight = SystemParameters.WorkArea.Height;
         MaxWidth = SystemParameters.WorkArea.Width;
+
+        try
+        {
+            // Explicitly set window icon from pack resource
+            Icon = BitmapFrame.Create(new Uri("pack://application:,,,/app.ico"));
+
+            var hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            if (hwnd != IntPtr.Zero)
+            {
+                string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app.ico");
+                if (File.Exists(iconPath))
+                {
+                    IntPtr hIconBig = LoadImage(IntPtr.Zero, iconPath, 1 /* IMAGE_ICON */, 48, 48, 0x0010 /* LR_LOADFROMFILE */);
+                    IntPtr hIconSmall = LoadImage(IntPtr.Zero, iconPath, 1 /* IMAGE_ICON */, 16, 16, 0x0010 /* LR_LOADFROMFILE */);
+                    if (hIconBig != IntPtr.Zero) SendMessage(hwnd, 0x0080 /* WM_SETICON */, (IntPtr)1 /* ICON_BIG */, hIconBig);
+                    if (hIconSmall != IntPtr.Zero) SendMessage(hwnd, 0x0080 /* WM_SETICON */, (IntPtr)0 /* ICON_SMALL */, hIconSmall);
+                }
+            }
+        }
+        catch { }
     }
 
     private void MainWindow_StateChanged(object? sender, EventArgs e)
