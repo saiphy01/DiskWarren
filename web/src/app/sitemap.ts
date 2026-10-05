@@ -42,6 +42,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ios/privacy', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/ios/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
 
+    // DiskWarren Recover Standalone Website (recovery.diskwarren.com)
+    { path: '/recovery', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/recovery/download', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/recovery/pricing', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/recovery/safety', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/recovery/features', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/recovery/faq', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/recovery/privacy', priority: 0.8, changeFrequency: 'monthly' as const },
+    { path: '/recovery/system-requirements', priority: 0.75, changeFrequency: 'monthly' as const },
+
     // Primary SEO Capabilities (Mac)
     { path: '/mac-storage-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/mac-disk-space-analyzer', priority: 0.9, changeFrequency: 'weekly' as const },

@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Helper to rewrite paths for subdomains
-  const getSubdomainRewrite = (platformPrefix: 'windows' | 'android' | 'ios') => {
+  const getSubdomainRewrite = (platformPrefix: 'windows' | 'android' | 'ios' | 'recovery') => {
     // If the path already has the prefix (e.g., /windows or /windows/download), don't double-prefix
     if (pathname.startsWith(`/${platformPrefix}`)) {
       return NextResponse.next();
@@ -30,6 +30,11 @@ export function middleware(request: NextRequest) {
     // Rewrite subpages (e.g., /download -> /windows/download)
     return NextResponse.rewrite(new URL(`/${platformPrefix}${pathname}`, request.url));
   };
+
+  // Recovery Subdomain: recovery.diskwarren.com
+  if (host.startsWith('recovery.diskwarren.com') || host.startsWith('recovery.localhost')) {
+    return getSubdomainRewrite('recovery');
+  }
 
   // Windows Subdomain: windows.diskwarren.com
   if (host.startsWith('windows.diskwarren.com') || host.startsWith('windows.localhost')) {

@@ -17,7 +17,7 @@ import {
   Check
 } from 'lucide-react';
 
-type Platform = 'mac' | 'windows' | 'android' | 'ios';
+type Platform = 'mac' | 'windows' | 'android' | 'ios' | 'recovery';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -29,6 +29,11 @@ export default function Navbar() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const host = window.location.hostname;
+      if (host.startsWith('recovery.')) {
+        setPlatform('recovery');
+        setIsSubdomain(true);
+        return;
+      }
       if (host.startsWith('windows.')) {
         setPlatform('windows');
         setIsSubdomain(true);
@@ -46,7 +51,10 @@ export default function Navbar() {
       }
     }
 
-    if (pathname.startsWith('/windows')) {
+    if (pathname.startsWith('/recovery')) {
+      setPlatform('recovery');
+      setIsSubdomain(false);
+    } else if (pathname.startsWith('/windows')) {
       setPlatform('windows');
       setIsSubdomain(false);
     } else if (pathname.startsWith('/android')) {
@@ -84,6 +92,18 @@ export default function Navbar() {
   // Platform-specific styling & labels
   const getBrandDetails = () => {
     switch (platform) {
+      case 'recovery':
+        return {
+          title: 'DiskWarren',
+          badge: 'Recover',
+          accentColor: 'text-teal-600',
+          gradientBg: 'from-teal-600 to-emerald-600',
+          shadowColor: 'shadow-teal-500/20',
+          ctaBg: 'bg-teal-600 hover:bg-teal-500',
+          ctaShadow: 'shadow-teal-600/25',
+          ctaLabel: 'Download Scanner',
+          icon: <ShieldCheck className="w-5 h-5 text-white stroke-[2.5]" />
+        };
       case 'windows':
         return {
           title: 'DiskWarren',
@@ -231,6 +251,22 @@ export default function Navbar() {
                   <span className="text-[11px] text-slate-500 block">PhotoKit &amp; ProRes video</span>
                 </div>
               </Link>
+
+              <Link
+                href="https://recovery.diskwarren.com/"
+                className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors ${platform === 'recovery' ? 'bg-teal-50/70 border border-teal-100' : 'hover:bg-slate-50'}`}
+              >
+                <div className="w-8 h-8 rounded-md bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div className="flex-grow">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-900 block">DiskWarren Recover</span>
+                    {platform === 'recovery' && <Check className="w-3.5 h-3.5 text-teal-600" />}
+                  </div>
+                  <span className="text-[11px] text-slate-500 block">Safe read-only data recovery</span>
+                </div>
+              </Link>
             </div>
           </div>
 
@@ -306,6 +342,13 @@ export default function Navbar() {
                 className={`p-2.5 rounded-lg text-xs font-bold flex items-center gap-2 ${platform === 'ios' ? 'bg-purple-50 text-purple-900 border border-purple-200' : 'bg-slate-50 text-slate-800'}`}
               >
                 <Smartphone className="w-3.5 h-3.5 text-purple-600" /> iPhone
+              </Link>
+              <Link 
+                href="https://recovery.diskwarren.com/" 
+                onClick={closeMobileMenu} 
+                className={`col-span-2 p-2.5 rounded-lg text-xs font-bold flex items-center gap-2 ${platform === 'recovery' ? 'bg-teal-50 text-teal-900 border border-teal-200' : 'bg-slate-50 text-slate-800'}`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-teal-600" /> DiskWarren Recover (Safe Data Restore)
               </Link>
             </div>
           </div>

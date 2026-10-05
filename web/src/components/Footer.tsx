@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HardDrive, ShieldCheck, Lock, Laptop, Smartphone } from 'lucide-react';
 
-type Platform = 'mac' | 'windows' | 'android' | 'ios';
+type Platform = 'mac' | 'windows' | 'android' | 'ios' | 'recovery';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -15,6 +15,11 @@ export default function Footer() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const host = window.location.hostname;
+      if (host.startsWith('recovery.')) {
+        setPlatform('recovery');
+        setIsSubdomain(true);
+        return;
+      }
       if (host.startsWith('windows.')) {
         setPlatform('windows');
         setIsSubdomain(true);
@@ -32,7 +37,10 @@ export default function Footer() {
       }
     }
 
-    if (pathname.startsWith('/windows')) {
+    if (pathname.startsWith('/recovery')) {
+      setPlatform('recovery');
+      setIsSubdomain(false);
+    } else if (pathname.startsWith('/windows')) {
       setPlatform('windows');
       setIsSubdomain(false);
     } else if (pathname.startsWith('/android')) {
@@ -56,6 +64,20 @@ export default function Footer() {
 
   const getPlatformDetails = () => {
     switch (platform) {
+      case 'recovery':
+        return {
+          title: 'DiskWarren Recover',
+          description: 'Professional Windows-first data recovery without forensic complexity. 100% read-only block scanning, partition detection, raw signature carving, and SHA-256 verification.',
+          badge: 'Data Recovery',
+          features: [
+            { label: 'Read-Only Block Engine', url: getUrl('safety') },
+            { label: 'Evidence Health Scoring', url: getUrl('features') },
+            { label: 'NTFS, FAT32 & exFAT', url: getUrl('features') },
+            { label: 'Deep Signature Carving', url: getUrl('features') },
+            { label: 'Destination Safety Checks', url: getUrl('safety') },
+            { label: 'Raw Disk Imaging', url: getUrl('features') },
+          ]
+        };
       case 'windows':
         return {
           title: 'DiskWarren for Windows',
@@ -161,6 +183,11 @@ export default function Footer() {
               <li>
                 <Link href="https://ios.diskwarren.com/" className={`transition-colors font-medium ${platform === 'ios' ? 'text-purple-600 font-bold' : 'hover:text-slate-900'}`}>
                   iPhone &amp; iPad Intelligence
+                </Link>
+              </li>
+              <li>
+                <Link href="https://recovery.diskwarren.com/" className={`transition-colors font-medium ${platform === 'recovery' ? 'text-teal-600 font-bold' : 'hover:text-slate-900'}`}>
+                  DiskWarren Recover (Data Restore)
                 </Link>
               </li>
             </ul>
