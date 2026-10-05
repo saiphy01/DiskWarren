@@ -23,7 +23,10 @@ obj/
 .vs/
 windows/publish/
 windows/publish_ui/
+windows/artifacts/
 windows/src/DiskWarren.Setup/payload.zip
+windows/src/DiskWarren.Recover.Setup/payload.zip
+*.log
 *.wixpdb
 
 # Android / Gradle / Java
