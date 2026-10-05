@@ -446,12 +446,12 @@ public static class UiHtml
     </div>
 
     <div class=""form-group"">
-      <label>Destination Directory</label>
+      <label>Destination Directory (Must be on a different drive)</label>
       <div style=""display:flex;gap:8px;"">
-        <input type=""text"" id=""destPathInput"" style=""flex:1;"" placeholder=""D:\RecoveredFiles or E:\DataBackup"" oninput=""validateDestPath(this.value)"" />
-        <button class=""btn-secondary"" onclick=""browseFolder()"">Browse...</button>
+        <input type=""text"" id=""destPathInput"" style=""flex:1;"" placeholder=""Click Browse to select destination folder on another drive..."" oninput=""validateDestPath(this.value)"" />
+        <button class=""btn-primary"" style=""padding:8px 16px;font-size:12px;white-space:nowrap;"" onclick=""browseFolder()"">Browse Folder...</button>
       </div>
-      <span style=""font-size:11px;color:var(--text-subtle);margin-top:4px;"" id=""destDriveHelp"">Target must be on a separate physical or logical volume.</span>
+      <span style=""font-size:11px;color:var(--text-subtle);margin-top:4px;"" id=""destDriveHelp"">Always select a separate drive (e.g. C: or external disk) to prevent overwriting deleted data.</span>
     </div>
 
     <div id=""exportProgressSection"" style=""display:none;"">
@@ -549,8 +549,11 @@ public static class UiHtml
         document.getElementById('editionBadge').innerText = msg.tier + ' Edition';
       }
     } else if (msg.type === 'folderSelected') {
-      document.getElementById('destPathInput').value = msg.path;
-      validateDestPath(msg.path);
+      if (msg.path) {
+        document.getElementById('exportModal').classList.add('active');
+        document.getElementById('destPathInput').value = msg.path;
+        validateDestPath(msg.path);
+      }
     }
   };
 
@@ -794,9 +797,27 @@ public static class UiHtml
   }
 
   function openExportModal() {
+    const selected = allCandidates.filter(c => c.isSelected);
+    if (selected.length === 0) {
+      alert('Please select at least one file to recover.');
+      return;
+    }
+
     document.getElementById('exportModal').classList.add('active');
-    document.getElementById('destPathInput').value = 'D:\\RecoveredFiles';
-    validateDestPath('D:\\RecoveredFiles');
+    document.getElementById('btnConfirmExport').disabled = true;
+    document.getElementById('sameDriveWarning').style.display = 'none';
+
+    const input = document.getElementById('destPathInput');
+    const help = document.getElementById('destDriveHelp');
+
+    if (input.value && input.value.trim().length > 0) {
+      validateDestPath(input.value.trim());
+    } else {
+      help.innerText = 'Please select a destination folder on a different drive to protect recovered data.';
+      help.style.color = 'var(--text-subtle)';
+      // Always prompt user with native folder dialog
+      browseFolder();
+    }
   }
 
   function closeExportModal() {

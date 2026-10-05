@@ -199,20 +199,23 @@ public partial class MainWindow : Window
 
     private void HandleBrowseFolder()
     {
-        var dialog = new System.Windows.Forms.FolderBrowserDialog
+        Dispatcher.Invoke(() =>
         {
-            Description = "Select Recovery Destination Directory (Must be on a separate drive)",
-            UseDescriptionForTitle = true
-        };
-
-        if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
-            SendToWeb(new
+            var dialog = new Microsoft.Win32.OpenFolderDialog
             {
-                type = "folderSelected",
-                path = dialog.SelectedPath
-            });
-        }
+                Title = "Select Destination Folder to Save Recovered Files (Must be on a separate drive)",
+                Multiselect = false
+            };
+
+            if (dialog.ShowDialog(this) == true)
+            {
+                SendToWeb(new
+                {
+                    type = "folderSelected",
+                    path = dialog.FolderName
+                });
+            }
+        });
     }
 
     private async void HandleExportFiles(JsonElement root)
