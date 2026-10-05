@@ -64,4 +64,38 @@ public class RecoverEngineTests
 
         Assert.NotEmpty(results);
     }
+
+    [Fact]
+    public async Task TestRecoveryScanner_ScansSDCard_CarvesRealFiles()
+    {
+        var drives = DriveEnumerator.EnumerateDrives();
+        var sdCard = drives.FirstOrDefault(d => d.DeviceId.Equals("D:", StringComparison.OrdinalIgnoreCase));
+        if (sdCard == null)
+        {
+            _output.WriteLine("D: drive not present, skipping SD card test");
+            return;
+        }
+
+        var scanner = new RecoveryScanner();
+        var options = new ScanOptions
+        {
+            TargetDrive = sdCard.DeviceId,
+            Mode = ScanMode.QuickScan
+        };
+
+        var progress = new Progress<ScanProgressInfo>(p =>
+        {
+            _output.WriteLine($"[SD Card {p.Percent}%] {p.Stage} - Found: {p.FoundCount}");
+        });
+
+        var results = await scanner.ExecuteScanAsync(sdCard, options, progress, CancellationToken.None);
+
+        _output.WriteLine($"Total Candidates Discovered on SD Card: {results.Count}");
+        foreach (var candidate in results.Take(15))
+        {
+            _output.WriteLine($" - [{candidate.Category}] {candidate.FileName} ({candidate.SizeDisplay}) Offset=0x{candidate.ClusterOffset:X8} Sig={candidate.DetectedSignature}");
+        }
+
+        Assert.NotEmpty(results);
+    }
 }

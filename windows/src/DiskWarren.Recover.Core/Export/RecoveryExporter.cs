@@ -77,7 +77,30 @@ public static class RecoveryExporter
 
             try
             {
-                if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
+                if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("RAW:"))
+                {
+                    var parts = cand.InternalRefPath.Split(':');
+                    string driveLetter = parts[1];
+                    long rawOffset = long.Parse(parts[2]);
+                    long rawSize = long.Parse(parts[3]);
+
+                    string rawDevPath = $@"\\.\{driveLetter}:";
+                    using var rawStream = new FileStream(rawDevPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    rawStream.Seek(rawOffset, SeekOrigin.Begin);
+
+                    using var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None);
+                    byte[] buf = new byte[64 * 1024];
+                    long remaining = rawSize;
+                    while (remaining > 0)
+                    {
+                        int toRead = (int)Math.Min(buf.Length, remaining);
+                        int read = rawStream.Read(buf, 0, toRead);
+                        if (read <= 0) break;
+                        outFs.Write(buf, 0, read);
+                        remaining -= read;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
                 {
                     File.Copy(cand.InternalRefPath, destFile, overwrite: true);
                 }

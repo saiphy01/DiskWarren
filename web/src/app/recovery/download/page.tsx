@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function RecoveryDownloadPage() {
-  const sha256Installer = "f526bbca444ec1af059fb63824ce033f04835e1ad3872a26b7f479d27c9b44c6";
+  const sha256Installer = "86a8a66798dd0e01ff94906a3f077064a9a94a033b2bb690e92d43e138e0981b";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
 
   const handleCopyInstaller = () => {
