@@ -55,6 +55,10 @@ public partial class MainWindow : Window
             WebViewControl.CoreWebView2.Settings.IsZoomControlEnabled = false;
 
             WebViewControl.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+            WebViewControl.CoreWebView2.NavigationCompleted += (s, ev) =>
+            {
+                HandleGetDrives();
+            };
             WebViewControl.NavigateToString(UiHtml.GetHtml());
         }
         catch (Exception ex)
@@ -277,11 +281,18 @@ public partial class MainWindow : Window
 
     private void SendToWeb(object data)
     {
-        try
+        Dispatcher.InvokeAsync(async () =>
         {
-            string json = JsonSerializer.Serialize(data, JsonOpts);
-            WebViewControl.CoreWebView2.PostWebMessageAsJson(json);
-        }
-        catch { }
+            try
+            {
+                string json = JsonSerializer.Serialize(data, JsonOpts);
+                if (WebViewControl?.CoreWebView2 != null)
+                {
+                    WebViewControl.CoreWebView2.PostWebMessageAsJson(json);
+                    await WebViewControl.CoreWebView2.ExecuteScriptAsync($"if (window.handleHostMessage) window.handleHostMessage({json});");
+                }
+            }
+            catch { }
+        });
     }
 }

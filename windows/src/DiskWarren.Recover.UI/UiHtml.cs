@@ -508,16 +508,26 @@ public static class UiHtml
   let searchQuery = '';
   let selectedCandidate = null;
 
+  function requestDrives() {
+    try {
+      if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ action: 'getDrives' });
+      }
+    } catch (e) {}
+  }
+
   // Init
   window.addEventListener('DOMContentLoaded', () => {
-    window.chrome.webview.postMessage({ action: 'getDrives' });
+    requestDrives();
+    setTimeout(requestDrives, 300);
+    setTimeout(requestDrives, 1000);
   });
 
-  // Handle messages from C# host
-  window.chrome.webview.addEventListener('message', event => {
-    const msg = event.data;
+  // Dual-channel message handler
+  window.handleHostMessage = function(msg) {
+    if (!msg) return;
     if (msg.type === 'drivesLoaded') {
-      drives = msg.drives;
+      drives = msg.drives || [];
       renderDrives();
     } else if (msg.type === 'scanProgress') {
       updateScanProgress(msg.progress);
@@ -542,7 +552,26 @@ public static class UiHtml
       document.getElementById('destPathInput').value = msg.path;
       validateDestPath(msg.path);
     }
-  });
+  };
+
+  function setupWebviewListener() {
+    if (window.chrome && window.chrome.webview) {
+      window.chrome.webview.addEventListener('message', event => {
+        window.handleHostMessage(event.data);
+      });
+      return true;
+    }
+    return false;
+  }
+
+  if (!setupWebviewListener()) {
+    const chkTimer = setInterval(() => {
+      if (setupWebviewListener()) {
+        clearInterval(chkTimer);
+        requestDrives();
+      }
+    }, 100);
+  }
 
   function renderDrives() {
     const grid = document.getElementById('driveGrid');

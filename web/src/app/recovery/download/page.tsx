@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function RecoveryDownloadPage() {
-  const sha256Installer = "ec545f611905c2c0b73201ef64fa0fc2150f2e3f0d1b23321f2e2219d0c29bb8";
+  const sha256Installer = "f526bbca444ec1af059fb63824ce033f04835e1ad3872a26b7f479d27c9b44c6";
   const [copiedInstaller, setCopiedInstaller] = useState(false);
 
   const handleCopyInstaller = () => {
@@ -59,7 +59,7 @@ export default function RecoveryDownloadPage() {
               DiskWarrenRecover-Setup.exe
             </h2>
             <p className="text-sm text-slate-500 mt-2 font-mono">
-              Version 1.0.0 • Windows 10 &amp; 11 (x64) • Size: 63.1 MB
+              Version 1.0.0 • Windows 10 &amp; 11 (x64) • Size: 67.0 MB
             </p>
           </div>
 
