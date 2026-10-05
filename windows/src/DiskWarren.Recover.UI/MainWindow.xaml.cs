@@ -254,7 +254,7 @@ public partial class MainWindow : Window
 
         try
         {
-            var report = await RecoveryExporter.ExportCandidatesAsync(sourceDrive, destPath, toExport, progress);
+            var report = await Task.Run(() => RecoveryExporter.ExportCandidatesAsync(sourceDrive, destPath, toExport, progress));
             _licenseState.BytesRecoveredTotal += report.TotalBytesRecovered;
 
             SendToWeb(new
@@ -284,15 +284,14 @@ public partial class MainWindow : Window
 
     private void SendToWeb(object data)
     {
-        Dispatcher.InvokeAsync(async () =>
+        Dispatcher.InvokeAsync(() =>
         {
             try
             {
-                string json = JsonSerializer.Serialize(data, JsonOpts);
                 if (WebViewControl?.CoreWebView2 != null)
                 {
+                    string json = JsonSerializer.Serialize(data, JsonOpts);
                     WebViewControl.CoreWebView2.PostWebMessageAsJson(json);
-                    await WebViewControl.CoreWebView2.ExecuteScriptAsync($"if (window.handleHostMessage) window.handleHostMessage({json});");
                 }
             }
             catch { }

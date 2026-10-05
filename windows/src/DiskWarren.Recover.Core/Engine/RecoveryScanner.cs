@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DiskWarren.Recover.Core.Models;
 using DiskWarren.Recover.Core.Scoring;
+using DiskWarren.Recover.Core.Export;
 
 namespace DiskWarren.Recover.Core.Engine;
 
@@ -143,23 +144,57 @@ public class RecoveryScanner
         // 2. Scan Directory Tree of the target drive itself (including DCIM, LOST.DIR, .Trashes)
         try
         {
-            var targetDirInfo = new DirectoryInfo(drive.RootPath);
-            if (targetDirInfo.Exists)
+            var probeDirs = new List<string>();
+            if (drive.IsSystem || drive.DeviceId.Equals("C:", StringComparison.OrdinalIgnoreCase))
             {
-                var localFiles = targetDirInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-                    .Where(f => !f.Attributes.HasFlag(FileAttributes.System) || f.Length > 1024)
-                    .Take(40);
-
-                foreach (var f in localFiles)
+                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (!string.IsNullOrEmpty(userProfile))
                 {
-                    if (cancellationToken.IsCancellationRequested) break;
-                    string ext = f.Extension.ToLowerInvariant();
-                    var cat = Categorize(ext);
-                    if (!options.Categories.Contains(cat)) continue;
-                    if (f.Length <= 0) continue;
-                    if (!seenNames.Add(f.Name)) continue;
+                    probeDirs.Add(Path.Combine(userProfile, "Downloads"));
+                    probeDirs.Add(Path.Combine(userProfile, "Pictures"));
+                    probeDirs.Add(Path.Combine(userProfile, "Videos"));
+                    probeDirs.Add(Path.Combine(userProfile, "Documents"));
+                }
+            }
+            else
+            {
+                probeDirs.Add(drive.RootPath);
+                probeDirs.Add(Path.Combine(drive.RootPath, "DCIM"));
+                probeDirs.Add(Path.Combine(drive.RootPath, "LOST.DIR"));
+                probeDirs.Add(Path.Combine(drive.RootPath, ".Trashes"));
+            }
 
-                    long offset = 0x00100000 + (results.Count * 0x00010000);
+            var localFiles = new List<FileInfo>();
+            foreach (var pDir in probeDirs)
+            {
+                if (localFiles.Count >= 40) break;
+                if (Directory.Exists(pDir))
+                {
+                    try
+                    {
+                        var di = new DirectoryInfo(pDir);
+                        foreach (var f in di.EnumerateFiles("*", SearchOption.TopDirectoryOnly))
+                        {
+                            if (!f.Attributes.HasFlag(FileAttributes.System) && f.Length > 0)
+                            {
+                                localFiles.Add(f);
+                                if (localFiles.Count >= 40) break;
+                            }
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+            foreach (var f in localFiles)
+            {
+                if (cancellationToken.IsCancellationRequested) break;
+                string ext = f.Extension.ToLowerInvariant();
+                var cat = Categorize(ext);
+                if (!options.Categories.Contains(cat)) continue;
+                if (!seenNames.Add(f.Name)) continue;
+
+                long offset = 0x00100000 + (results.Count * 0x00010000);
                     var (score, rating, tokens) = EvidenceConfidenceEngine.Evaluate(
                         hasMetadataRecord: true,
                         hasValidHeader: true,
@@ -191,7 +226,6 @@ public class RecoveryScanner
                         SourcePhysicalDisk = drive.DeviceId
                     });
                 }
-            }
         }
         catch { }
 
@@ -236,12 +270,12 @@ public class RecoveryScanner
         string devicePath = @"\\.\" + drive.DeviceId.TrimEnd('\\');
         try
         {
-            using var rawStream = new FileStream(devicePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 512 * 1024);
+            using var rawStream = new FileStream(devicePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 512 * 1024, useAsync: true);
             
-            // Scan up to 2 GB for SD cards or 4 GB for Deep Carve
+            // Scan up to 512 MB for QuickScan or 4 GB for Deep Carve
             long maxBytesToScan = options.Mode == ScanMode.DeepCarve 
                 ? Math.Min(drive.TotalBytes > 0 ? drive.TotalBytes : 4L * 1024 * 1024 * 1024, 4L * 1024 * 1024 * 1024)
-                : Math.Min(drive.TotalBytes > 0 ? drive.TotalBytes : 2L * 1024 * 1024 * 1024, 2L * 1024 * 1024 * 1024);
+                : Math.Min(drive.TotalBytes > 0 ? drive.TotalBytes : 512L * 1024 * 1024, 512L * 1024 * 1024);
 
             byte[] buffer = new byte[512 * 1024];
             long currentOffset = 0;
@@ -251,6 +285,7 @@ public class RecoveryScanner
             {
                 if (cancellationToken.IsCancellationRequested) break;
 
+                rawStream.Seek(currentOffset, SeekOrigin.Begin);
                 int read = await rawStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
                 if (read <= 0) break;
 
@@ -307,16 +342,15 @@ public class RecoveryScanner
                         if (!seenOffsets.Add(absOffset)) continue;
 
                         string brand = Encoding.ASCII.GetString(buffer, i + 8, 4).Trim();
-                        long estimatedSize = 25L * 1024 * 1024; // 25 MB video estimate
-                        
-                        // Parse MP4 size from mdat header if available
+                        long estimatedSize = 25L * 1024 * 1024;
                         if (i + 40 < read && buffer[i + 28] == 0x6D && buffer[i + 29] == 0x64 && buffer[i + 30] == 0x61 && buffer[i + 31] == 0x74)
                         {
-                            long extSize = BitConverter.ToInt64(new byte[] {
-                                buffer[i + 39], buffer[i + 38], buffer[i + 37], buffer[i + 36],
-                                buffer[i + 35], buffer[i + 34], buffer[i + 33], buffer[i + 32]
-                            }, 0);
-                            if (extSize > 0 && extSize < 4L * 1024 * 1024 * 1024) estimatedSize = extSize + 24;
+                            long extSize = (long)(((ulong)buffer[i + 32] << 56) | ((ulong)buffer[i + 33] << 48) | ((ulong)buffer[i + 34] << 40) | ((ulong)buffer[i + 35] << 32) |
+                                                  ((ulong)buffer[i + 36] << 24) | ((ulong)buffer[i + 37] << 16) | ((ulong)buffer[i + 38] << 8) | (ulong)buffer[i + 39]);
+                            if (extSize > 0 && extSize < 8L * 1024 * 1024 * 1024)
+                            {
+                                estimatedSize = extSize + 24 + 1024 * 1024; // ftyp + mdat + moov buffer
+                            }
                         }
 
                         string fileName = $"Video_Recording_{absOffset:X8}.mp4";

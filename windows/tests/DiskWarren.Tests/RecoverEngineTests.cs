@@ -98,4 +98,61 @@ public class RecoverEngineTests
 
         Assert.NotEmpty(results);
     }
+
+    [Fact]
+    public async Task TestRecoveryExporter_Mp4Carve_ExtractsPlayableMoovAtom()
+    {
+        var drives = DriveEnumerator.EnumerateDrives();
+        var sdCard = drives.FirstOrDefault(d => d.DeviceId.Equals("D:", StringComparison.OrdinalIgnoreCase));
+        if (sdCard == null) return;
+
+        using var rawStream = new FileStream(@"\\.\D:", FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024, useAsync: true);
+        long mp4ExactSize = await DiskWarren.Recover.Core.Export.RecoveryExporter.DetermineMp4ExactSizeAsync(rawStream, 0x01060000);
+
+        _output.WriteLine($"Exact MP4 size with moov atom: {mp4ExactSize} bytes");
+        Assert.Equal(19111179, mp4ExactSize);
+    }
+
+    [Fact]
+    public async Task TestRecoveryExporter_FullExportSession_Succeeds()
+    {
+        var drives = DriveEnumerator.EnumerateDrives();
+        var sdCard = drives.FirstOrDefault(d => d.DeviceId.Equals("D:", StringComparison.OrdinalIgnoreCase));
+        if (sdCard == null) return;
+
+        string tempDest = Path.Combine(Path.GetTempPath(), "DiskWarren_ExportTest_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var candidate = new RecoveryCandidate
+            {
+                Id = "test-mp4-1",
+                FileName = "Export_Test_Video.mp4",
+                Extension = ".mp4",
+                Category = FileCategory.AudioVideo,
+                SizeBytes = 19111179,
+                InternalRefPath = "RAW:D:17170432:19111179"
+            };
+
+            var progress = new Progress<(int Percent, string CurrentFile)>(p =>
+            {
+                _output.WriteLine($"[Export {p.Percent}%] {p.CurrentFile}");
+            });
+
+            var report = await DiskWarren.Recover.Core.Export.RecoveryExporter.ExportCandidatesAsync(
+                "D:",
+                tempDest,
+                new List<RecoveryCandidate> { candidate },
+                progress);
+
+            Assert.Equal(1, report.SuccessfulCount);
+            Assert.True(File.Exists(Path.Combine(tempDest, "Export_Test_Video.mp4")));
+            Assert.Equal(19111179, new FileInfo(Path.Combine(tempDest, "Export_Test_Video.mp4")).Length);
+            Assert.False(string.IsNullOrEmpty(report.Files[0].Sha256Checksum));
+            _output.WriteLine($"SHA256: {report.Files[0].Sha256Checksum}");
+        }
+        finally
+        {
+            try { if (Directory.Exists(tempDest)) Directory.Delete(tempDest, true); } catch { }
+        }
+    }
 }

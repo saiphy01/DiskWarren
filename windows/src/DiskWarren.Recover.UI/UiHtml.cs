@@ -538,11 +538,17 @@ public static class UiHtml
       handleDestValidationResult(msg.result);
     } else if (msg.type === 'exportProgress') {
       document.getElementById('exportProgressSection').style.display = 'block';
-      document.getElementById('exportProgressBar').style.width = msg.percent + '%';
-      document.getElementById('exportCurrentFile').innerText = 'Writing & SHA-256 verifying: ' + msg.file;
+      document.getElementById('exportProgressBar').style.width = Math.min(100, Math.max(0, msg.percent)) + '%';
+      document.getElementById('exportCurrentFile').innerText = msg.file;
     } else if (msg.type === 'exportComplete') {
-      alert('Recovery successfully completed!\n' + msg.report.successfulCount + ' files exported with SHA-256 verification.\nAudit report saved to destination folder.');
-      closeExportModal();
+      document.getElementById('exportProgressBar').style.width = '100%';
+      document.getElementById('exportCurrentFile').innerText = 'Recovery Complete: ' + msg.report.successfulCount + ' files exported.';
+      const btn = document.getElementById('btnConfirmExport');
+      if (btn) btn.innerText = 'Recovered!';
+      setTimeout(() => {
+        alert('Recovery successfully completed!\n' + msg.report.successfulCount + ' files exported with SHA-256 verification.\nAudit report saved to destination folder.');
+        closeExportModal();
+      }, 400);
     } else if (msg.type === 'licenseResult') {
       document.getElementById('licenseMsg').innerText = msg.message;
       if (msg.success) {
@@ -823,6 +829,11 @@ public static class UiHtml
   function closeExportModal() {
     document.getElementById('exportModal').classList.remove('active');
     document.getElementById('exportProgressSection').style.display = 'none';
+    const btn = document.getElementById('btnConfirmExport');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Verify &amp; Recover</span>';
+    }
   }
 
   function validateDestPath(path) {
@@ -860,6 +871,16 @@ public static class UiHtml
   function executeExport() {
     const path = document.getElementById('destPathInput').value;
     const selectedIds = allCandidates.filter(c => c.isSelected).map(c => c.id);
+
+    // Immediately show responsive extraction progress
+    document.getElementById('exportProgressSection').style.display = 'block';
+    document.getElementById('exportProgressBar').style.width = '2%';
+    document.getElementById('exportCurrentFile').innerText = 'Starting non-blocking recovery transfer...';
+
+    const btn = document.getElementById('btnConfirmExport');
+    btn.disabled = true;
+    btn.innerHTML = '<span>Extracting Files...</span>';
+
     window.chrome.webview.postMessage({
       action: 'exportFiles',
       sourceDrive: selectedDrive.deviceId,
