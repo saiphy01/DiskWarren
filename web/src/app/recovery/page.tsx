@@ -187,7 +187,7 @@ export default function RecoveryLandingPage() {
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-base transition-all shadow-md shadow-teal-600/25 flex items-center justify-center gap-2 group active:scale-95 cursor-pointer"
           >
             <Download className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
-            <span>Download Free Scanner (Windows x64)</span>
+            <span>Download Free Scanner (All Platforms)</span>
           </Link>
           <Link
             href="/recovery/pricing"
@@ -738,7 +738,7 @@ export default function RecoveryLandingPage() {
       <section className="px-6 max-w-4xl mx-auto text-center p-10 rounded-2xl bg-gradient-to-br from-teal-700 via-teal-800 to-slate-900 text-white space-y-6 shadow-xl shadow-teal-900/20">
         <h2 className="text-3xl font-extrabold">Ready to rescue your lost data safely?</h2>
         <p className="text-teal-100 text-sm max-w-xl mx-auto">
-          Download DiskWarren Recover for Windows 10 &amp; 11. Run a free scan, preview your files, and see exact recovery confidence scores.
+          Download DiskWarren Recover for Windows, macOS, Android, and iOS. Run a free scan, preview your files, and see exact recovery confidence scores.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link

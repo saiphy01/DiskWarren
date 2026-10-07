@@ -96,54 +96,13 @@ public static class RecoveryExporter
                     using var rawStream = new FileStream(rawDevPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024, useAsync: true);
                     using var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: true);
 
-                    if (cand.Extension.Equals(".mp4", StringComparison.OrdinalIgnoreCase) || cand.Category == FileCategory.AudioVideo)
+                    long exactSize = await DetermineExactFileSizeAsync(rawStream, rawOffset, cand.Extension, cand.Category, rawSize);
+                    fileBytesWritten = await ExportRawStreamAsync(rawStream, outFs, incrementalHash, rawOffset, exactSize, (chunkBytes, total) =>
                     {
-                        fileBytesWritten = await ExportMp4StreamAsync(rawStream, outFs, incrementalHash, rawOffset, (chunkBytes, atomTotal) =>
-                        {
-                            cumulativeBytesWritten += chunkBytes;
-                            int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                            progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(fileBytesWritten)} / {StorageDrive.FormatBytes(atomTotal)})"));
-                        });
-                    }
-                    else
-                    {
-                        byte[] buf = new byte[1024 * 1024]; // 1MB buffer
-                        long remaining = rawSize;
-                        var sw = System.Diagnostics.Stopwatch.StartNew();
-                        long lastReportTime = 0;
-
-                        while (remaining > 0)
-                        {
-                            int toRead = (int)Math.Min(buf.Length, remaining);
-                            int alignedReadSize = ((toRead + 511) / 512) * 512;
-                            long currentPos = rawOffset + fileBytesWritten;
-                            long sectorPos = (currentPos / 512) * 512;
-                            int offsetInSector = (int)(currentPos % 512);
-
-                            rawStream.Seek(sectorPos, SeekOrigin.Begin);
-                            int read = await rawStream.ReadAsync(buf.AsMemory(0, Math.Min(buf.Length, alignedReadSize + offsetInSector)));
-                            if (read <= offsetInSector) break;
-
-                            int available = Math.Min(toRead, read - offsetInSector);
-                            if (available <= 0) break;
-
-                            await outFs.WriteAsync(buf.AsMemory(offsetInSector, available));
-                            incrementalHash.AppendData(buf, offsetInSector, available);
-
-                            remaining -= available;
-                            fileBytesWritten += available;
-                            cumulativeBytesWritten += available;
-
-                            if (sw.ElapsedMilliseconds - lastReportTime >= 50 || remaining == 0)
-                            {
-                                lastReportTime = sw.ElapsedMilliseconds;
-                                int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                                progress.Report((overallPercent, $"Writing {cand.FileName} ({StorageDrive.FormatBytes(fileBytesWritten)} / {StorageDrive.FormatBytes(rawSize)})"));
-                            }
-
-                            await Task.Yield();
-                        }
-                    }
+                        cumulativeBytesWritten += chunkBytes;
+                        int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
+                        progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(fileBytesWritten)} / {StorageDrive.FormatBytes(total)})"));
+                    });
 
                     itemResult.BytesWritten = fileBytesWritten;
                 }
@@ -219,6 +178,238 @@ public static class RecoveryExporter
         return report;
     }
 
+    public static async Task<long> DetermineExactFileSizeAsync(
+        FileStream rawStream,
+        long startOffset,
+        string extension,
+        FileCategory category,
+        long defaultSize)
+    {
+        return extension.ToLowerInvariant() switch
+        {
+            ".mp4" or ".mov" or ".m4v" => await DetermineMp4ExactSizeAsync(rawStream, startOffset),
+            ".jpg" or ".jpeg" => await DetermineJpegExactSizeAsync(rawStream, startOffset, defaultSize),
+            ".png" => await DeterminePngExactSizeAsync(rawStream, startOffset, defaultSize),
+            ".zip" or ".docx" or ".xlsx" or ".pptx" or ".apk" => await DetermineZipExactSizeAsync(rawStream, startOffset, defaultSize),
+            ".pdf" => await DeterminePdfExactSizeAsync(rawStream, startOffset, defaultSize),
+            _ => defaultSize
+        };
+    }
+
+    public static async Task<long> DetermineJpegExactSizeAsync(FileStream rawStream, long startOffset, long fallbackSize = 3L * 1024 * 1024)
+    {
+        byte[] header = await ReadRawBytesAlignedAsync(rawStream, startOffset, 4);
+        if (header.Length < 3 || header[0] != 0xFF || header[1] != 0xD8 || header[2] != 0xFF)
+        {
+            return fallbackSize;
+        }
+
+        long currentPos = startOffset + 2;
+        long maxSearch = 64L * 1024 * 1024;
+        bool inSosScan = false;
+
+        while (currentPos - startOffset < maxSearch)
+        {
+            if (!inSosScan)
+            {
+                byte[] mBytes = await ReadRawBytesAlignedAsync(rawStream, currentPos, 4);
+                if (mBytes.Length < 2) break;
+
+                if (mBytes[0] != 0xFF)
+                {
+                    break;
+                }
+
+                int skip = 0;
+                while (skip < mBytes.Length && mBytes[skip] == 0xFF) skip++;
+                if (skip >= mBytes.Length)
+                {
+                    currentPos += skip;
+                    continue;
+                }
+
+                byte marker = mBytes[skip];
+                currentPos += (skip + 1);
+
+                if (marker == 0xD9)
+                {
+                    return currentPos - startOffset;
+                }
+
+                if ((marker >= 0xD0 && marker <= 0xD7) || marker == 0xD8 || marker == 0x01)
+                {
+                    continue;
+                }
+
+                byte[] lenBytes = await ReadRawBytesAlignedAsync(rawStream, currentPos, 2);
+                if (lenBytes.Length < 2) break;
+                ushort markerLen = (ushort)((lenBytes[0] << 8) | lenBytes[1]);
+                if (markerLen < 2) break;
+
+                if (marker == 0xDA) // SOS
+                {
+                    currentPos += markerLen;
+                    inSosScan = true;
+                }
+                else
+                {
+                    currentPos += markerLen;
+                }
+            }
+            else
+            {
+                int toRead = 64 * 1024;
+                byte[] buf = await ReadRawBytesAlignedAsync(rawStream, currentPos, toRead);
+                if (buf.Length < 2) break;
+
+                for (int i = 0; i < buf.Length - 1; i++)
+                {
+                    if (buf[i] == 0xFF)
+                    {
+                        byte b2 = buf[i + 1];
+                        if (b2 == 0xD9) // EOI
+                        {
+                            return (currentPos + i + 2) - startOffset;
+                        }
+                        else if (b2 == 0x00 || (b2 >= 0xD0 && b2 <= 0xD7))
+                        {
+                            i++;
+                        }
+                        else if (b2 == 0xDA)
+                        {
+                            if (i + 3 < buf.Length)
+                            {
+                                ushort pLen = (ushort)((buf[i + 2] << 8) | buf[i + 3]);
+                                i += (1 + pLen);
+                            }
+                        }
+                    }
+                }
+
+                currentPos += (buf.Length - 1);
+            }
+        }
+
+        return fallbackSize;
+    }
+
+    public static async Task<long> DeterminePngExactSizeAsync(FileStream rawStream, long startOffset, long fallbackSize = 2L * 1024 * 1024)
+    {
+        byte[] sig = await ReadRawBytesAlignedAsync(rawStream, startOffset, 8);
+        if (sig.Length < 8 || sig[0] != 0x89 || sig[1] != 0x50 || sig[2] != 0x4E || sig[3] != 0x47 ||
+            sig[4] != 0x0D || sig[5] != 0x0A || sig[6] != 0x1A || sig[7] != 0x0A)
+        {
+            return fallbackSize;
+        }
+
+        long currentPos = startOffset + 8;
+        long maxSearch = 64L * 1024 * 1024;
+
+        while (currentPos - startOffset < maxSearch)
+        {
+            byte[] chunkHeader = await ReadRawBytesAlignedAsync(rawStream, currentPos, 8);
+            if (chunkHeader.Length < 8) break;
+
+            uint length = (uint)((chunkHeader[0] << 24) | (chunkHeader[1] << 16) | (chunkHeader[2] << 8) | chunkHeader[3]);
+            string type = Encoding.ASCII.GetString(chunkHeader, 4, 4);
+
+            if (type == "IEND")
+            {
+                return (currentPos + 12) - startOffset;
+            }
+
+            if (length > 32L * 1024 * 1024) break;
+
+            currentPos += (12 + length);
+        }
+
+        return fallbackSize;
+    }
+
+    public static async Task<long> DetermineZipExactSizeAsync(FileStream rawStream, long startOffset, long fallbackSize = 5L * 1024 * 1024)
+    {
+        byte[] header = await ReadRawBytesAlignedAsync(rawStream, startOffset, 4);
+        if (header.Length < 4 || header[0] != 0x50 || header[1] != 0x4B || header[2] != 0x03 || header[3] != 0x04)
+        {
+            return fallbackSize;
+        }
+
+        long currentPos = startOffset;
+        long maxSearch = 100L * 1024 * 1024;
+        int blockSize = 64 * 1024;
+
+        while (currentPos - startOffset < maxSearch)
+        {
+            byte[] buf = await ReadRawBytesAlignedAsync(rawStream, currentPos, blockSize);
+            if (buf.Length < 22) break;
+
+            for (int i = 0; i <= buf.Length - 22; i++)
+            {
+                if (buf[i] == 0x50 && buf[i + 1] == 0x4B && buf[i + 2] == 0x05 && buf[i + 3] == 0x06)
+                {
+                    long eocdOffset = currentPos + i;
+                    long relEocd = eocdOffset - startOffset;
+
+                    uint cdSize = (uint)(buf[i + 12] | (buf[i + 13] << 8) | (buf[i + 14] << 16) | (buf[i + 15] << 24));
+                    uint cdOffset = (uint)(buf[i + 16] | (buf[i + 17] << 8) | (buf[i + 18] << 16) | (buf[i + 19] << 24));
+                    ushort commentLen = (ushort)(buf[i + 20] | (buf[i + 21] << 8));
+
+                    if (cdOffset + cdSize == relEocd)
+                    {
+                        return relEocd + 22 + commentLen;
+                    }
+                }
+            }
+
+            currentPos += (buf.Length - 22);
+        }
+
+        return fallbackSize;
+    }
+
+    public static async Task<long> DeterminePdfExactSizeAsync(FileStream rawStream, long startOffset, long fallbackSize = 2L * 1024 * 1024)
+    {
+        byte[] header = await ReadRawBytesAlignedAsync(rawStream, startOffset, 5);
+        if (header.Length < 5 || header[0] != 0x25 || header[1] != 0x50 || header[2] != 0x44 || header[3] != 0x46 || header[4] != 0x2D)
+        {
+            return fallbackSize;
+        }
+
+        long currentPos = startOffset;
+        long maxSearch = 64L * 1024 * 1024;
+        long lastEofOffset = -1;
+        int blockSize = 64 * 1024;
+
+        while (currentPos - startOffset < maxSearch)
+        {
+            byte[] buf = await ReadRawBytesAlignedAsync(rawStream, currentPos, blockSize);
+            if (buf.Length < 6) break;
+
+            for (int i = 0; i <= buf.Length - 5; i++)
+            {
+                if (buf[i] == 0x25 && buf[i + 1] == 0x25 && buf[i + 2] == 0x45 && buf[i + 3] == 0x4F && buf[i + 4] == 0x46)
+                {
+                    long eofEnd = currentPos + i + 5;
+                    if (i + 5 < buf.Length && (buf[i + 5] == 0x0D || buf[i + 5] == 0x0A))
+                    {
+                        eofEnd++;
+                        if (i + 6 < buf.Length && buf[i + 6] == 0x0A) eofEnd++;
+                    }
+                    lastEofOffset = eofEnd - startOffset;
+                }
+            }
+
+            if (lastEofOffset > 0 && (currentPos - startOffset) > lastEofOffset + 64 * 1024)
+            {
+                break;
+            }
+
+            currentPos += (buf.Length - 5);
+        }
+
+        return lastEofOffset > 0 ? lastEofOffset : fallbackSize;
+    }
+
     public static async Task<long> DetermineMp4ExactSizeAsync(FileStream rawStream, long startOffset)
     {
         long currentOffset = startOffset;
@@ -259,7 +450,6 @@ public static class RecoveryExporter
 
             if (seenMdat && seenMoov)
             {
-                // Check if there is an immediate trailing udta or uuid box right after
                 byte[] nextHeader = await ReadRawBytesAlignedAsync(rawStream, currentOffset, 8);
                 if (nextHeader.Length >= 8)
                 {
@@ -299,17 +489,16 @@ public static class RecoveryExporter
         return result;
     }
 
-    private static async Task<long> ExportMp4StreamAsync(
+    public static async Task<long> ExportRawStreamAsync(
         FileStream rawStream,
         FileStream outFs,
         IncrementalHash incrementalHash,
         long rawOffset,
+        long totalSize,
         Action<long, long> onChunk)
     {
-        long exactMp4Size = await DetermineMp4ExactSizeAsync(rawStream, rawOffset);
-
         long bytesWritten = 0;
-        long remaining = exactMp4Size;
+        long remaining = totalSize;
         byte[] buf = new byte[1024 * 1024]; // 1MB buffer
         long currentOffset = rawOffset;
         var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -339,7 +528,7 @@ public static class RecoveryExporter
             if (sw.ElapsedMilliseconds - lastReportTime >= 50 || remaining == 0)
             {
                 lastReportTime = sw.ElapsedMilliseconds;
-                onChunk(available, exactMp4Size);
+                onChunk(available, totalSize);
             }
 
             await Task.Yield();

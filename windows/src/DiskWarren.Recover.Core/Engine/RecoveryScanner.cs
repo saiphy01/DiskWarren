@@ -299,7 +299,7 @@ public class RecoveryScanner
                         if (!options.Categories.Contains(FileCategory.Images)) continue;
                         if (!seenOffsets.Add(absOffset)) continue;
 
-                        long estimatedSize = 3L * 1024 * 1024; // 3 MB photo estimate
+                        long exactSize = await RecoveryExporter.DetermineJpegExactSizeAsync(rawStream, absOffset, 3L * 1024 * 1024);
                         string fileName = $"Camera_Photo_{absOffset:X8}.jpg";
                         if (!seenNames.Add(fileName)) continue;
 
@@ -321,7 +321,7 @@ public class RecoveryScanner
                             FileName = fileName,
                             OriginalPath = Path.Combine(drive.RootPath, "DCIM", "100MEDIA", fileName),
                             Extension = ".jpg",
-                            SizeBytes = estimatedSize,
+                            SizeBytes = exactSize,
                             Category = FileCategory.Images,
                             DetectedSignature = "JPEG Image (FF D8 FF)",
                             ClusterOffset = absOffset,
@@ -331,7 +331,7 @@ public class RecoveryScanner
                             PreviewType = "image",
                             HexSnippet = hex,
                             DateDeleted = DateTime.UtcNow.AddDays(-7),
-                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{estimatedSize}",
+                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{exactSize}",
                             SourcePhysicalDisk = drive.DeviceId
                         });
                     }
@@ -342,16 +342,7 @@ public class RecoveryScanner
                         if (!seenOffsets.Add(absOffset)) continue;
 
                         string brand = Encoding.ASCII.GetString(buffer, i + 8, 4).Trim();
-                        long estimatedSize = 25L * 1024 * 1024;
-                        if (i + 40 < read && buffer[i + 28] == 0x6D && buffer[i + 29] == 0x64 && buffer[i + 30] == 0x61 && buffer[i + 31] == 0x74)
-                        {
-                            long extSize = (long)(((ulong)buffer[i + 32] << 56) | ((ulong)buffer[i + 33] << 48) | ((ulong)buffer[i + 34] << 40) | ((ulong)buffer[i + 35] << 32) |
-                                                  ((ulong)buffer[i + 36] << 24) | ((ulong)buffer[i + 37] << 16) | ((ulong)buffer[i + 38] << 8) | (ulong)buffer[i + 39]);
-                            if (extSize > 0 && extSize < 8L * 1024 * 1024 * 1024)
-                            {
-                                estimatedSize = extSize + 24 + 1024 * 1024; // ftyp + mdat + moov buffer
-                            }
-                        }
+                        long exactSize = await RecoveryExporter.DetermineMp4ExactSizeAsync(rawStream, absOffset);
 
                         string fileName = $"Video_Recording_{absOffset:X8}.mp4";
                         if (!seenNames.Add(fileName)) continue;
@@ -374,7 +365,7 @@ public class RecoveryScanner
                             FileName = fileName,
                             OriginalPath = Path.Combine(drive.RootPath, "DCIM", "Video", fileName),
                             Extension = ".mp4",
-                            SizeBytes = estimatedSize,
+                            SizeBytes = exactSize,
                             Category = FileCategory.AudioVideo,
                             DetectedSignature = $"MPEG-4 ISO Base Video ({brand})",
                             ClusterOffset = absOffset,
@@ -384,7 +375,7 @@ public class RecoveryScanner
                             PreviewType = "video",
                             HexSnippet = hex,
                             DateDeleted = DateTime.UtcNow.AddDays(-12),
-                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{estimatedSize}",
+                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{exactSize}",
                             SourcePhysicalDisk = drive.DeviceId
                         });
                     }
@@ -394,7 +385,7 @@ public class RecoveryScanner
                         if (!options.Categories.Contains(FileCategory.Images)) continue;
                         if (!seenOffsets.Add(absOffset)) continue;
 
-                        long estimatedSize = 1024L * 1024;
+                        long exactSize = await RecoveryExporter.DeterminePngExactSizeAsync(rawStream, absOffset, 1024L * 1024);
                         string fileName = $"Image_{absOffset:X8}.png";
                         if (!seenNames.Add(fileName)) continue;
 
@@ -416,7 +407,7 @@ public class RecoveryScanner
                             FileName = fileName,
                             OriginalPath = Path.Combine(drive.RootPath, "Pictures", fileName),
                             Extension = ".png",
-                            SizeBytes = estimatedSize,
+                            SizeBytes = exactSize,
                             Category = FileCategory.Images,
                             DetectedSignature = "PNG Portable Network Graphics (89 50 4E 47)",
                             ClusterOffset = absOffset,
@@ -426,7 +417,7 @@ public class RecoveryScanner
                             PreviewType = "image",
                             HexSnippet = hex,
                             DateDeleted = DateTime.UtcNow.AddDays(-5),
-                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{estimatedSize}",
+                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{exactSize}",
                             SourcePhysicalDisk = drive.DeviceId
                         });
                     }
@@ -436,7 +427,7 @@ public class RecoveryScanner
                         if (!options.Categories.Contains(FileCategory.Documents)) continue;
                         if (!seenOffsets.Add(absOffset)) continue;
 
-                        long estimatedSize = 2L * 1024 * 1024;
+                        long exactSize = await RecoveryExporter.DeterminePdfExactSizeAsync(rawStream, absOffset, 2L * 1024 * 1024);
                         string fileName = $"Document_{absOffset:X8}.pdf";
                         if (!seenNames.Add(fileName)) continue;
 
@@ -458,7 +449,7 @@ public class RecoveryScanner
                             FileName = fileName,
                             OriginalPath = Path.Combine(drive.RootPath, "Documents", fileName),
                             Extension = ".pdf",
-                            SizeBytes = estimatedSize,
+                            SizeBytes = exactSize,
                             Category = FileCategory.Documents,
                             DetectedSignature = "Adobe PDF Document (%PDF-)",
                             ClusterOffset = absOffset,
@@ -468,18 +459,51 @@ public class RecoveryScanner
                             PreviewType = "hex",
                             HexSnippet = hex,
                             DateDeleted = DateTime.UtcNow.AddDays(-14),
-                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{estimatedSize}",
+                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{exactSize}",
                             SourcePhysicalDisk = drive.DeviceId
                         });
                     }
-                    // 5. ZIP Archive (50 4B 03 04)
+                    // 5. ZIP Archive / Office Document (50 4B 03 04)
                     else if (buffer[i] == 0x50 && buffer[i + 1] == 0x4B && buffer[i + 2] == 0x03 && buffer[i + 3] == 0x04)
                     {
                         if (!options.Categories.Contains(FileCategory.Archives) && !options.Categories.Contains(FileCategory.Documents)) continue;
                         if (!seenOffsets.Add(absOffset)) continue;
 
-                        long estimatedSize = 5L * 1024 * 1024;
-                        string fileName = $"Archive_{absOffset:X8}.zip";
+                        string ext = ".zip";
+                        string sigDesc = "Standard ZIP Archive (50 4B 03 04)";
+                        FileCategory cat = FileCategory.Archives;
+
+                        if (i + 30 < read)
+                        {
+                            ushort fnLen = (ushort)(buffer[i + 26] | (buffer[i + 27] << 8));
+                            if (fnLen > 0 && i + 30 + fnLen <= read)
+                            {
+                                string entryName = Encoding.ASCII.GetString(buffer, i + 30, fnLen);
+                                if (entryName.Contains("word/"))
+                                {
+                                    ext = ".docx";
+                                    sigDesc = "Microsoft Word Document (OpenXML)";
+                                    cat = FileCategory.Documents;
+                                }
+                                else if (entryName.Contains("xl/"))
+                                {
+                                    ext = ".xlsx";
+                                    sigDesc = "Microsoft Excel Spreadsheet (OpenXML)";
+                                    cat = FileCategory.Documents;
+                                }
+                                else if (entryName.Contains("ppt/"))
+                                {
+                                    ext = ".pptx";
+                                    sigDesc = "Microsoft PowerPoint Presentation (OpenXML)";
+                                    cat = FileCategory.Documents;
+                                }
+                            }
+                        }
+
+                        if (!options.Categories.Contains(cat)) continue;
+
+                        long exactSize = await RecoveryExporter.DetermineZipExactSizeAsync(rawStream, absOffset, 5L * 1024 * 1024);
+                        string fileName = $"{cat}_{absOffset:X8}{ext}";
                         if (!seenNames.Add(fileName)) continue;
 
                         string hex = FormatHex(buffer, i, Math.Min(64, read - i));
@@ -499,10 +523,10 @@ public class RecoveryScanner
                         {
                             FileName = fileName,
                             OriginalPath = Path.Combine(drive.RootPath, "Archives", fileName),
-                            Extension = ".zip",
-                            SizeBytes = estimatedSize,
-                            Category = FileCategory.Archives,
-                            DetectedSignature = "Standard ZIP Archive (50 4B 03 04)",
+                            Extension = ext,
+                            SizeBytes = exactSize,
+                            Category = cat,
+                            DetectedSignature = sigDesc,
                             ClusterOffset = absOffset,
                             ConfidenceScore = score,
                             Health = rating,
@@ -510,7 +534,7 @@ public class RecoveryScanner
                             PreviewType = "hex",
                             HexSnippet = hex,
                             DateDeleted = DateTime.UtcNow.AddDays(-20),
-                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{estimatedSize}",
+                            InternalRefPath = $"RAW:{drive.DeviceId.TrimEnd(':')}:{absOffset}:{exactSize}",
                             SourcePhysicalDisk = drive.DeviceId
                         });
                     }
