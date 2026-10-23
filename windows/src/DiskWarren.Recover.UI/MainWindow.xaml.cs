@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -43,27 +49,117 @@ public partial class MainWindow : Window
         catch { }
     }
 
-    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ButtonState == MouseButtonState.Pressed)
+        {
+            try { DragMove(); } catch { }
+        }
+    }
+
+    private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private void BtnClose_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void BtnDownloadWebView2_Click(object sender, RoutedEventArgs e)
     {
         try
         {
-            var env = await CoreWebView2Environment.CreateAsync(null, Path.Combine(Path.GetTempPath(), "DiskWarrenRecover_WebView2"));
+            Process.Start(new ProcessStartInfo("https://go.microsoft.com/fwlink/p/?LinkId=2124703")
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Could not open browser:\n{ex.Message}", "DiskWarren Recover", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private async void BtnRetryInit_Click(object sender, RoutedEventArgs e)
+    {
+        ErrorOverlay.Visibility = Visibility.Collapsed;
+        LoadingOverlay.Visibility = Visibility.Visible;
+        LoadingStatusText.Text = "Retrying engine initialization...";
+        await InitializeWebViewSafeAsync();
+    }
+
+    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        await InitializeWebViewSafeAsync();
+    }
+
+    private async Task InitializeWebViewSafeAsync()
+    {
+        try
+        {
+            LoadingStatusText.Text = "Configuring safe recovery renderer...";
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string userDataDir = Path.Combine(localAppData, "DiskWarrenRecover", "WebView2");
+            Directory.CreateDirectory(userDataDir);
+
+            CoreWebView2Environment env;
+            try
+            {
+                env = await CoreWebView2Environment.CreateAsync(null, userDataDir);
+            }
+            catch
+            {
+                // Fallback to default user data folder if custom location is constrained
+                env = await CoreWebView2Environment.CreateAsync(null, null);
+            }
+
+            LoadingStatusText.Text = "Connecting hardware safety shields...";
             await WebViewControl.EnsureCoreWebView2Async(env);
 
             WebViewControl.CoreWebView2.Settings.IsStatusBarEnabled = false;
             WebViewControl.CoreWebView2.Settings.AreDevToolsEnabled = true;
             WebViewControl.CoreWebView2.Settings.IsZoomControlEnabled = false;
 
+            WebViewControl.CoreWebView2.WebMessageReceived -= CoreWebView2_WebMessageReceived;
             WebViewControl.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+
             WebViewControl.CoreWebView2.NavigationCompleted += (s, ev) =>
             {
-                HandleGetDrives();
+                Dispatcher.Invoke(() =>
+                {
+                    if (ev.IsSuccess)
+                    {
+                        LoadingOverlay.Visibility = Visibility.Collapsed;
+                        ErrorOverlay.Visibility = Visibility.Collapsed;
+                        HandleGetDrives();
+                    }
+                    else
+                    {
+                        LoadingOverlay.Visibility = Visibility.Collapsed;
+                        ErrorOverlay.Visibility = Visibility.Visible;
+                        ErrorDetailsText.Text = $"Renderer navigation failure: {ev.WebErrorStatus}";
+                    }
+                });
             };
+
+            LoadingStatusText.Text = "Loading disk inspection engine...";
             WebViewControl.NavigateToString(UiHtml.GetHtml());
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show($"Failed to initialize WebView2:\n{ex.Message}", "DiskWarren Recover", MessageBoxButton.OK, MessageBoxImage.Error);
+            Dispatcher.Invoke(() =>
+            {
+                LoadingOverlay.Visibility = Visibility.Collapsed;
+                ErrorOverlay.Visibility = Visibility.Visible;
+                ErrorDetailsText.Text = $"{ex.GetType().Name}: {ex.Message}";
+            });
         }
     }
 
@@ -111,7 +207,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error processing web message: {ex}");
+            Debug.WriteLine($"Error processing web message: {ex}");
         }
     }
 
@@ -238,7 +334,7 @@ public partial class MainWindow : Window
 
         if (!_licenseState.CanRecover(totalBytes))
         {
-            System.Windows.MessageBox.Show($"Recovery volume ({StorageDrive.FormatBytes(totalBytes)}) exceeds remaining Community quota ({StorageDrive.FormatBytes(_licenseState.RemainingFreeBytes)}).\n\nPlease activate a Pro license for unlimited recovery.", "Quota Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show($"Recovery volume ({StorageDrive.FormatBytes(totalBytes)}) exceeds remaining Community quota ({StorageDrive.FormatBytes(_licenseState.RemainingFreeBytes)}).\n\nPlease activate a Pro license for unlimited recovery.", "Quota Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -265,7 +361,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show($"Export error: {ex.Message}", "Recovery Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Export error: {ex.Message}", "Recovery Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

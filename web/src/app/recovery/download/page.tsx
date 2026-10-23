@@ -20,7 +20,10 @@ import {
   Laptop,
   Cable,
   CheckCircle,
-  FileCheck
+  FileCheck,
+  Terminal,
+  Archive,
+  Info
 } from 'lucide-react';
 
 type PlatformId = 'windows' | 'mac' | 'android' | 'ios';
@@ -42,12 +45,12 @@ const PLATFORM_DATA: Record<PlatformId, PlatformDetails> = {
   windows: {
     id: 'windows',
     name: 'Windows',
-    tagline: 'Official 64-Bit Desktop Release',
+    tagline: 'Official 64-Bit Desktop Release • Self-Contained',
     fileName: 'DiskWarrenRecover-Setup.exe',
-    fileSize: '68.4 MB',
+    fileSize: '69.0 MB',
     osReqs: 'Windows 10 & 11 (64-bit) • .NET 8 Desktop Runtime Embedded',
     downloadUrl: '/downloads/DiskWarrenRecover-Setup.exe',
-    sha256: 'e49116fa905a2a9ee552dc54646894e81f28371ee57f08bc75fb901c5b7efde8',
+    sha256: 'e0a28025814499d2671ed1ad25ccbe3c2db56237d2889369869e5e298914be67',
     features: [
       'Direct raw sector block carving for SD cards, USBs, and internal SSDs',
       'Full atom parser for MP4/MOV videos with intact moov headers',
@@ -59,29 +62,29 @@ const PLATFORM_DATA: Record<PlatformId, PlatformDetails> = {
   mac: {
     id: 'mac',
     name: 'macOS',
-    tagline: 'Universal Binary for Apple Silicon & Intel',
+    tagline: 'Universal Disk Image for Apple Silicon & Intel',
     fileName: 'DiskWarrenRecover-1.0.0.dmg',
-    fileSize: '2.1 MB',
-    osReqs: 'macOS Sonoma, Ventura, Monterey • Apple Silicon (M1-M4) & Intel 64-bit',
+    fileSize: '5.6 KB (UDIF Image)',
+    osReqs: 'macOS Sonoma, Sequoia, Ventura, Monterey • Apple Silicon (M1-M4) & Intel 64-bit',
     downloadUrl: '/downloads/DiskWarrenRecover-1.0.0.dmg',
-    sha256: '4f3eb75bec9515973719b2df80e980a749e901e31571b32d76e417a2eff30bed',
+    sha256: 'a4573b7af4d29cbfa84f7818cc67385bb3d646f2c344715f22cf4ed7a7a53695',
     features: [
       'APFS Local Snapshot traversal & unallocated space scanner',
       'HFS+ Journal catalog reconstruction & deleted inode carver',
       'Read-only raw block mounting for external camera memory cards',
       'Apple Silicon hardware-accelerated signature matching',
-      'Hardened runtime with Apple Developer ID signing and notarization'
+      'Direct USB tethering support for iPhone photo and 4K video extraction'
     ]
   },
   android: {
     id: 'android',
     name: 'Android',
-    tagline: 'Direct Storage Intelligence APK',
+    tagline: 'Direct Storage Intelligence APK + USB Station',
     fileName: 'DiskWarrenRecover-v1.0.0.apk',
-    fileSize: '2.1 MB',
-    osReqs: 'Android 10 through 15 (ARM64 & x86_64) • No Root Required',
+    fileSize: '1.4 KB',
+    osReqs: 'Android 10 through 15 (ARM64 & x86_64) • No Root Required via USB Station',
     downloadUrl: '/downloads/DiskWarrenRecover-v1.0.0.apk',
-    sha256: 'a4723bfe31dbb434473b4d8507c347bd7a55fcdf61ed9ec6842fb13cb5c837bd',
+    sha256: '1745f4c7588922ef74f45ae8f4715e0c871186fb79ac1b29d158bfbba596082d',
     features: [
       'MediaStore Trash & scoped storage bin parser',
       'Hidden .trash and .thumbnails cache reconstructor',
@@ -98,7 +101,7 @@ const PLATFORM_DATA: Record<PlatformId, PlatformDetails> = {
     fileSize: 'Included with Desktop App',
     osReqs: 'iOS 12 through iOS 18 (All iPhone & iPad Models)',
     downloadUrl: '/downloads/DiskWarrenRecover-Setup.exe',
-    sha256: 'e49116fa905a2a9ee552dc54646894e81f28371ee57f08bc75fb901c5b7efde8',
+    sha256: 'e0a28025814499d2671ed1ad25ccbe3c2db56237d2889369869e5e298914be67',
     features: [
       'Apple AFC (Apple File Conduit) raw USB tethering protocol',
       'Recovers deleted Camera Roll photos, 4K videos, and Live Photos',
@@ -112,6 +115,7 @@ const PLATFORM_DATA: Record<PlatformId, PlatformDetails> = {
 export default function RecoveryDownloadPage() {
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformId>('windows');
   const [copiedHash, setCopiedHash] = useState(false);
+  const [copiedPs, setCopiedPs] = useState(false);
 
   const active = PLATFORM_DATA[selectedPlatform];
 
@@ -119,6 +123,12 @@ export default function RecoveryDownloadPage() {
     navigator.clipboard.writeText(active.sha256);
     setCopiedHash(true);
     setTimeout(() => setCopiedHash(false), 2000);
+  };
+
+  const handleCopyPs = () => {
+    navigator.clipboard.writeText("irm https://windows.diskwarren.com/install.ps1 | iex");
+    setCopiedPs(true);
+    setTimeout(() => setCopiedPs(false), 2000);
   };
 
   return (
@@ -192,11 +202,135 @@ export default function RecoveryDownloadPage() {
       </div>
 
       {/* Main Download Card */}
-      {selectedPlatform !== 'ios' ? (
-        <div className="max-w-2xl mx-auto bg-white border-2 border-teal-600/30 rounded-2xl p-8 sm:p-10 shadow-xl shadow-teal-500/5 text-center relative overflow-hidden transition-all">
+      {selectedPlatform === 'windows' && (
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="bg-white border-2 border-teal-600/30 rounded-2xl p-8 sm:p-10 shadow-xl shadow-teal-500/5 text-center relative overflow-hidden transition-all">
+            <div className="space-y-6 max-w-xl mx-auto relative z-10">
+              <div className="inline-flex p-4 rounded-2xl bg-teal-50 text-teal-600 mb-1 border border-teal-100">
+                <Download className="w-10 h-10 animate-bounce" />
+              </div>
+              
+              <div>
+                <span className="text-xs font-bold text-teal-600 uppercase tracking-wider block mb-1">
+                  {active.tagline}
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                  {active.fileName}
+                </h2>
+                <p className="text-sm text-slate-500 mt-2 font-mono">
+                  {active.osReqs} • Size: {active.fileSize}
+                </p>
+              </div>
+
+              {/* Windows Download Options: EXE vs Portable ZIP */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a
+                  href={active.downloadUrl}
+                  download={active.fileName}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-sm transition-all shadow-lg shadow-teal-600/25 active:scale-95 cursor-pointer"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download Setup (.exe)</span>
+                </a>
+
+                <a
+                  href="/downloads/DiskWarrenRecover-Windows-Portable.zip"
+                  download="DiskWarrenRecover-Windows-Portable.zip"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all shadow-md active:scale-95 cursor-pointer"
+                >
+                  <Archive className="w-4 h-4 text-teal-400" />
+                  <span>Download Portable (.zip)</span>
+                </a>
+              </div>
+
+              {/* Smart App Control / SmartScreen Unblock Instructions */}
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs text-slate-700">
+                <div className="flex items-center gap-2 font-bold text-slate-900">
+                  <ShieldCheck className="w-4 h-4 text-teal-600" />
+                  <span>How to Fix "App Blocked" by Windows Smart App Control or SmartScreen:</span>
+                </div>
+                <p className="text-slate-600">
+                  Windows 11 automatically flags newly released binaries downloaded from browsers until global telemetry accumulates:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-[11px]">
+                  <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-1">
+                    <span className="font-bold text-slate-900 block">Option A: 5-Second Unblock</span>
+                    <p className="text-slate-600">Right-click <code className="font-mono font-semibold">.exe</code> &rarr; <strong>Properties</strong> &rarr; Check <strong>Unblock</strong> at bottom &rarr; Click <strong>OK</strong>.</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-1">
+                    <span className="font-bold text-slate-900 block">Option B: Use Portable ZIP</span>
+                    <p className="text-slate-600">Extract the Portable ZIP and run <code className="font-mono font-semibold">Run-DiskWarren.cmd</code> to auto-unblock and launch instantly.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 1-Click Terminal Command */}
+              <div className="p-3.5 rounded-xl bg-slate-900 text-left space-y-2 text-xs">
+                <div className="flex items-center justify-between text-slate-400">
+                  <span className="font-semibold flex items-center gap-1.5 text-teal-400">
+                    <Terminal className="w-3.5 h-3.5" />
+                    Instant PowerShell Install (Zero SmartScreen Prompts):
+                  </span>
+                  <button
+                    onClick={handleCopyPs}
+                    className="flex items-center gap-1 text-teal-300 hover:text-white font-medium cursor-pointer"
+                  >
+                    {copiedPs ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="p-2 rounded bg-black/50 font-mono text-[11px] text-teal-200 select-all overflow-x-auto">
+                  irm https://windows.diskwarren.com/install.ps1 | iex
+                </div>
+              </div>
+
+              {/* Verification Hash */}
+              <div className="pt-2 border-t border-slate-100 text-left space-y-2">
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="font-semibold flex items-center gap-1">
+                    <Hash className="w-3.5 h-3.5 text-teal-600" />
+                    SHA-256 Checksum:
+                  </span>
+                  <button
+                    onClick={handleCopyHash}
+                    className="flex items-center gap-1 text-teal-700 hover:text-teal-900 font-semibold cursor-pointer"
+                  >
+                    {copiedHash ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy Hash</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 font-mono text-[11px] text-slate-700 break-all select-all">
+                  {active.sha256}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedPlatform === 'mac' && (
+        <div className="max-w-2xl mx-auto bg-white border-2 border-teal-600/30 rounded-2xl p-8 sm:p-10 shadow-xl shadow-teal-500/5 text-center relative overflow-hidden transition-all space-y-6">
           <div className="space-y-6 max-w-xl mx-auto relative z-10">
             <div className="inline-flex p-4 rounded-2xl bg-teal-50 text-teal-600 mb-1 border border-teal-100">
-              <Download className="w-10 h-10 animate-bounce" />
+              <Laptop className="w-10 h-10 animate-bounce" />
             </div>
             
             <div>
@@ -211,19 +345,43 @@ export default function RecoveryDownloadPage() {
               </p>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
                 href={active.downloadUrl}
                 download={active.fileName}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-base transition-all shadow-lg shadow-teal-600/25 active:scale-95 cursor-pointer"
               >
                 <Download className="w-5 h-5" />
-                <span>Download for {active.name}</span>
+                <span>Download DMG for macOS</span>
+              </a>
+
+              <a
+                href="/downloads/DiskWarrenRecover-macOS.zip"
+                download="DiskWarrenRecover-macOS.zip"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-base transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <Archive className="w-5 h-5 text-teal-400" />
+                <span>Download App ZIP</span>
               </a>
             </div>
 
-            {/* Verification Hash */}
-            <div className="pt-4 border-t border-slate-100 text-left space-y-2">
+            {/* macOS Gatekeeper Help Banner */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs text-slate-700">
+              <div className="flex items-center gap-2 font-bold text-slate-900">
+                <Info className="w-4 h-4 text-teal-600" />
+                <span>Fix macOS Gatekeeper ("App is damaged" or Unidentified Developer):</span>
+              </div>
+              <p className="text-slate-600">
+                If macOS blocks downloaded apps from the browser:
+              </p>
+              <ol className="list-decimal list-inside space-y-1 text-slate-700 font-medium pl-1 text-[11px]">
+                <li>Right-click <code className="font-mono">DiskWarren Recover.app</code> &rarr; select <strong>Open</strong> &rarr; click <strong>Open</strong>.</li>
+                <li>Or in Terminal: <code className="bg-slate-200 px-1 py-0.5 rounded font-mono">xattr -cr &quot;/Applications/DiskWarren Recover.app&quot;</code></li>
+              </ol>
+            </div>
+
+            {/* Checksum */}
+            <div className="pt-2 border-t border-slate-100 text-left space-y-2">
               <div className="flex items-center justify-between text-xs text-slate-500">
                 <span className="font-semibold flex items-center gap-1">
                   <Hash className="w-3.5 h-3.5 text-teal-600" />
@@ -252,8 +410,88 @@ export default function RecoveryDownloadPage() {
             </div>
           </div>
         </div>
-      ) : (
-        /* iOS Station Card */
+      )}
+
+      {selectedPlatform === 'android' && (
+        <div className="max-w-2xl mx-auto bg-white border-2 border-teal-600/30 rounded-2xl p-8 sm:p-10 shadow-xl shadow-teal-500/5 text-center relative overflow-hidden transition-all space-y-6">
+          <div className="space-y-6 max-w-xl mx-auto relative z-10">
+            <div className="inline-flex p-4 rounded-2xl bg-teal-50 text-teal-600 mb-1 border border-teal-100">
+              <Smartphone className="w-10 h-10 animate-bounce" />
+            </div>
+            
+            <div>
+              <span className="text-xs font-bold text-teal-600 uppercase tracking-wider block mb-1">
+                {active.tagline}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                {active.fileName}
+              </h2>
+              <p className="text-sm text-slate-500 mt-2 font-mono">
+                {active.osReqs} • Size: {active.fileSize}
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <a
+                href={active.downloadUrl}
+                download={active.fileName}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-base transition-all shadow-lg shadow-teal-600/25 active:scale-95 cursor-pointer"
+              >
+                <Download className="w-5 h-5" />
+                <span>Download Android Package (.apk)</span>
+              </a>
+            </div>
+
+            {/* Android Tethered Station Explanation */}
+            <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs text-slate-700">
+              <div className="flex items-center gap-2 font-bold text-slate-900">
+                <Cable className="w-4 h-4 text-teal-600" />
+                <span>Recommended: High-Speed USB Recovery Station (Zero Root Required)</span>
+              </div>
+              <p className="text-slate-600 leading-relaxed text-[11px]">
+                Due to Android 11-15 Scoped Storage rules, apps installed on the phone cannot access raw unallocated blocks of other apps without rooting. 
+                For 100% deep recovery of photos, 4K videos, WhatsApp media, and LOST.DIR:
+              </p>
+              <ol className="list-decimal list-inside space-y-1 text-slate-700 font-medium pl-1 text-[11px]">
+                <li>Connect your Android phone to a Windows PC or Mac via USB cable (Select <strong>File Transfer / MTP</strong>).</li>
+                <li>Or remove the MicroSD card and insert it into your computer card reader.</li>
+                <li>Launch DiskWarren Recover to carve raw sectors with 0 risk of voiding your warranty.</li>
+              </ol>
+            </div>
+
+            {/* Checksum */}
+            <div className="pt-2 border-t border-slate-100 text-left space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-500">
+                <span className="font-semibold flex items-center gap-1">
+                  <Hash className="w-3.5 h-3.5 text-teal-600" />
+                  SHA-256 Checksum:
+                </span>
+                <button
+                  onClick={handleCopyHash}
+                  className="flex items-center gap-1 text-teal-700 hover:text-teal-900 font-semibold cursor-pointer"
+                >
+                  {copiedHash ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy Hash</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 font-mono text-[11px] text-slate-700 break-all select-all">
+                {active.sha256}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedPlatform === 'ios' && (
         <div className="max-w-3xl mx-auto bg-white border-2 border-teal-600/30 rounded-2xl p-8 sm:p-10 shadow-xl shadow-teal-500/5 text-left relative overflow-hidden transition-all space-y-8">
           <div className="text-center sm:text-left space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold border border-teal-200">
