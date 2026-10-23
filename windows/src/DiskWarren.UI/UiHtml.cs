@@ -8,8 +8,6 @@ public static class UiHtml
   <meta charset=""UTF-8"">
   <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
   <title>DiskWarren — Storage Intelligence &amp; Safe Cleanup</title>
-  <link rel=""icon"" type=""image/png"" sizes=""32x32"" href=""data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABO0lEQVR42u2XS0oDQRCGv85kQOINVMgdFLJNQBduPITHMB7GQ3gCt0Jc5QKCeANFGDvlYqpDqdM+4vT0ICkoZujH//9UVz8Kmq2gfWvEdJGBXvumwBEw2pD0GVgAN4AY7G9VnupEackXivlldEPHpZnogeqP7g3ePCYiNMx14Kt6WxGweBcfRYSfEx1QAasWyYOvFFuAY8vtgBJYGrWSyAP2EhjaTTAzay6JPXDMAAYqYGLClNrC8k6sgJ3ImZDKnHKuBQjdm1gB2WwrYCvgnwtwDoqi/kZsmHanC3ifIQKuhi0PxuxdXVPuj9+19yoH0iyB1Hda9XDP4/nZp/amCLgMSehsBF6SXEjxJBTlXEfgVhUNOtr6TjnpxZMs+6M0+7O8F4VJttLsJ8XpIbC7YcY/AXe/KU47L8/fAJ/AOgn4cZ3/AAAAAElFTkSuQmCC"">
-  <link rel=""apple-touch-icon"" href=""data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABO0lEQVR42u2XS0oDQRCGv85kQOINVMgdFLJNQBduPITHMB7GQ3gCt0Jc5QKCeANFGDvlYqpDqdM+4vT0ICkoZujH//9UVz8Kmq2gfWvEdJGBXvumwBEw2pD0GVgAN4AY7G9VnupEackXivlldEPHpZnogeqP7g3ePCYiNMx14Kt6WxGweBcfRYSfEx1QAasWyYOvFFuAY8vtgBJYGrWSyAP2EhjaTTAzay6JPXDMAAYqYGLClNrC8k6sgJ3ImZDKnHKuBQjdm1gB2WwrYCvgnwtwDoqi/kZsmHanC3ifIQKuhi0PxuxdXVPuj9+19yoH0iyB1Hda9XDP4/nZp/amCLgMSehsBF6SXEjxJBTlXEfgVhUNOtr6TjnpxZMs+6M0+7O8F4VJttLsJ8XpIbC7YcY/AXe/KU47L8/fAJ/AOgn4cZ3/AAAAAElFTkSuQmCC"">
   <style>
     :root {
       --bg: #F8FAFC;
@@ -84,33 +82,31 @@ public static class UiHtml
 
     /* Header Bar */
     .app-header {
-      height: 50px;
+      height: 56px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 0 0 16px;
+      padding: 0 0 0 20px;
       z-index: 100;
       box-shadow: var(--shadow-sm);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       user-select: none;
-      flex-shrink: 0;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      white-space: nowrap;
+      gap: 12px;
+      min-width: 200px;
     }
 
     .brand-logo {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -120,16 +116,16 @@ public static class UiHtml
     }
 
     .brand-name {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.5px;
       color: var(--text-main);
     }
 
     .badge-enterprise {
-      font-size: 9.5px;
-      padding: 2px 6px;
-      border-radius: 5px;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 6px;
       font-weight: 700;
       letter-spacing: 0.4px;
       text-transform: uppercase;
@@ -143,17 +139,15 @@ public static class UiHtml
       display: flex;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2px;
+      border-radius: 12px;
+      padding: 3px;
       gap: 2px;
-      flex-shrink: 0;
-      white-space: nowrap;
     }
 
     .tab-item {
-      padding: 6px 13px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 7px 15px;
+      border-radius: 9px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-muted);
       background: transparent;
@@ -162,9 +156,8 @@ public static class UiHtml
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       outline: none;
-      white-space: nowrap;
     }
     .tab-item:hover {
       color: var(--text-main);
@@ -183,28 +176,43 @@ public static class UiHtml
       align-items: center;
       height: 100%;
       gap: 8px;
-      margin-left: auto;
       flex-shrink: 0;
+      margin-left: auto;
     }
 
     .toolstrip {
       display: flex;
       align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-    .toolstrip .btn {
-      white-space: nowrap;
-      flex-shrink: 0;
+      gap: 6px;
+      flex-shrink: 1;
     }
 
-    /* Windows 11 Fluent Caption Buttons */
+    /* Windows 11 Fluent Caption Buttons (Always 100% visible and pinned) */
     .window-controls {
       display: flex;
       align-items: stretch;
       height: 100%;
       margin-left: 8px;
-      flex-shrink: 0;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 1280px) {
+      .tab-item { padding: 6px 11px; font-size: 11.5px; }
+      .toolstrip .btn { padding: 5px 8px; font-size: 11px; }
+      .brand-group { min-width: 160px; gap: 8px; }
+    }
+
+    @media (max-width: 1100px) {
+      .badge-enterprise { display: none; }
+      .tab-item { padding: 6px 9px; font-size: 11px; }
+      .tab-item svg { width: 13px; height: 13px; }
+      .toolstrip { gap: 4px; }
+      .toolstrip .btn { padding: 4px 6px; font-size: 10.5px; }
+    }
+
+    @media (max-width: 950px) {
+      .tab-item span.tab-label { display: none; }
+      .toolstrip .btn span.btn-label { display: none; }
     }
 
     .win-btn {
@@ -219,7 +227,6 @@ public static class UiHtml
       cursor: pointer;
       outline: none;
       transition: background-color 0.12s ease, color 0.12s ease;
-      flex-shrink: 0;
     }
 
     .win-btn:hover {
@@ -248,134 +255,6 @@ public static class UiHtml
     .win-btn-close:active {
       background: #C42B1C !important;
       color: #FFFFFF !important;
-    }
-
-    /* Top Persistent Scanner Bar */
-    .top-scanner-bar {
-      height: 48px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 95;
-      gap: 16px;
-      flex-shrink: 0;
-      transition: background-color 0.25s ease, border-color 0.25s ease;
-    }
-    .top-scanner-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-    .top-scanner-drives {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .scanner-drive-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface-subtle);
-      color: var(--text-muted);
-      transition: all 0.15s ease;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .scanner-drive-chip:hover {
-      color: var(--text-main);
-      border-color: var(--accent-primary);
-    }
-    .scanner-drive-chip.active {
-      background: rgba(2, 132, 199, 0.1);
-      border-color: var(--accent-primary);
-      color: var(--accent-primary);
-    }
-    .top-scanner-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: var(--surface-subtle);
-      white-space: nowrap;
-    }
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 6px #10B981;
-      animation: pulseGreen 2s infinite ease-in-out;
-      flex-shrink: 0;
-    }
-    @keyframes pulseGreen {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
-    }
-    .top-scanner-meter-wrap {
-      flex: 1;
-      max-width: 480px;
-      position: relative;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      background: var(--surface-subtle);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      padding: 0 10px;
-    }
-    .top-scanner-meter-bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 0%;
-      background: linear-gradient(90deg, #0284C7, #38BDF8, #10B981);
-      border-radius: 12px;
-      transition: width 0.3s ease;
-    }
-    .top-scanner-meter-text {
-      position: relative;
-      z-index: 2;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .top-scanner-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-    .top-scan-btn {
-      padding: 6px 15px;
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.28);
-      white-space: nowrap;
-    }
-    .scan-spin-icon.spinning {
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
     }
 
     /* Buttons */
@@ -1088,79 +967,52 @@ public static class UiHtml
     <nav class=""tab-bar"">
       <button class=""tab-item active"" onclick=""switchTab('dashboard')"">
         <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><path d=""M21.21 15.89A10 10 0 1 1 8 2.83""/><path d=""M22 12A10 10 0 0 0 12 2v10z""/></svg>
-        Storage Map &amp; Space Pie
+        <span class=""tab-label"">Storage Map &amp; Space Pie</span>
       </button>
       <button class=""tab-item"" onclick=""switchTab('visualizer')"">
         <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><circle cx=""12"" cy=""12"" r=""10""/><circle cx=""12"" cy=""12"" r=""4""/><path d=""m4.93 4.93 4.24 4.24""/></svg>
-        Deep Visualizer
+        <span class=""tab-label"">Deep Visualizer</span>
       </button>
       <button class=""tab-item"" onclick=""switchTab('toolchains')"">
         <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><polyline points=""16 18 22 12 16 6""/><polyline points=""8 6 2 12 8 18""/></svg>
-        Developer Toolchains
+        <span class=""tab-label"">Developer Toolchains</span>
       </button>
       <button class=""tab-item"" onclick=""switchTab('duplicates')"">
         <svg width=""15"" height=""15"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2""><rect width=""14"" height=""14"" x=""8"" y=""8"" rx=""2""/><path d=""M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2""/></svg>
-        Duplicate Finder
+        <span class=""tab-label"">Duplicate Finder</span>
       </button>
     </nav>
 
     <!-- Right Zone: Toolstrip + Native Windows Caption Controls -->
     <div class=""header-right-zone"">
       <div class=""toolstrip"">
-        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px; white-space:nowrap;"" onclick=""openSafetyModal()"" title=""Air-Gap &amp; Reversible Safety Architecture"">
-          🛡️ Safety
+        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11px;"" onclick=""openSafetyModal()"" title=""Air-Gapped Zero-Risk Guarantee"">
+          🛡️ <span class=""btn-label"">Safety</span>
         </button>
-        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px; white-space:nowrap;"" onclick=""openLicenseModal()"" title=""Perpetual Pro License"">
-          ★ Pro
+        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11px;"" onclick=""openLicenseModal()"" title=""Professional License"">
+          ★ <span class=""btn-label"">Pro</span>
         </button>
-        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px; white-space:nowrap;"" onclick=""toggleSound()"" id=""soundToggleBtn"" title=""Toggle Sound Feedback"">
-          🔊 Audio
+        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11px;"" onclick=""toggleSound()"" id=""soundToggleBtn"" title=""Sound Effects"">
+          🔊 <span class=""btn-label"">Audio</span>
         </button>
-        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11.5px; white-space:nowrap;"" onclick=""toggleTheme()"" id=""themeToggleBtn"" title=""Toggle Theme"">
-          ☀️ Theme
+        <button class=""btn btn-secondary"" style=""padding:5px 9px; font-size:11px;"" onclick=""toggleTheme()"" id=""themeToggleBtn"" title=""Switch Theme"">
+          ☀️ <span class=""btn-label"">Theme</span>
         </button>
       </div>
-
       <!-- Windows 11 Fluent Caption Buttons -->
       <div class=""window-controls"">
         <button class=""win-btn win-btn-minimize"" onclick=""minimizeWindow()"" title=""Minimize"" aria-label=""Minimize"">
-          <svg width=""10"" height=""1"" viewBox=""0 0 10 1""><line x1=""0"" y1=""0.5"" x2=""10"" y2=""0.5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""0"" y1=""5"" x2=""10"" y2=""5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
         </button>
         <button class=""win-btn win-btn-maximize"" onclick=""maximizeWindow()"" title=""Maximize"" aria-label=""Maximize"">
           <svg id=""maxRestoreIcon"" width=""10"" height=""10"" viewBox=""0 0 10 10""><rect x=""1"" y=""1"" width=""8"" height=""8"" fill=""none"" stroke=""currentColor"" stroke-width=""1.2"" rx=""1""/></svg>
         </button>
         <button class=""win-btn win-btn-close"" onclick=""closeWindow()"" title=""Close"" aria-label=""Close"">
-          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""1"" y1=""1"" x2=""9"" y2=""9"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/><line x1=""9"" y1=""1"" x2=""1"" y2=""9"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
+          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""1.5"" y1=""1.5"" x2=""8.5"" y2=""8.5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/><line x1=""8.5"" y1=""1.5"" x2=""1.5"" y2=""8.5"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
         </button>
       </div>
     </div>
   </header>
-
-  <!-- Top Persistent Telemetry & Scanner Strip -->
-  <div class=""top-scanner-bar"" id=""topScannerBar"">
-    <div class=""top-scanner-left"">
-      <div class=""top-scanner-drives"" id=""topScannerDrivePills"">
-        <!-- Live from C# / JS -->
-      </div>
-      <div class=""top-scanner-badge"" id=""topScannerBadge"">
-        <span class=""live-dot""></span>
-        <span id=""topScannerBadgeText"">Drive C:\ Telemetry Active • 384.9 GB Free</span>
-      </div>
-    </div>
-
-    <!-- Active Scan Animated Meter -->
-    <div class=""top-scanner-meter-wrap"" id=""topScannerMeterWrap"" style=""display:none;"">
-      <div class=""top-scanner-meter-bar"" id=""topScannerMeterBar""></div>
-      <span class=""top-scanner-meter-text"" id=""topScannerMeterText"">Scanning C:\ Master File Table (MFT)...</span>
-    </div>
-
-    <div class=""top-scanner-right"">
-      <button class=""btn btn-primary top-scan-btn"" id=""topRunScanBtn"" onclick=""runDiagnosticScan()"">
-        <svg class=""scan-spin-icon"" id=""topScanSpinIcon"" width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""23 4 23 10 17 10""/><polyline points=""1 20 1 14 7 14""/><path d=""M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15""/></svg>
-        <span id=""topRunScanBtnText"">Run Diagnostic Scan</span>
-      </button>
-    </div>
-  </div>
 
   <!-- Viewports -->
   <main class=""app-main"">
@@ -1172,8 +1024,9 @@ public static class UiHtml
           <h1 class=""view-title"">System Volume Allocation &amp; Space Pie</h1>
           <p class=""view-subtitle"">High-precision filesystem telemetry, partition cluster analysis, and disposable package caches.</p>
         </div>
-        <button class=""btn btn-secondary"" onclick=""openCacheOptionsModal()"">
-          🧹 Clear App &amp; System Caches
+        <button class=""btn btn-primary"" onclick=""triggerStorageRefresh()"">
+          <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><polyline points=""23 4 23 10 17 10""/><polyline points=""1 20 1 14 7 14""/><path d=""M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15""/></svg>
+          Run Diagnostic Scan
         </button>
       </div>
 
@@ -1224,7 +1077,7 @@ public static class UiHtml
             Verified disposable compiler caches, package archives, and crash logs ready for zero-risk recycling.
           </p>
           <div style=""display:flex; gap:8px; width:100%;"">
-            <button class=""btn btn-secondary"" style=""flex:1;"" onclick=""openCacheOptionsModal()"">
+            <button class=""btn btn-secondary"" style=""flex:1;"" onclick=""switchView('toolchains')"">
               ⚡ Clear App &amp; Dev Caches
             </button>
             <button class=""btn btn-primary"" style=""flex:1;"" onclick=""stageAllLowRiskTargets()"">
@@ -1407,88 +1260,6 @@ public static class UiHtml
     </div>
   </div>
 
-  <!-- Dedicated Cache Cleanup Modal (System Cache vs App Cache) -->
-  <div class=""modal-overlay"" id=""cacheOptionsModal"">
-    <div class=""modal-card"" style=""width:640px; max-width:92vw;"">
-      <div style=""display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 16px;"">
-        <div style=""display:flex; align-items:center; gap:12px;"">
-          <div style=""width:38px; height:38px; border-radius:10px; background:rgba(2, 132, 199, 0.12); display:flex; align-items:center; justify-content:center; color:#0284C7;"">
-            <svg width=""20"" height=""20"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.2""><path d=""M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83""/></svg>
-          </div>
-          <div>
-            <div class=""modal-title"" style=""margin-bottom:2px;"">Clean Disposable Caches</div>
-            <p style=""font-size:12px; color:var(--text-muted); margin:0;"">Select whether to clean Application/Developer caches or Windows System caches:</p>
-          </div>
-        </div>
-        <button class=""win-btn"" style=""width:30px; height:30px; border-radius:6px;"" onclick=""closeCacheOptionsModal()"" title=""Close"">
-          <svg width=""10"" height=""10"" viewBox=""0 0 10 10""><line x1=""1"" y1=""1"" x2=""9"" y2=""9"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/><line x1=""9"" y1=""1"" x2=""1"" y2=""9"" stroke=""currentColor"" stroke-width=""1.2"" stroke-linecap=""round""/></svg>
-        </button>
-      </div>
-
-      <!-- Two-Card Selector Grid -->
-      <div style=""display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom: 18px;"">
-        <!-- Option 1: App & Developer Caches -->
-        <div style=""border:1.5px solid var(--border); border-radius:12px; padding:16px; background:var(--surface-subtle); display:flex; flex-direction:column; justify-content:space-between;"">
-          <div>
-            <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"">
-              <span style=""font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#0284C7; background:rgba(2, 132, 199, 0.1); padding:2px 7px; border-radius:5px;"">Developer &amp; Apps</span>
-              <span id=""cacheModalAppSize"" style=""font-size:13px; font-weight:800; color:var(--text-main);"">1.4 GB</span>
-            </div>
-            <div style=""font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:4px;"">Application Caches</div>
-            <p style=""font-size:11px; color:var(--text-muted); line-height:1.45; margin-bottom:10px;"">
-              Package tarballs, compiler intermediates, and app data scratchpads:
-            </p>
-            <ul style=""font-size:11px; color:var(--text-muted); line-height:1.55; margin-left:14px; margin-bottom:14px;"">
-              <li>NuGet, npm, pip &amp; cargo caches</li>
-              <li>Visual Studio .vs workspace caches</li>
-              <li>Build daemons &amp; package indexes</li>
-            </ul>
-          </div>
-          <button class=""btn btn-primary"" style=""width:100%; justify-content:center; padding:8px; font-size:12px;"" onclick=""executeCategoryClean('app')"">
-            ⚡ Clear App Caches
-          </button>
-        </div>
-
-        <!-- Option 2: System Caches -->
-        <div style=""border:1.5px solid var(--border); border-radius:12px; padding:16px; background:var(--surface-subtle); display:flex; flex-direction:column; justify-content:space-between;"">
-          <div>
-            <div style=""display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"">
-              <span style=""font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#10B981; background:rgba(16, 185, 129, 0.1); padding:2px 7px; border-radius:5px;"">Windows OS</span>
-              <span id=""cacheModalSysSize"" style=""font-size:13px; font-weight:800; color:var(--text-main);"">11.9 GB</span>
-            </div>
-            <div style=""font-size:14px; font-weight:700; color:var(--text-main); margin-bottom:4px;"">System Caches</div>
-            <p style=""font-size:11px; color:var(--text-muted); line-height:1.45; margin-bottom:10px;"">
-              Temporary OS scratch files and disposable crash telemetry:
-            </p>
-            <ul style=""font-size:11px; color:var(--text-muted); line-height:1.55; margin-left:14px; margin-bottom:14px;"">
-              <li>User %TEMP% scratch files</li>
-              <li>Windows crash dumps (CrashDumps)</li>
-              <li>Explorer thumbnail databases</li>
-            </ul>
-          </div>
-          <button class=""btn btn-secondary"" style=""width:100%; justify-content:center; padding:8px; font-size:12px; border-color:rgba(16, 185, 129, 0.4); color:#059669;"" onclick=""executeCategoryClean('system')"">
-            🧹 Clear System Caches
-          </button>
-        </div>
-      </div>
-
-      <!-- Bottom Bulk Action & Reversibility Banner -->
-      <div style=""background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;"">
-        <div style=""display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-muted);"">
-          <svg width=""14"" height=""14"" viewBox=""0 0 24 24"" fill=""none"" stroke=""#10B981"" stroke-width=""2""><polyline points=""20 6 9 17 4 12""/></svg>
-          <span>Recycle Bin safety guaranteed: all files can be restored with 1 click.</span>
-        </div>
-        <button class=""btn btn-primary"" style=""background:#0F172A; padding:6px 12px; font-size:11.5px;"" onclick=""executeCategoryClean('all')"">
-          Clean Both (<span id=""cacheModalBothSize"">13.3 GB</span>)
-        </button>
-      </div>
-
-      <div style=""display:flex; justify-content:flex-end;"">
-        <button class=""btn btn-secondary"" style=""padding:6px 16px; font-size:12px;"" onclick=""closeCacheOptionsModal()"">Cancel</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Toast -->
   <div class=""toast-pill"" id=""toastPill"">Notification</div>
 
@@ -1646,14 +1417,14 @@ public static class UiHtml
       playSound('click');
       isDarkTheme = !isDarkTheme;
       document.documentElement.className = isDarkTheme ? 'dark' : 'light';
-      document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
+      document.getElementById('themeToggleBtn').innerHTML = isDarkTheme ? '🌙 <span class=""btn-label"">Dark</span>' : '☀️ <span class=""btn-label"">Theme</span>';
       renderAllDashboardCharts();
       if (activeTab === 'visualizer' && vizMode === 'sunburst') renderSunburst();
     }
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Sound On' : '🔇 Mute';
+      document.getElementById('soundToggleBtn').innerHTML = soundEnabled ? '🔊 <span class=""btn-label"">Audio</span>' : '🔇 <span class=""btn-label"">Mute</span>';
       if (soundEnabled) playSound('click');
     }
 
@@ -1671,153 +1442,6 @@ public static class UiHtml
       document.getElementById('confirmModal').style.display = 'flex';
     }
     function closeConfirmationModal() { document.getElementById('confirmModal').style.display = 'none'; }
-
-    // Dedicated Cache Cleanup Modal (App Cache vs System Cache)
-    function openCacheOptionsModal() {
-      playSound('click');
-      let appBytes = 0;
-      let sysBytes = 0;
-      rules.forEach(r => {
-        if (r.domain === 'system') {
-          sysBytes += (r.sizeBytes || 0);
-        } else {
-          appBytes += (r.sizeBytes || 0);
-        }
-      });
-
-      const appDisplay = appBytes > 0 ? formatBytes(appBytes) : '1.4 GB';
-      const sysDisplay = sysBytes > 0 ? formatBytes(sysBytes) : '11.9 GB';
-      const bothDisplay = (appBytes + sysBytes) > 0 ? formatBytes(appBytes + sysBytes) : '13.3 GB';
-
-      const elApp = document.getElementById('cacheModalAppSize');
-      const elSys = document.getElementById('cacheModalSysSize');
-      const elBoth = document.getElementById('cacheModalBothSize');
-      if (elApp) elApp.innerText = appDisplay;
-      if (elSys) elSys.innerText = sysDisplay;
-      if (elBoth) elBoth.innerText = bothDisplay;
-
-      const modal = document.getElementById('cacheOptionsModal');
-      if (modal) modal.style.display = 'flex';
-    }
-
-    function closeCacheOptionsModal() {
-      const modal = document.getElementById('cacheOptionsModal');
-      if (modal) modal.style.display = 'none';
-    }
-
-    function executeCategoryClean(category) {
-      closeCacheOptionsModal();
-      playSound('click');
-      const catLabel = category === 'all' ? 'All Application & System Caches' : (category === 'system' ? 'Windows System Caches' : 'Application & Developer Caches');
-      showToast(`Initiating safe recycle of ${catLabel}...`);
-      if (window.chrome && window.chrome.webview) {
-        window.chrome.webview.postMessage({ action: 'cleanCategory', category: category });
-      }
-    }
-
-    window.onCategoryCleanCompleted = function(res) {
-      playSound('clean');
-      const count = res.itemsCleaned || 0;
-      const sizeStr = res.formattedSize || '0 B';
-      const cat = res.category || 'all';
-      const catLabel = cat === 'all' ? 'caches' : (cat === 'system' ? 'system cache' : 'app cache');
-      showToast(`✓ Safely moved ${count} items (${sizeStr}) of ${catLabel} to Windows Recycle Bin!`);
-      triggerStorageRefresh();
-    };
-
-    // Top Persistent Telemetry & Scanner Bar
-    function renderTopScannerBar() {
-      const pillsContainer = document.getElementById('topScannerDrivePills');
-      const badgeText = document.getElementById('topScannerBadgeText');
-      if (!pillsContainer || drives.length === 0) return;
-
-      const activeDrive = drives[selectedDriveIdx] || drives[0];
-      if (badgeText && activeDrive) {
-        const freeGb = (activeDrive.freeSizeBytes / (1024*1024*1024)).toFixed(1);
-        const totalGb = (activeDrive.totalSizeBytes / (1024*1024*1024)).toFixed(1);
-        badgeText.innerText = `Drive ${activeDrive.driveName} Active • ${freeGb} GB Free of ${totalGb} GB (${activeDrive.usedPercent.toFixed(1)}% Used)`;
-      }
-
-      let pillsHtml = '';
-      drives.forEach((d, idx) => {
-        const isSel = idx === selectedDriveIdx;
-        pillsHtml += `
-          <button class=""top-scanner-pill ${isSel ? 'active' : ''}"" onclick=""selectDriveAndScan(${idx})"" title=""Switch active scan telemetry to Drive ${d.driveName}"">
-            <svg width=""12"" height=""12"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.2""><rect width=""20"" height=""8"" x=""2"" y=""14"" rx=""2""/><path d=""M6 18h.01M10 18h.01""/><path d=""M4 14V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8""/></svg>
-            <span>${d.driveName}</span>
-          </button>`;
-      });
-      pillsContainer.innerHTML = pillsHtml;
-    }
-
-    function selectDriveAndScan(idx) {
-      playSound('click');
-      selectedDriveIdx = idx;
-      renderTopScannerBar();
-      renderVolumes();
-      renderAllDashboardCharts();
-      const drive = drives[idx];
-      const targetPath = drive ? drive.driveName : 'C:\\';
-      showToast(`Telemetry locked to Drive ${targetPath}`);
-      if (window.chrome && window.chrome.webview) {
-        window.chrome.webview.postMessage({ action: 'getSunburst', path: targetPath });
-      }
-    }
-
-    let isDiagnosticScanning = false;
-    function runDiagnosticScan() {
-      if (isDiagnosticScanning) return;
-      isDiagnosticScanning = true;
-      playSound('click');
-
-      const meterWrap = document.getElementById('topScannerMeterWrap');
-      const meterBar = document.getElementById('topScannerMeterBar');
-      const meterText = document.getElementById('topScannerMeterText');
-      const btn = document.getElementById('topRunScanBtn');
-      const btnText = document.getElementById('topRunScanBtnText');
-      const spinIcon = document.getElementById('topScanSpinIcon');
-
-      if (btn) btn.disabled = true;
-      if (btnText) btnText.innerText = 'Scanning...';
-      if (spinIcon) spinIcon.style.animation = 'spin 0.8s linear infinite';
-      if (meterWrap) meterWrap.style.display = 'flex';
-
-      const activeDrive = drives[selectedDriveIdx] || drives[0];
-      const driveName = activeDrive ? activeDrive.driveName : 'C:\\';
-
-      const steps = [
-        { pct: 15, msg: `Mounting filesystem telemetry for ${driveName}...` },
-        { pct: 40, msg: 'Querying NTFS Master File Table (MFT) & cluster maps...' },
-        { pct: 70, msg: 'Analyzing developer caches (NuGet, npm, pip, Cargo)...' },
-        { pct: 90, msg: 'Auditing Windows %TEMP% & crash dump stores...' },
-        { pct: 100, msg: `Telemetry synchronized for ${driveName}.` }
-      ];
-
-      let stepIdx = 0;
-      function nextStep() {
-        if (stepIdx < steps.length) {
-          const s = steps[stepIdx];
-          if (meterBar) meterBar.style.width = s.pct + '%';
-          if (meterText) meterText.innerText = s.msg;
-          stepIdx++;
-          setTimeout(nextStep, 250);
-        } else {
-          setTimeout(() => {
-            if (meterWrap) meterWrap.style.display = 'none';
-            if (btn) btn.disabled = false;
-            if (btnText) btnText.innerText = 'Run Diagnostic Scan';
-            if (spinIcon) spinIcon.style.animation = '';
-            isDiagnosticScanning = false;
-            playSound('clean');
-            showToast(`Diagnostic scan complete on Drive ${driveName}`);
-            if (window.chrome && window.chrome.webview) {
-              window.chrome.webview.postMessage({ action: 'ready' });
-            }
-          }, 350);
-        }
-      }
-      nextStep();
-    }
 
     // Toast
     function showToast(msg) {
@@ -1876,7 +1500,6 @@ public static class UiHtml
       playSound('click');
       selectedDriveIdx = idx;
       renderVolumes();
-      renderTopScannerBar();
       renderAllDashboardCharts();
     }
 
@@ -2516,7 +2139,6 @@ public static class UiHtml
       if (data.sunburst) sunburstTree = data.sunburst;
 
       renderVolumes();
-      renderTopScannerBar();
       renderAllDashboardCharts();
       renderPrimaryRegistries();
       renderTreemap();

@@ -171,21 +171,44 @@
       display: flex;
       align-items: center;
       height: 100%;
-      gap: 10px;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
     }
 
     .toolstrip {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 1;
     }
 
-    /* Windows 11 Fluent Caption Buttons */
+    /* Windows 11 Fluent Caption Buttons (Always 100% visible and pinned) */
     .window-controls {
       display: flex;
       align-items: stretch;
       height: 100%;
-      margin-left: 6px;
+      margin-left: 8px;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 1280px) {
+      .tab-item { padding: 6px 11px; font-size: 11.5px; }
+      .toolstrip .btn { padding: 5px 8px; font-size: 11px; }
+      .brand-group { min-width: 160px; gap: 8px; }
+    }
+
+    @media (max-width: 1100px) {
+      .badge-enterprise { display: none; }
+      .tab-item { padding: 6px 9px; font-size: 11px; }
+      .tab-item svg { width: 13px; height: 13px; }
+      .toolstrip { gap: 4px; }
+      .toolstrip .btn { padding: 4px 6px; font-size: 10.5px; }
+    }
+
+    @media (max-width: 950px) {
+      .tab-item span.tab-label { display: none; }
+      .toolstrip .btn span.btn-label { display: none; }
     }
 
     .win-btn {
@@ -940,39 +963,38 @@
     <nav class="tab-bar">
       <button class="tab-item active" onclick="switchTab('dashboard')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        Storage Map &amp; Space Pie
+        <span class="tab-label">Storage Map &amp; Space Pie</span>
       </button>
       <button class="tab-item" onclick="switchTab('visualizer')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.93 4.93 4.24 4.24"/></svg>
-        Deep Visualizer
+        <span class="tab-label">Deep Visualizer</span>
       </button>
       <button class="tab-item" onclick="switchTab('toolchains')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Developer Toolchains
+        <span class="tab-label">Developer Toolchains</span>
       </button>
       <button class="tab-item" onclick="switchTab('duplicates')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-        Duplicate Finder
+        <span class="tab-label">Duplicate Finder</span>
       </button>
     </nav>
 
     <!-- Right Zone: Toolstrip + Native Windows Caption Controls -->
     <div class="header-right-zone">
       <div class="toolstrip">
-        <button class="btn btn-secondary" style="padding:5px 11px; font-size:11.5px;" onclick="openSafetyModal()">
-          🛡️ Air-Gap &amp; Safety
+        <button class="btn btn-secondary" style="padding:5px 9px; font-size:11px;" onclick="openSafetyModal()" title="Air-Gapped Zero-Risk Guarantee">
+          🛡️ <span class="btn-label">Safety</span>
         </button>
-        <button class="btn btn-secondary" style="padding:5px 11px; font-size:11.5px;" onclick="openLicenseModal()">
-          ★ Pro Edition
+        <button class="btn btn-secondary" style="padding:5px 9px; font-size:11px;" onclick="openLicenseModal()" title="Professional License">
+          ★ <span class="btn-label">Pro</span>
         </button>
-        <button class="btn btn-secondary" style="padding:5px 10px; font-size:11.5px;" onclick="toggleSound()" id="soundToggleBtn">
-          🔊 Sound On
+        <button class="btn btn-secondary" style="padding:5px 9px; font-size:11px;" onclick="toggleSound()" id="soundToggleBtn" title="Sound Effects">
+          🔊 <span class="btn-label">Audio</span>
         </button>
-        <button class="btn btn-secondary" style="padding:5px 10px; font-size:11.5px;" onclick="toggleTheme()" id="themeToggleBtn">
-          ☀️ Light
+        <button class="btn btn-secondary" style="padding:5px 9px; font-size:11px;" onclick="toggleTheme()" id="themeToggleBtn" title="Switch Theme">
+          ☀️ <span class="btn-label">Theme</span>
         </button>
       </div>
-
       <!-- Windows 11 Fluent Caption Buttons -->
       <div class="window-controls">
         <button class="win-btn win-btn-minimize" onclick="minimizeWindow()" title="Minimize" aria-label="Minimize">
@@ -1391,14 +1413,14 @@
       playSound('click');
       isDarkTheme = !isDarkTheme;
       document.documentElement.className = isDarkTheme ? 'dark' : 'light';
-      document.getElementById('themeToggleBtn').innerText = isDarkTheme ? '🌙 Dark' : '☀️ Light';
+      document.getElementById('themeToggleBtn').innerHTML = isDarkTheme ? '🌙 <span class="btn-label">Dark</span>' : '☀️ <span class="btn-label">Theme</span>';
       renderAllDashboardCharts();
       if (activeTab === 'visualizer' && vizMode === 'sunburst') renderSunburst();
     }
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊 Sound On' : '🔇 Mute';
+      document.getElementById('soundToggleBtn').innerHTML = soundEnabled ? '🔊 <span class="btn-label">Audio</span>' : '🔇 <span class="btn-label">Mute</span>';
       if (soundEnabled) playSound('click');
     }
 

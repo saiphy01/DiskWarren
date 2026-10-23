@@ -9,10 +9,52 @@ repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 downloads_dir = os.path.join(repo_root, "web", "public", "downloads")
 os.makedirs(downloads_dir, exist_ok=True)
 
-# 1. Publish DiskWarren.Recover.UI (Self-Contained Single File)
+# -------------------------------------------------------------
+# 1. Publish DiskWarren.UI (Cleaner App - Self-Contained Win-x64)
+# -------------------------------------------------------------
+cleaner_csproj = os.path.join(repo_root, "windows", "src", "DiskWarren.UI", "DiskWarren.UI.csproj")
+cleaner_pub = os.path.join(repo_root, "windows", "artifacts", "cleaner_publish")
+print("1. Publishing DiskWarren.UI (Cleaner)...")
+subprocess.run([
+    "dotnet", "publish", cleaner_csproj,
+    "-c", "Release",
+    "-r", "win-x64",
+    "--self-contained", "true",
+    "-p:PublishSingleFile=true",
+    "-p:IncludeNativeLibrariesForSelfExtract=true",
+    "-o", cleaner_pub
+], check=True)
+
+built_cleaner_exe = os.path.join(cleaner_pub, "DiskWarren.exe")
+dest_cleaner_setup_ver = os.path.join(downloads_dir, "DiskWarren-Setup-1.0.0.exe")
+dest_cleaner_setup = os.path.join(downloads_dir, "DiskWarren-Setup.exe")
+print(f"2. Copying Cleaner to {dest_cleaner_setup_ver} and {dest_cleaner_setup}...")
+shutil.copy2(built_cleaner_exe, dest_cleaner_setup_ver)
+shutil.copy2(built_cleaner_exe, dest_cleaner_setup)
+cleaner_size = os.path.getsize(dest_cleaner_setup)
+print(f"   DiskWarren-Setup.exe size: {cleaner_size:,} bytes ({cleaner_size / (1024*1024):.1f} MB)")
+assert cleaner_size < 100 * 1024 * 1024, "FATAL: Cleaner executable exceeds 100MB GitHub limit!"
+
+# Cleaner Portable ZIP
+cleaner_portable_zip = os.path.join(downloads_dir, "DiskWarren-Windows-Portable.zip")
+print("3. Creating DiskWarren-Windows-Portable.zip...")
+with zipfile.ZipFile(cleaner_portable_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=5) as cpz:
+    cpz.write(built_cleaner_exe, "DiskWarren/DiskWarren.exe")
+    cleaner_cmd = (
+        "@echo off\r\n"
+        "title Starting DiskWarren...\r\n"
+        "echo [DiskWarren] Unblocking local binaries...\r\n"
+        "powershell -NoProfile -Command \"Get-ChildItem -Path '%~dp0' -Recurse | Unblock-File -ErrorAction SilentlyContinue\"\r\n"
+        "start \"\" \"%~dp0DiskWarren.exe\"\r\n"
+    )
+    cpz.writestr("DiskWarren/Run-DiskWarren.cmd", cleaner_cmd)
+
+# -------------------------------------------------------------
+# 2. Publish DiskWarren.Recover.UI (Self-Contained Win-x64)
+# -------------------------------------------------------------
 recover_csproj = os.path.join(repo_root, "windows", "src", "DiskWarren.Recover.UI", "DiskWarren.Recover.UI.csproj")
 recover_pub = os.path.join(repo_root, "windows", "artifacts", "recover_publish")
-print("1. Publishing DiskWarren.Recover.UI...")
+print("4. Publishing DiskWarren.Recover.UI (Data Recovery)...")
 subprocess.run([
     "dotnet", "publish", recover_csproj,
     "-c", "Release",
@@ -25,15 +67,15 @@ subprocess.run([
 
 built_recover_exe = os.path.join(recover_pub, "DiskWarrenRecover.exe")
 dest_setup = os.path.join(downloads_dir, "DiskWarrenRecover-Setup.exe")
-print(f"2. Copying built executable to {dest_setup}...")
+print(f"5. Copying built executable to {dest_setup}...")
 shutil.copy2(built_recover_exe, dest_setup)
 exe_size = os.path.getsize(dest_setup)
 print(f"   DiskWarrenRecover-Setup.exe size: {exe_size:,} bytes ({exe_size / (1024*1024):.1f} MB)")
 assert exe_size < 100 * 1024 * 1024, "FATAL: Executable exceeds 100MB GitHub limit!"
 
-# 3. Create Portable ZIP for Windows (Bypasses Smart App Control & SmartScreen)
+# 6. Create Portable ZIP for Windows (Bypasses Smart App Control & SmartScreen)
 portable_zip_path = os.path.join(downloads_dir, "DiskWarrenRecover-Windows-Portable.zip")
-print("3. Creating DiskWarrenRecover-Windows-Portable.zip...")
+print("6. Creating DiskWarrenRecover-Windows-Portable.zip...")
 with zipfile.ZipFile(portable_zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=5) as pz:
     pz.write(built_recover_exe, "DiskWarrenRecover/DiskWarrenRecover.exe")
     
@@ -64,9 +106,9 @@ zip_size = os.path.getsize(portable_zip_path)
 print(f"   Portable ZIP ready: {portable_zip_path} ({zip_size:,} bytes, {zip_size/(1024*1024):.1f} MB)")
 assert zip_size < 100 * 1024 * 1024, "FATAL: Zip exceeds 100MB GitHub limit!"
 
-# 4. Create 1-Click PowerShell installer: web/public/install.ps1
+# 7. Create 1-Click PowerShell installer: web/public/install.ps1
 install_ps1_path = os.path.join(repo_root, "web", "public", "install.ps1")
-print("4. Creating 1-Click web/public/install.ps1...")
+print("7. Creating 1-Click web/public/install.ps1...")
 install_ps1_content = """# DiskWarren Recover - Official 1-Click PowerShell Installer
 # Installs directly to %LOCALAPPDATA%\\Programs\\DiskWarrenRecover and unblocks
 $ErrorActionPreference = 'Stop'
@@ -96,9 +138,9 @@ Start-Process -FilePath $exePath
 with open(install_ps1_path, "w", encoding="utf-8") as f:
     f.write(install_ps1_content)
 
-# 5. Create valid Android APK file (proper ZIP structure)
+# 8. Create valid Android APK file (proper ZIP structure)
 apk_path = os.path.join(downloads_dir, "DiskWarrenRecover-v1.0.0.apk")
-print("5. Creating valid Android APK archive...")
+print("8. Creating valid Android APK archive...")
 with zipfile.ZipFile(apk_path, "w", zipfile.ZIP_DEFLATED) as az:
     manifest_xml = (
         '<?xml version="1.0" encoding="utf-8"?>\n'
@@ -130,10 +172,10 @@ with zipfile.ZipFile(apk_path, "w", zipfile.ZIP_DEFLATED) as az:
 
 print(f"   Android APK ready: {apk_path} ({os.path.getsize(apk_path):,} bytes)")
 
-# 6. Create valid macOS package archive
+# 9. Create valid macOS package archive
 mac_path = os.path.join(downloads_dir, "DiskWarrenRecover-1.0.0.dmg")
 mac_zip_path = os.path.join(downloads_dir, "DiskWarrenRecover-macOS.zip")
-print("6. Creating valid macOS package archives...")
+print("9. Creating valid macOS package archives...")
 with zipfile.ZipFile(mac_zip_path, "w", zipfile.ZIP_DEFLATED) as mz:
     plist = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -186,7 +228,13 @@ with open(mac_path, "wb") as f:
 
 print(f"   macOS DMG ready: {mac_path} ({os.path.getsize(mac_path):,} bytes)")
 
-# 7. Compute All Checksums
+# 10. Authenticode Sign Windows Binaries
+sign_script = os.path.join(repo_root, "scripts", "sign_recover.ps1")
+if os.path.exists(sign_script):
+    print("10. Signing Windows binaries with Authenticode...")
+    subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", sign_script], check=False)
+
+# 11. Compute All Checksums
 def get_sha256(filepath):
     h = hashlib.sha256()
     with open(filepath, "rb") as f:
@@ -194,13 +242,16 @@ def get_sha256(filepath):
             h.update(chunk)
     return h.hexdigest()
 
-win_exe_sha = get_sha256(dest_setup)
+win_cleaner_sha = get_sha256(dest_cleaner_setup)
+win_recover_sha = get_sha256(dest_setup)
 win_zip_sha = get_sha256(portable_zip_path)
 mac_sha = get_sha256(mac_path)
 apk_sha = get_sha256(apk_path)
 
 print("\n--- FINAL CRYPTOGRAPHIC SHA-256 HASHES ---")
-print(f"Windows Setup EXE:     {win_exe_sha}")
-print(f"Windows Portable ZIP:  {win_zip_sha}")
-print(f"macOS DMG:             {mac_sha}")
-print(f"Android APK:           {apk_sha}")
+print(f"DiskWarren Cleaner EXE:   {win_cleaner_sha}")
+print(f"DiskWarren Recover EXE:   {win_recover_sha}")
+print(f"Windows Portable ZIP:     {win_zip_sha}")
+print(f"macOS DMG:                {mac_sha}")
+print(f"Android APK:              {apk_sha}")
+print("\nPackaging completed successfully!")
