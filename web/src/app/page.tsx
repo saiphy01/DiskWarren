@@ -25,7 +25,13 @@ import {
   Brain,
   Code2,
   FolderTree,
-  ShieldAlert
+  ShieldAlert,
+  Laptop,
+  Smartphone,
+  ExternalLink,
+  Check,
+  FileSearch,
+  Terminal
 } from 'lucide-react';
 import SimulatedStorageAnalyzer from '@/components/SimulatedStorageAnalyzer';
 
@@ -122,6 +128,60 @@ export default function HomePage() {
           <span className="text-slate-300">•</span>
           <span className="flex items-center gap-1.5"><Zap className="w-4 h-4 text-amber-600" /> One-Time Purchase, No Subscriptions</span>
         </div>
+
+        {/* Quick Platform & Service Switcher */}
+        <div className="pt-3">
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200/90 shadow-xs max-w-3xl mx-auto text-xs">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2.5">
+              Switch Platform:
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-cyan-800 font-bold shadow-xs border border-cyan-200/70">
+              <Laptop className="w-3.5 h-3.5 text-cyan-600" />
+              <span>macOS</span>
+              <span className="text-[9px] bg-cyan-100 text-cyan-800 px-1.5 py-0.2 rounded font-semibold">Current</span>
+            </span>
+            <Link
+              href="/windows"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-blue-700 hover:bg-white font-medium transition-all"
+              title="Switch to DiskWarren for Windows PC"
+            >
+              <HardDrive className="w-3.5 h-3.5 text-blue-600" />
+              <span>Windows PC</span>
+            </Link>
+            <Link
+              href="/recovery"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-teal-700 hover:bg-white font-medium transition-all"
+              title="Switch to DiskWarren Recover (Emergency Data Restore)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+              <span>Data Recovery</span>
+              <span className="text-[9px] bg-teal-100 text-teal-800 px-1.5 py-0.2 rounded font-semibold">New</span>
+            </Link>
+            <Link
+              href="/android"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-emerald-700 hover:bg-white font-medium transition-all"
+              title="Switch to DiskWarren for Android"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Android</span>
+            </Link>
+            <Link
+              href="/ios"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-700 hover:text-purple-700 hover:bg-white font-medium transition-all"
+              title="Switch to DiskWarren for iPhone & iPad"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-purple-600" />
+              <span>iPhone</span>
+            </Link>
+            <a
+              href="#other-services"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-slate-500 hover:text-slate-900 font-semibold text-[11px] hover:underline"
+            >
+              <span>All Services</span>
+              <ArrowRight className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* 2. INTERACTIVE STORAGE DEMO */}
@@ -139,6 +199,383 @@ export default function HomePage() {
           </p>
         </div>
         <SimulatedStorageAnalyzer />
+      </section>
+
+      {/* 2.5 OTHER SERVICES & NATIVE EDITIONS SUITE */}
+      <section id="other-services" className="px-6 max-w-7xl mx-auto space-y-12 scroll-mt-24">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>The DiskWarren Native Suite</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+            Native Storage Intelligence &amp; Data Recovery for Every Device
+          </h2>
+          <p className="text-base text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            Need to reclaim 80GB on macOS, clean bloated NTFS partitions on Windows, recover lost photos from a camera SD card, or declutter your mobile device? DiskWarren provides a dedicated, 100% native client for every platform. Switch instantly:
+          </p>
+        </div>
+
+        {/* 5 Product Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* 1. DiskWarren for Windows */}
+          <div className="p-7 rounded-3xl bg-white border-2 border-blue-100 hover:border-blue-400 shadow-md shadow-blue-500/5 transition-all flex flex-col justify-between group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200 shadow-xs group-hover:scale-105 transition-transform">
+                  <HardDrive className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+                  Windows 10 / 11 Native
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">DiskWarren for Windows</h3>
+                <p className="text-xs text-blue-600 font-semibold mt-0.5">NTFS Telemetry &amp; Developer Toolchains</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Native .NET 8 64-bit cleaner for Windows PCs. Scans partition clusters on drive C: &amp; D:, cleans Visual Studio &amp; NuGet package caches, compacts WSL2 Docker virtual disks (ext4.vhdx), and safely routes all removals through the Win32 Recycle Bin.
+              </p>
+
+              <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-700 font-medium">
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Multi-drive support (C:, D:, NVMe SSDs)</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Reversible Win32 Recycle Bin safety</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> WSL2 &amp; Docker VHDX live compaction</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> Standalone portable edition (Zero-Block)</div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-slate-100 space-y-2.5">
+              <Link
+                href="/windows"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20 active:scale-95"
+              >
+                <span>Switch to Windows Edition</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <div className="flex items-center gap-2 text-[11px]">
+                <a
+                  href="/downloads/DiskWarren-Setup.exe"
+                  download="DiskWarren-Setup.exe"
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-medium transition-colors"
+                >
+                  Download .EXE
+                </a>
+                <a
+                  href="/downloads/DiskWarren-Windows-Portable.zip"
+                  download="DiskWarren-Windows-Portable.zip"
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-medium transition-colors"
+                >
+                  Portable ZIP
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. DiskWarren Recover (Emergency Data Restore) */}
+          <div className="p-7 rounded-3xl bg-white border-2 border-teal-200 hover:border-teal-400 shadow-md shadow-teal-500/10 transition-all flex flex-col justify-between group relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+              Emergency Service
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center border border-teal-200 shadow-xs group-hover:scale-105 transition-transform">
+                  <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200 uppercase tracking-wider">
+                  100% Read-Only Safety
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">DiskWarren Recover</h3>
+                <p className="text-xs text-teal-600 font-semibold mt-0.5">Hardware Block Carving &amp; Data Restore</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Emergency data recovery utility for corrupted SD cards, formatted USB thumb drives, deleted photos, and raw partition recovery. Operates with a hardware 100% Read-Only Source Lock to guarantee zero write operations touch the damaged media.
+              </p>
+
+              <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-700 font-medium">
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-teal-600 shrink-0" /> 100% Read-Only Source Lock shield</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-teal-600 shrink-0" /> Camera SD cards, USB flash &amp; SSD recovery</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-teal-600 shrink-0" /> Deep sector signature carving (20+ types)</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-teal-600 shrink-0" /> In-memory file preview before saving</div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-slate-100 space-y-2.5">
+              <Link
+                href="/recovery"
+                className="w-full py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-teal-600/20 active:scale-95"
+              >
+                <span>Switch to Recovery Edition</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <div className="flex items-center gap-2 text-[11px]">
+                <a
+                  href="/downloads/DiskWarrenRecover-Setup.exe"
+                  download="DiskWarrenRecover-Setup.exe"
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-800 text-center font-medium transition-colors border border-teal-200"
+                >
+                  Download .EXE
+                </a>
+                <a
+                  href="/downloads/DiskWarrenRecover-Windows-Portable.zip"
+                  download="DiskWarrenRecover-Windows-Portable.zip"
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-medium transition-colors"
+                >
+                  Portable ZIP
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. DiskWarren for Mac */}
+          <div className="p-7 rounded-3xl bg-white border-2 border-cyan-100 hover:border-cyan-400 shadow-md shadow-cyan-500/5 transition-all flex flex-col justify-between group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center border border-cyan-200 shadow-xs group-hover:scale-105 transition-transform">
+                  <Laptop className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200 uppercase tracking-wider">
+                  macOS Sequoia Ready
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">DiskWarren for Mac</h3>
+                <p className="text-xs text-cyan-600 font-semibold mt-0.5">APFS Intelligence &amp; AI Weight Manager</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                The flagship macOS storage analyzer. Decodes mysterious 'System Data', prunes Xcode DerivedData and iOS simulator runtimes, unprunes Docker virtual disks, and correlates Ollama/LM Studio local AI model weights.
+              </p>
+
+              <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-700 font-medium">
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Universal 2 binary (Apple Silicon &amp; Intel)</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Interactive squarified treemap &amp; zoom</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Safe native macOS Trash reversibility</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-cyan-600 shrink-0" /> Lifetime license with zero subscriptions</div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-slate-100 space-y-2.5">
+              <Link
+                href="/features"
+                className="w-full py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-cyan-600/20 active:scale-95"
+              >
+                <span>Explore Mac Features</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <div className="flex items-center gap-2 text-[11px]">
+                <a
+                  href="/downloads/DiskWarren-1.0.0.dmg"
+                  download="DiskWarren-1.0.0.dmg"
+                  className="w-full py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-medium transition-colors"
+                >
+                  Download Universal DMG
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. DiskWarren for Android */}
+          <div className="p-7 rounded-3xl bg-white border-2 border-emerald-100 hover:border-emerald-400 shadow-md shadow-emerald-500/5 transition-all flex flex-col justify-between group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shadow-xs group-hover:scale-105 transition-transform">
+                  <Smartphone className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider">
+                  Android 10 – 15
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">DiskWarren for Android</h3>
+                <p className="text-xs text-emerald-600 font-semibold mt-0.5">Scoped Storage &amp; LOST.DIR Audit</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Purpose-built for modern Android Scoped Storage. Audits internal memory and MicroSD cards, cleans dormant WhatsApp/Telegram media, and removes duplicate photos using native 30-day OS Trash safety.
+              </p>
+
+              <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-700 font-medium">
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Internal Storage &amp; MicroSD block audit</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Perceptual photo de-duplication clustering</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> 30-day MediaStore OS trash reversibility</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> Zero background battery or cloud drain</div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-slate-100 space-y-2.5">
+              <Link
+                href="/android"
+                className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20 active:scale-95"
+              >
+                <span>Switch to Android Edition</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <div className="flex items-center gap-2 text-[11px]">
+                <a
+                  href="/downloads/DiskWarrenRecover-v1.0.0.apk"
+                  download="DiskWarrenRecover-v1.0.0.apk"
+                  className="w-full py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-center font-medium transition-colors"
+                >
+                  Download APK
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. DiskWarren for iOS */}
+          <div className="p-7 rounded-3xl bg-white border-2 border-purple-100 hover:border-purple-400 shadow-md shadow-purple-500/5 transition-all flex flex-col justify-between group lg:col-span-2">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-200 shadow-xs group-hover:scale-105 transition-transform">
+                  <Smartphone className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 uppercase tracking-wider">
+                  iOS 17 &amp; 18 PhotoKit
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">DiskWarren for iPhone &amp; iPad</h3>
+                <p className="text-xs text-purple-600 font-semibold mt-0.5">PhotoKit Neural Discovery &amp; ProRes Video</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                On-device neural engine inspection for Apple PhotoKit libraries. Identifies gigabytes of redundant burst shots, blurry captures, and massive 4K ProRes videos without sending a single pixel or metadata tag to any server.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs text-slate-700 font-medium">
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-purple-600 shrink-0" /> 100% On-Device Neural Engine processing</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-purple-600 shrink-0" /> 4K ProRes &amp; HDR high-bitrate discovery</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Recently Deleted 30-day safety protection</div>
+                <div className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-purple-600 shrink-0" /> Apple Family Sharing license support</div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
+              <Link
+                href="/ios"
+                className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-purple-600/20 active:scale-95"
+              >
+                <span>Switch to iOS Edition</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/ios/download"
+                className="w-full sm:w-auto py-2.5 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold text-center transition-colors"
+              >
+                Setup Guide &amp; App Store Link
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Executive Comparison Matrix */}
+        <div className="rounded-3xl bg-slate-900 text-white p-8 md:p-10 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div>
+              <h3 className="text-xl md:text-2xl font-bold tracking-tight">Ecosystem Quick-Matrix</h3>
+              <p className="text-xs text-slate-400 mt-1">Cross-platform overview of features, safety, and direct download links</p>
+            </div>
+            <span className="text-xs font-mono px-3 py-1 rounded-full bg-slate-800 text-cyan-400 border border-slate-700 w-fit">
+              All Versions v1.0.0
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-800 text-slate-400 font-mono uppercase text-[11px]">
+                  <th className="pb-3 pr-4">Edition</th>
+                  <th className="pb-3 pr-4">Primary Capability</th>
+                  <th className="pb-3 pr-4">Safety Model</th>
+                  <th className="pb-3 pr-4">Pricing</th>
+                  <th className="pb-3 text-right">Direct Download</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/80">
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 pr-4 font-bold text-white flex items-center gap-2">
+                    <Laptop className="w-4 h-4 text-cyan-400" />
+                    <span>DiskWarren for Mac</span>
+                  </td>
+                  <td className="py-3.5 pr-4 text-slate-300">APFS &amp; Developer Cache Analyzer</td>
+                  <td className="py-3.5 pr-4 text-emerald-400 font-medium">Reversible macOS Trash</td>
+                  <td className="py-3.5 pr-4 font-mono text-cyan-300">Free / $9.99 Life</td>
+                  <td className="py-3.5 text-right">
+                    <a href="/downloads/DiskWarren-1.0.0.dmg" download="DiskWarren-1.0.0.dmg" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold transition-colors">
+                      <Download className="w-3 h-3" /> DMG
+                    </a>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 pr-4 font-bold text-white flex items-center gap-2">
+                    <HardDrive className="w-4 h-4 text-blue-400" />
+                    <span>DiskWarren for Windows</span>
+                  </td>
+                  <td className="py-3.5 pr-4 text-slate-300">NTFS Telemetry &amp; WSL2 Cleanup</td>
+                  <td className="py-3.5 pr-4 text-emerald-400 font-medium">Win32 Recycle Bin</td>
+                  <td className="py-3.5 pr-4 font-mono text-blue-300">Free / $9.99 Life</td>
+                  <td className="py-3.5 text-right">
+                    <a href="/downloads/DiskWarren-Setup.exe" download="DiskWarren-Setup.exe" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-400 text-white font-bold transition-colors">
+                      <Download className="w-3 h-3" /> EXE
+                    </a>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 pr-4 font-bold text-white flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-teal-400" />
+                    <span>DiskWarren Recover</span>
+                  </td>
+                  <td className="py-3.5 pr-4 text-slate-300">Emergency Hardware Data Restoration</td>
+                  <td className="py-3.5 pr-4 text-teal-300 font-medium">100% Read-Only Lock</td>
+                  <td className="py-3.5 pr-4 font-mono text-teal-300">Free Scan / $9.99 Life</td>
+                  <td className="py-3.5 text-right">
+                    <a href="/downloads/DiskWarrenRecover-Setup.exe" download="DiskWarrenRecover-Setup.exe" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold transition-colors">
+                      <Download className="w-3 h-3" /> EXE
+                    </a>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 pr-4 font-bold text-white flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-emerald-400" />
+                    <span>DiskWarren for Android</span>
+                  </td>
+                  <td className="py-3.5 pr-4 text-slate-300">Scoped Storage &amp; LOST.DIR Purge</td>
+                  <td className="py-3.5 pr-4 text-emerald-400 font-medium">30-Day OS Trash</td>
+                  <td className="py-3.5 pr-4 font-mono text-emerald-300">100% Free</td>
+                  <td className="py-3.5 text-right">
+                    <a href="/downloads/DiskWarrenRecover-v1.0.0.apk" download="DiskWarrenRecover-v1.0.0.apk" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition-colors">
+                      <Download className="w-3 h-3" /> APK
+                    </a>
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 pr-4 font-bold text-white flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-purple-400" />
+                    <span>DiskWarren for iOS</span>
+                  </td>
+                  <td className="py-3.5 pr-4 text-slate-300">PhotoKit Neural De-dupe &amp; ProRes</td>
+                  <td className="py-3.5 pr-4 text-purple-300 font-medium">Recently Deleted Safety</td>
+                  <td className="py-3.5 pr-4 font-mono text-purple-300">100% Free</td>
+                  <td className="py-3.5 text-right">
+                    <Link href="/ios/download" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500 hover:bg-purple-400 text-white font-bold transition-colors">
+                      Guide &rarr;
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       {/* 3. MAJOR SECTION: YOUR MAC ISN'T JUST FULL OF "JUNK" */}

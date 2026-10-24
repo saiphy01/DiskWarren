@@ -219,6 +219,143 @@ export default function MacDownloadPage() {
         </div>
       </div>
 
+      {/* All Platforms & Editions Download Switcher */}
+      <div className="bg-slate-900 text-white rounded-2xl p-8 sm:p-10 space-y-8 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-mono mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Multi-Platform Suite</span>
+            </div>
+            <h3 className="text-2xl font-bold tracking-tight">Looking for Another Platform?</h3>
+            <p className="text-sm text-slate-400 mt-1">
+              Download the official native DiskWarren client for your other devices with 1 click:
+            </p>
+          </div>
+          <Link
+            href="/#other-services"
+            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1 shrink-0"
+          >
+            <span>Compare All Editions &rarr;</span>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Windows Cleaner */}
+          <div className="p-5 rounded-xl bg-slate-800/80 border border-slate-700/80 flex flex-col justify-between space-y-4 hover:border-blue-500/60 transition-colors">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
+                <HardDrive className="w-4 h-4" />
+                <span>Windows PC</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                NTFS partition telemetry, VS temp &amp; WSL2 Docker cleaner.
+              </p>
+              <div className="text-[11px] text-slate-400 font-mono">
+                Win 10/11 • 64-bit .NET 8
+              </div>
+            </div>
+            <div className="space-y-2 pt-2">
+              <a
+                href="/downloads/DiskWarren-Setup.exe"
+                download="DiskWarren-Setup.exe"
+                className="w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" /> Download .EXE
+              </a>
+              <a
+                href="/downloads/DiskWarren-Windows-Portable.zip"
+                download="DiskWarren-Windows-Portable.zip"
+                className="w-full py-1.5 px-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+              >
+                Portable ZIP
+              </a>
+            </div>
+          </div>
+
+          {/* DiskWarren Recover */}
+          <div className="p-5 rounded-xl bg-slate-800/80 border border-teal-500/40 flex flex-col justify-between space-y-4 hover:border-teal-400 transition-colors">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <ShieldCheck className="w-4 h-4" />
+                <span>DiskWarren Recover</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Safe read-only data restoration for SD cards, USBs &amp; disks.
+              </p>
+              <div className="text-[11px] text-teal-300 font-mono">
+                100% Read-Only Safety Lock
+              </div>
+            </div>
+            <div className="space-y-2 pt-2">
+              <a
+                href="/downloads/DiskWarrenRecover-Setup.exe"
+                download="DiskWarrenRecover-Setup.exe"
+                className="w-full py-2 px-3 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" /> Download .EXE
+              </a>
+              <a
+                href="/downloads/DiskWarrenRecover-Windows-Portable.zip"
+                download="DiskWarrenRecover-Windows-Portable.zip"
+                className="w-full py-1.5 px-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+              >
+                Portable ZIP
+              </a>
+            </div>
+          </div>
+
+          {/* Android Companion */}
+          <div className="p-5 rounded-xl bg-slate-800/80 border border-slate-700/80 flex flex-col justify-between space-y-4 hover:border-emerald-500/60 transition-colors">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                <Laptop className="w-4 h-4" />
+                <span>Android Mobile</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Scoped storage, LOST.DIR &amp; WhatsApp media cleaner.
+              </p>
+              <div className="text-[11px] text-slate-400 font-mono">
+                Android 10 – 15 APK
+              </div>
+            </div>
+            <div className="pt-2">
+              <a
+                href="/downloads/DiskWarrenRecover-v1.0.0.apk"
+                download="DiskWarrenRecover-v1.0.0.apk"
+                className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" /> Download APK
+              </a>
+            </div>
+          </div>
+
+          {/* iOS PhotoKit */}
+          <div className="p-5 rounded-xl bg-slate-800/80 border border-slate-700/80 flex flex-col justify-between space-y-4 hover:border-purple-500/60 transition-colors">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-purple-400 font-bold text-sm">
+                <Laptop className="w-4 h-4" />
+                <span>iPhone &amp; iPad</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                PhotoKit duplicate clustering &amp; 4K ProRes video analyzer.
+              </p>
+              <div className="text-[11px] text-slate-400 font-mono">
+                iOS 17 &amp; 18+ Neural
+              </div>
+            </div>
+            <div className="pt-2">
+              <Link
+                href="/ios/download"
+                className="w-full py-2 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <span>View iOS Guide &rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Support & Release Notes Callout */}
       <div className="text-center text-sm text-slate-500 pt-4 flex flex-wrap items-center justify-center gap-4">
         <span>Need a perpetual license? <Link href="/pricing" className="text-cyan-600 hover:underline font-semibold">View Pro Pricing ($9.99 One-Time)</Link></span>

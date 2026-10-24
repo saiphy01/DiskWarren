@@ -178,13 +178,13 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-          {/* Platforms Dropdown */}
+          {/* Other Services & Platforms Dropdown */}
           <div className="relative group">
             <button
               onClick={() => setPlatformsOpen(!platformsOpen)}
-              className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer py-2"
+              className="flex items-center gap-1.5 hover:text-slate-900 transition-colors cursor-pointer py-2"
             >
-              <span>Platforms</span>
+              <span>Other Services &amp; Editions</span>
               <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-900 transition-transform group-hover:rotate-180" />
             </button>
             <div className="absolute top-full left-0 w-64 p-2 bg-white border border-slate-200 rounded-xl shadow-xl shadow-slate-200/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 space-y-1">
@@ -271,6 +271,7 @@ export default function Navbar() {
           </div>
 
           {/* Active Platform's Standalone Links */}
+          <a href="/#other-services" className="hover:text-slate-900 transition-colors font-semibold text-cyan-700">Other Services</a>
           <Link href={getUrl('features')} className="hover:text-slate-900 transition-colors">Features</Link>
           <Link href={getUrl('safety')} className="hover:text-slate-900 transition-colors">Safety</Link>
           <Link href={getUrl('pricing')} className="hover:text-slate-900 transition-colors">Pricing</Link>
@@ -354,6 +355,14 @@ export default function Navbar() {
           </div>
 
           <div className="flex flex-col space-y-2 text-sm font-medium text-slate-700 pt-2 border-t border-slate-100">
+            <a 
+              href="/#other-services" 
+              onClick={closeMobileMenu}
+              className="py-2 px-3 rounded-lg bg-cyan-50/50 text-cyan-900 font-bold hover:bg-cyan-50 transition-colors flex items-center justify-between"
+            >
+              <span>Other Services &amp; All Editions</span>
+              <ArrowRight className="w-4 h-4 text-cyan-600" />
+            </a>
             <Link 
               href={getUrl('features')} 
               onClick={closeMobileMenu}
