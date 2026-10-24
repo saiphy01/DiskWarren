@@ -34,6 +34,21 @@ public static class InstallerLogic
 
         Directory.CreateDirectory(installDir);
 
+        // Terminate any running DiskWarrenRecover processes to prevent file lock sharing violations
+        try
+        {
+            foreach (var proc in Process.GetProcessesByName("DiskWarrenRecover"))
+            {
+                try
+                {
+                    proc.Kill();
+                    proc.WaitForExit(3000);
+                }
+                catch { }
+            }
+        }
+        catch { }
+
         progress.Report(new InstallProgress(25, "Extracting DiskWarren Recover engine & UI components..."));
         await Task.Run(() =>
         {
@@ -50,8 +65,12 @@ public static class InstallerLogic
             if (stream == null) throw new InvalidOperationException("Cannot read payload stream.");
 
             using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
+            int totalEntries = archive.Entries.Count;
+            int current = 0;
+
             foreach (var entry in archive.Entries)
             {
+                current++;
                 if (string.IsNullOrEmpty(entry.Name))
                 {
                     string dir = Path.Combine(installDir, entry.FullName);
@@ -64,6 +83,23 @@ public static class InstallerLogic
                 if (!string.IsNullOrEmpty(parentDir))
                 {
                     Directory.CreateDirectory(parentDir);
+                }
+
+                int pct = 25 + (int)(45.0 * current / Math.Max(1, totalEntries));
+                progress.Report(new InstallProgress(pct, $"Extracting {entry.Name} ({current}/{totalEntries})..."));
+
+                if (File.Exists(destinationPath))
+                {
+                    try { File.Delete(destinationPath); }
+                    catch
+                    {
+                        try
+                        {
+                            string tempBak = destinationPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                            File.Move(destinationPath, tempBak);
+                        }
+                        catch { }
+                    }
                 }
 
                 entry.ExtractToFile(destinationPath, overwrite: true);

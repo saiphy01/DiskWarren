@@ -40,7 +40,8 @@ public static class RecoveryExporter
         string sourceDrive,
         string destinationFolder,
         List<RecoveryCandidate> selectedCandidates,
-        IProgress<(int Percent, string CurrentFile)> progress)
+        IProgress<(int Percent, string CurrentFile)> progress,
+        CancellationToken cancellationToken = default)
     {
         long totalBytes = selectedCandidates.Sum(c => c.SizeBytes);
         var safetyCheck = SafetyShield.ValidateDestination(sourceDrive, destinationFolder, totalBytes);
@@ -63,6 +64,8 @@ public static class RecoveryExporter
 
         for (int i = 0; i < selectedCandidates.Count; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var cand = selectedCandidates[i];
             string destFile = Path.Combine(destinationFolder, cand.FileName);
             // Handle filename collision
@@ -96,13 +99,14 @@ public static class RecoveryExporter
                     using var rawStream = new FileStream(rawDevPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024, useAsync: true);
                     using var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: true);
 
-                    long exactSize = await DetermineExactFileSizeAsync(rawStream, rawOffset, cand.Extension, cand.Category, rawSize);
+                    // If rawSize is already known from the scanner, use it directly without re-seeking across the raw drive!
+                    long exactSize = rawSize > 0 ? rawSize : await DetermineExactFileSizeAsync(rawStream, rawOffset, cand.Extension, cand.Category, rawSize);
                     fileBytesWritten = await ExportRawStreamAsync(rawStream, outFs, incrementalHash, rawOffset, exactSize, (chunkBytes, total) =>
                     {
                         cumulativeBytesWritten += chunkBytes;
                         int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
                         progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(fileBytesWritten)} / {StorageDrive.FormatBytes(total)})"));
-                    });
+                    }, cancellationToken);
 
                     itemResult.BytesWritten = fileBytesWritten;
                 }
@@ -113,9 +117,10 @@ public static class RecoveryExporter
                     {
                         byte[] buf = new byte[512 * 1024];
                         int r;
-                        while ((r = await sourceStream.ReadAsync(buf.AsMemory(0, buf.Length))) > 0)
+                        while ((r = await sourceStream.ReadAsync(buf.AsMemory(0, buf.Length), cancellationToken)) > 0)
                         {
-                            await outFs.WriteAsync(buf.AsMemory(0, r));
+                            cancellationToken.ThrowIfCancellationRequested();
+                            await outFs.WriteAsync(buf.AsMemory(0, r), cancellationToken);
                             incrementalHash.AppendData(buf, 0, r);
                             cumulativeBytesWritten += r;
                             int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
@@ -127,25 +132,25 @@ public static class RecoveryExporter
                 }
                 else
                 {
+                    // Fallback for metadata-only or deleted files without direct file handle
                     using var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024, useAsync: true);
                     byte[] header = GetHeaderBytes(cand.Extension);
                     if (header.Length > 0)
                     {
-                        await fs.WriteAsync(header.AsMemory(0, header.Length));
+                        await fs.WriteAsync(header.AsMemory(0, header.Length), cancellationToken);
                         incrementalHash.AppendData(header, 0, header.Length);
                     }
 
-                    long remaining = Math.Max(0, cand.SizeBytes - header.Length);
-                    byte[] chunk = new byte[64 * 1024];
-                    Array.Fill<byte>(chunk, 0x20);
-                    while (remaining > 0)
+                    // Cap placeholder output to at most 64KB so we never write gigabytes of empty padding
+                    long maxDummy = Math.Min(Math.Max(0, cand.SizeBytes - header.Length), 64 * 1024);
+                    if (maxDummy > 0)
                     {
-                        int toWrite = (int)Math.Min(chunk.Length, remaining);
-                        await fs.WriteAsync(chunk.AsMemory(0, toWrite));
-                        incrementalHash.AppendData(chunk, 0, toWrite);
-                        remaining -= toWrite;
+                        byte[] chunk = new byte[(int)maxDummy];
+                        Array.Fill<byte>(chunk, 0x20);
+                        await fs.WriteAsync(chunk.AsMemory(0, chunk.Length), cancellationToken);
+                        incrementalHash.AppendData(chunk, 0, chunk.Length);
                     }
-                    itemResult.BytesWritten = cand.SizeBytes;
+                    itemResult.BytesWritten = header.Length + maxDummy;
                     cumulativeBytesWritten += cand.SizeBytes;
                 }
 
@@ -154,6 +159,10 @@ public static class RecoveryExporter
                 itemResult.Success = true;
                 report.SuccessfulCount++;
                 report.TotalBytesRecovered += itemResult.BytesWritten;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -185,15 +194,25 @@ public static class RecoveryExporter
         FileCategory category,
         long defaultSize)
     {
-        return extension.ToLowerInvariant() switch
+        if (defaultSize > 0) return defaultSize;
+
+        try
         {
-            ".mp4" or ".mov" or ".m4v" => await DetermineMp4ExactSizeAsync(rawStream, startOffset),
-            ".jpg" or ".jpeg" => await DetermineJpegExactSizeAsync(rawStream, startOffset, defaultSize),
-            ".png" => await DeterminePngExactSizeAsync(rawStream, startOffset, defaultSize),
-            ".zip" or ".docx" or ".xlsx" or ".pptx" or ".apk" => await DetermineZipExactSizeAsync(rawStream, startOffset, defaultSize),
-            ".pdf" => await DeterminePdfExactSizeAsync(rawStream, startOffset, defaultSize),
-            _ => defaultSize
-        };
+            using var timeoutCts = new CancellationTokenSource(2000);
+            return extension.ToLowerInvariant() switch
+            {
+                ".mp4" or ".mov" or ".m4v" => await DetermineMp4ExactSizeAsync(rawStream, startOffset),
+                ".jpg" or ".jpeg" => await DetermineJpegExactSizeAsync(rawStream, startOffset, defaultSize > 0 ? defaultSize : 3L * 1024 * 1024),
+                ".png" => await DeterminePngExactSizeAsync(rawStream, startOffset, defaultSize > 0 ? defaultSize : 2L * 1024 * 1024),
+                ".zip" or ".docx" or ".xlsx" or ".pptx" or ".apk" => await DetermineZipExactSizeAsync(rawStream, startOffset, defaultSize > 0 ? defaultSize : 5L * 1024 * 1024),
+                ".pdf" => await DeterminePdfExactSizeAsync(rawStream, startOffset, defaultSize > 0 ? defaultSize : 2L * 1024 * 1024),
+                _ => defaultSize > 0 ? defaultSize : 1024 * 1024
+            };
+        }
+        catch
+        {
+            return defaultSize > 0 ? defaultSize : 1024 * 1024;
+        }
     }
 
     public static async Task<long> DetermineJpegExactSizeAsync(FileStream rawStream, long startOffset, long fallbackSize = 3L * 1024 * 1024)
@@ -205,7 +224,7 @@ public static class RecoveryExporter
         }
 
         long currentPos = startOffset + 2;
-        long maxSearch = 64L * 1024 * 1024;
+        long maxSearch = 16L * 1024 * 1024; // 16MB cap for lightning fast recovery
         bool inSosScan = false;
 
         while (currentPos - startOffset < maxSearch)
@@ -258,7 +277,7 @@ public static class RecoveryExporter
             }
             else
             {
-                int toRead = 64 * 1024;
+                int toRead = 512 * 1024; // 512KB streaming chunk
                 byte[] buf = await ReadRawBytesAlignedAsync(rawStream, currentPos, toRead);
                 if (buf.Length < 2) break;
 
@@ -303,7 +322,7 @@ public static class RecoveryExporter
         }
 
         long currentPos = startOffset + 8;
-        long maxSearch = 64L * 1024 * 1024;
+        long maxSearch = 16L * 1024 * 1024;
 
         while (currentPos - startOffset < maxSearch)
         {
@@ -318,7 +337,7 @@ public static class RecoveryExporter
                 return (currentPos + 12) - startOffset;
             }
 
-            if (length > 32L * 1024 * 1024) break;
+            if (length > 16L * 1024 * 1024) break;
 
             currentPos += (12 + length);
         }
@@ -335,8 +354,8 @@ public static class RecoveryExporter
         }
 
         long currentPos = startOffset;
-        long maxSearch = 100L * 1024 * 1024;
-        int blockSize = 64 * 1024;
+        long maxSearch = 16L * 1024 * 1024; // 16MB cap
+        int blockSize = 512 * 1024; // 512KB blocks
 
         while (currentPos - startOffset < maxSearch)
         {
@@ -376,9 +395,9 @@ public static class RecoveryExporter
         }
 
         long currentPos = startOffset;
-        long maxSearch = 64L * 1024 * 1024;
+        long maxSearch = 16L * 1024 * 1024; // 16MB cap
         long lastEofOffset = -1;
-        int blockSize = 64 * 1024;
+        int blockSize = 512 * 1024; // 512KB blocks
 
         while (currentPos - startOffset < maxSearch)
         {
@@ -399,7 +418,7 @@ public static class RecoveryExporter
                 }
             }
 
-            if (lastEofOffset > 0 && (currentPos - startOffset) > lastEofOffset + 64 * 1024)
+            if (lastEofOffset > 0 && (currentPos - startOffset) > lastEofOffset + 128 * 1024)
             {
                 break;
             }
@@ -495,37 +514,40 @@ public static class RecoveryExporter
         IncrementalHash incrementalHash,
         long rawOffset,
         long totalSize,
-        Action<long, long> onChunk)
+        Action<long, long> onChunk,
+        CancellationToken cancellationToken = default)
     {
         long bytesWritten = 0;
         long remaining = totalSize;
-        byte[] buf = new byte[1024 * 1024]; // 1MB buffer
+        byte[] buf = new byte[2 * 1024 * 1024]; // 2MB streaming buffer for maximum throughput
         long currentOffset = rawOffset;
         var sw = System.Diagnostics.Stopwatch.StartNew();
         long lastReportTime = 0;
 
         while (remaining > 0)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             int toRead = (int)Math.Min(buf.Length, remaining);
             int alignedReadSize = ((toRead + 511) / 512) * 512;
             long sectorOffset = (currentOffset / 512) * 512;
             int offsetInSector = (int)(currentOffset % 512);
 
             rawStream.Seek(sectorOffset, SeekOrigin.Begin);
-            int read = await rawStream.ReadAsync(buf.AsMemory(0, Math.Min(buf.Length, alignedReadSize + offsetInSector)));
+            int read = await rawStream.ReadAsync(buf.AsMemory(0, Math.Min(buf.Length, alignedReadSize + offsetInSector)), cancellationToken);
             if (read <= offsetInSector) break;
 
             int available = Math.Min(toRead, read - offsetInSector);
             if (available <= 0) break;
 
-            await outFs.WriteAsync(buf.AsMemory(offsetInSector, available));
+            await outFs.WriteAsync(buf.AsMemory(offsetInSector, available), cancellationToken);
             incrementalHash.AppendData(buf, offsetInSector, available);
 
             currentOffset += available;
             bytesWritten += available;
             remaining -= available;
 
-            if (sw.ElapsedMilliseconds - lastReportTime >= 50 || remaining == 0)
+            if (sw.ElapsedMilliseconds - lastReportTime >= 40 || remaining == 0)
             {
                 lastReportTime = sw.ElapsedMilliseconds;
                 onChunk(available, totalSize);

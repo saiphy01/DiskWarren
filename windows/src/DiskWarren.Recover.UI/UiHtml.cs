@@ -905,9 +905,12 @@ public static class UiHtml
 
 
 
-    <div id=""exportProgressSection"" style=""display:none;"">
+    <div id=""exportProgressSection"" style=""display:none;margin-top:14px;"">
 
-      <div style=""font-size:12px;color:var(--text-muted);margin-bottom:6px;"" id=""exportCurrentFile"">Exporting files &amp; verifying SHA-256...</div>
+      <div style=""display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"">
+        <div style=""font-size:12px;color:var(--text-muted);"" id=""exportCurrentFile"">Exporting files &amp; verifying SHA-256...</div>
+        <button type=""button"" class=""btn-secondary"" style=""padding:3px 10px;font-size:11px;"" onclick=""cancelExport()"">Cancel</button>
+      </div>
 
       <div class=""capacity-bar-bg"">
 
@@ -1094,6 +1097,56 @@ public static class UiHtml
         closeExportModal();
 
       }, 400);
+
+    } else if (msg.type === 'exportError') {
+
+      document.getElementById('exportProgressSection').style.display = 'none';
+
+      const btn = document.getElementById('btnConfirmExport');
+
+      if (btn) {
+
+        btn.disabled = false;
+
+        btn.innerHTML = '<span>Verify &amp; Recover</span>';
+
+      }
+
+      const help = document.getElementById('destDriveHelp');
+
+      if (help) {
+
+        help.innerText = msg.message;
+
+        help.style.color = '#ef4444';
+
+      }
+
+      alert('Recovery Notice:\n' + msg.message);
+
+    } else if (msg.type === 'exportCancelled') {
+
+      document.getElementById('exportProgressSection').style.display = 'none';
+
+      const btn = document.getElementById('btnConfirmExport');
+
+      if (btn) {
+
+        btn.disabled = false;
+
+        btn.innerHTML = '<span>Verify &amp; Recover</span>';
+
+      }
+
+      const help = document.getElementById('destDriveHelp');
+
+      if (help) {
+
+        help.innerText = msg.message || 'File recovery cancelled.';
+
+        help.style.color = '#f59e0b';
+
+      }
 
     } else if (msg.type === 'licenseResult') {
 
@@ -1733,11 +1786,43 @@ public static class UiHtml
 
 
 
+  function cancelExport() {
+
+    window.chrome.webview.postMessage({ action: 'cancelExport' });
+
+    const cf = document.getElementById('exportCurrentFile');
+
+    if (cf) cf.innerText = 'Cancelling extraction...';
+
+    const btn = document.getElementById('btnConfirmExport');
+
+    if (btn) btn.innerHTML = '<span>Cancelling...</span>';
+
+  }
+
+
+
   function executeExport() {
 
     const path = document.getElementById('destPathInput').value;
 
+    if (!path || path.trim().length === 0) {
+
+      alert('Please select a destination folder first.');
+
+      return;
+
+    }
+
     const selectedIds = allCandidates.filter(c => c.isSelected).map(c => c.id);
+
+    if (selectedIds.length === 0) {
+
+      alert('Please select at least one file to recover.');
+
+      return;
+
+    }
 
 
 
@@ -1747,7 +1832,7 @@ public static class UiHtml
 
     document.getElementById('exportProgressBar').style.width = '2%';
 
-    document.getElementById('exportCurrentFile').innerText = 'Starting non-blocking recovery transfer...';
+    document.getElementById('exportCurrentFile').innerText = 'Starting high-speed recovery transfer...';
 
 
 
@@ -1765,7 +1850,7 @@ public static class UiHtml
 
       sourceDrive: selectedDrive.deviceId,
 
-      destPath: path,
+      destPath: path.trim(),
 
       candidateIds: selectedIds
 
