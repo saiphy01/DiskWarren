@@ -880,7 +880,7 @@ public class RecoveryScanner
                                 PreviewType = GetPreviewType(ext),
                                 HexSnippet = "0000: FF D8 FF E0 00 10 4A 46 49 46 00 01 01 01 00 60 |......JFIF.....`|",
                                 DateDeleted = DateTime.UtcNow.AddDays(-1),
-                                InternalRefPath = $"MTP:{drive.VolumeLabel}:{path}",
+                                InternalRefPath = $"MTP:{drive.VolumeLabel}|{name}|{currentPath}",
                                 SourcePhysicalDisk = drive.DeviceId
                             });
 

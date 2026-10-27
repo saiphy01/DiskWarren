@@ -112,6 +112,21 @@ public static class RecoveryExporter
 
                     itemResult.BytesWritten = fileBytesWritten;
                 }
+                else if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("MTP:"))
+                {
+                    bool exported = await ExportMtpItemAsync(cand, destFile, incrementalHash, (written, total) =>
+                    {
+                        cumulativeBytesWritten += written;
+                        int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
+                        progress.Report((overallPercent, $"Exporting {cand.FileName} ({StorageDrive.FormatBytes(written)})..."));
+                    }, cancellationToken);
+
+                    if (exported && File.Exists(destFile))
+                    {
+                        itemResult.BytesWritten = new FileInfo(destFile).Length;
+                        fileBytesWritten = itemResult.BytesWritten;
+                    }
+                }
                 else if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
                 {
                     long currentFileWritten = 0;
@@ -571,4 +586,143 @@ public static class RecoveryExporter
         ".zip" or ".docx" or ".xlsx" => new byte[] { 0x50, 0x4B, 0x03, 0x04 },
         _ => Array.Empty<byte>()
     };
+
+    private static async Task<bool> ExportMtpItemAsync(
+        RecoveryCandidate cand,
+        string destFile,
+        IncrementalHash incrementalHash,
+        Action<long, long> onProgress,
+        CancellationToken cancellationToken)
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                // Format: MTP:{volumeLabel}|{rawName}|{folderPath}
+                string mtpData = cand.InternalRefPath.Substring(4);
+                var parts = mtpData.Split('|');
+                if (parts.Length < 3) return false;
+
+                string phoneName = parts[0];
+                string rawName = parts[1];
+                string folderPath = parts[2];
+
+                Type? shellType = Type.GetTypeFromProgID("Shell.Application");
+                if (shellType == null) return false;
+                dynamic? shell = Activator.CreateInstance(shellType);
+                if (shell == null) return false;
+
+                string destDir = Path.GetDirectoryName(destFile) ?? "";
+                dynamic? destFolder = shell.Namespace(destDir);
+                if (destFolder == null) return false;
+
+                dynamic? myPc = shell.Namespace(17);
+                if (myPc == null) return false;
+
+                dynamic? phoneItem = null;
+                foreach (dynamic it in myPc.Items())
+                {
+                    string itName = (string)it.Name;
+                    if (itName.Contains(phoneName, StringComparison.OrdinalIgnoreCase) || phoneName.Contains(itName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        phoneItem = it;
+                        break;
+                    }
+                }
+                if (phoneItem == null) return false;
+
+                // Navigate folder breadcrumbs: e.g. "Internal storage\Pictures"
+                dynamic currFolder = phoneItem.GetFolder;
+                string[] segments = folderPath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string seg in segments)
+                {
+                    dynamic? foundSeg = null;
+                    foreach (dynamic it in currFolder.Items())
+                    {
+                        if ((bool)it.IsFolder && string.Equals((string)it.Name, seg, StringComparison.OrdinalIgnoreCase))
+                        {
+                            foundSeg = it.GetFolder;
+                            break;
+                        }
+                    }
+                    if (foundSeg == null) break;
+                    currFolder = foundSeg;
+                }
+
+                if (currFolder == null) return false;
+
+                // Locate the item inside currFolder
+                dynamic? targetItem = null;
+                foreach (dynamic item in currFolder.Items())
+                {
+                    string itName = (string)item.Name;
+                    if (!(bool)item.IsFolder && (string.Equals(itName, rawName, StringComparison.OrdinalIgnoreCase) || itName.StartsWith(rawName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        targetItem = item;
+                        break;
+                    }
+                }
+
+                if (targetItem == null) return false;
+
+                // 16 = FOF_NOCONFIRMATION, 512 = FOF_NOCONFIRMMKDIR, 1024 = FOF_NOERRORUI
+                destFolder.CopyHere(targetItem, 16 | 512 | 1024);
+
+                // When Shell copies an MTP file to destDir, it might name it with its extension or without extension
+                // e.g. "1781020669658.png" or "1781020669658"
+                string copiedCandidate1 = Path.Combine(destDir, cand.FileName);
+                string copiedCandidate2 = Path.Combine(destDir, rawName);
+                string copiedCandidate3 = destFile;
+
+                string actualCopiedFile = string.Empty;
+                for (int wait = 0; wait < 25; wait++)
+                {
+                    if (File.Exists(copiedCandidate1) && new FileInfo(copiedCandidate1).Length > 0)
+                    {
+                        actualCopiedFile = copiedCandidate1;
+                        break;
+                    }
+                    if (File.Exists(copiedCandidate2) && new FileInfo(copiedCandidate2).Length > 0)
+                    {
+                        actualCopiedFile = copiedCandidate2;
+                        break;
+                    }
+                    if (File.Exists(copiedCandidate3) && new FileInfo(copiedCandidate3).Length > 0)
+                    {
+                        actualCopiedFile = copiedCandidate3;
+                        break;
+                    }
+                    Thread.Sleep(200);
+                }
+
+                if (string.IsNullOrEmpty(actualCopiedFile)) return false;
+
+                // Ensure the target file has the correct final destination path and extension
+                if (!string.Equals(actualCopiedFile, destFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (File.Exists(destFile)) File.Delete(destFile);
+                    File.Move(actualCopiedFile, destFile);
+                }
+
+                // Hash the physical extracted file
+                using (var fs = File.OpenRead(destFile))
+                {
+                    byte[] buf = new byte[64 * 1024];
+                    int r;
+                    while ((r = fs.Read(buf, 0, buf.Length)) > 0)
+                    {
+                        incrementalHash.AppendData(buf, 0, r);
+                    }
+                }
+
+                long finalLen = new FileInfo(destFile).Length;
+                onProgress?.Invoke(finalLen, finalLen);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        });
+    }
 }
