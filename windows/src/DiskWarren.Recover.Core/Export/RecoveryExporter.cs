@@ -1033,11 +1033,9 @@ public static class RecoveryExporter
                 }
             }
 
-            // Truncate/rewrite the JPEG to clean standard length so macOS ImageIO / QuickLook accepts it cleanly
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
-            {
-                fs.SetLength(cleanLength);
-            }
+            // Losslessly clean JPEG: strip dangling XMP Container references & Samsung APP4 to guarantee 100% macOS ImageIO validity
+            byte[] cleanedJpeg = CleanJpegMarkersLossless(data, cleanLength);
+            await File.WriteAllBytesAsync(filePath, cleanedJpeg, cancellationToken);
         }
         catch
         {
@@ -1126,4 +1124,69 @@ public static class RecoveryExporter
         }
         return -1;
     }
+
+    private static byte[] CleanJpegMarkersLossless(byte[] data, int cleanLength)
+    {
+        using var ms = new MemoryStream(cleanLength);
+        ms.Write(data, 0, 2); // SOI FF D8
+        int idx = 2;
+        while (idx < cleanLength)
+        {
+            if (data[idx] != 0xFF) break;
+            while (idx < cleanLength && data[idx] == 0xFF) idx++;
+            if (idx >= cleanLength) break;
+            byte marker = data[idx++];
+
+            if (marker == 0xD8 || marker == 0xD9 || marker == 0x01 || (marker >= 0xD0 && marker <= 0xD7))
+            {
+                ms.WriteByte(0xFF);
+                ms.WriteByte(marker);
+                if (marker == 0xD9) break;
+                continue;
+            }
+
+            if (marker == 0xDA) // SOS
+            {
+                if (idx + 2 > cleanLength) break;
+                ushort markerLen = (ushort)((data[idx] << 8) | data[idx + 1]);
+                ms.WriteByte(0xFF);
+                ms.WriteByte(marker);
+                ms.Write(data, idx, markerLen);
+                idx += markerLen;
+                if (cleanLength > idx)
+                {
+                    ms.Write(data, idx, cleanLength - idx);
+                }
+                break;
+            }
+            else
+            {
+                if (idx + 2 > cleanLength) break;
+                ushort markerLen = (ushort)((data[idx] << 8) | data[idx + 1]);
+                bool skip = false;
+                if (marker == 0xE1 && markerLen > 2) // APP1 XMP
+                {
+                    string payloadStr = Encoding.ASCII.GetString(data, idx + 2, Math.Min((int)markerLen - 2, 512));
+                    if (payloadStr.Contains("MotionPhoto") || payloadStr.Contains("Container:Directory"))
+                    {
+                        skip = true;
+                    }
+                }
+                else if (marker == 0xE4) // APP4 Samsung proprietary
+                {
+                    skip = true;
+                }
+
+                if (!skip)
+                {
+                    ms.WriteByte(0xFF);
+                    ms.WriteByte(marker);
+                    ms.Write(data, idx, markerLen);
+                }
+                idx += markerLen;
+            }
+        }
+        return ms.ToArray();
+    }
+
 }
