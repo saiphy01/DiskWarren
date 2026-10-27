@@ -62,12 +62,12 @@ const PLATFORM_DATA: Record<PlatformId, PlatformDetails> = {
   mac: {
     id: 'mac',
     name: 'macOS',
-    tagline: 'Universal Disk Image for Apple Silicon & Intel',
-    fileName: 'DiskWarrenRecover-1.0.0.dmg',
-    fileSize: '5.6 KB (UDIF Image)',
+    tagline: 'Universal Application Package for Apple Silicon & Intel',
+    fileName: 'DiskWarrenRecover-macOS.zip',
+    fileSize: '2.6 KB (Native .app Zip)',
     osReqs: 'macOS Sonoma, Sequoia, Ventura, Monterey • Apple Silicon (M1-M4) & Intel 64-bit',
-    downloadUrl: '/downloads/DiskWarrenRecover-1.0.0.dmg',
-    sha256: 'a4573b7af4d29cbfa84f7818cc67385bb3d646f2c344715f22cf4ed7a7a53695',
+    downloadUrl: '/downloads/DiskWarrenRecover-macOS.zip',
+    sha256: '4d9844c82f0a5569846255e1ed60f3a94d07aca871b25a4dccc19b33c44e4dc8',
     features: [
       'APFS Local Snapshot traversal & unallocated space scanner',
       'HFS+ Journal catalog reconstruction & deleted inode carver',
@@ -525,8 +525,8 @@ export default function RecoveryDownloadPage() {
                 <span>Download Windows App (for iPhone)</span>
               </a>
               <a
-                href="/downloads/DiskWarrenRecover-1.0.0.dmg"
-                download="DiskWarrenRecover-1.0.0.dmg"
+                href="/downloads/DiskWarrenRecover-macOS.zip"
+                download="DiskWarrenRecover-macOS.zip"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all shadow-md active:scale-95 cursor-pointer"
               >
                 <Laptop className="w-4 h-4" />
