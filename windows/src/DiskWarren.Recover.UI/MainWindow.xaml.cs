@@ -330,6 +330,16 @@ public partial class MainWindow : Window
 
         await InitializeWebViewSafeAsync();
 
+        if (_driveWatcherTimer == null)
+        {
+            _driveWatcherTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2.0)
+            };
+            _driveWatcherTimer.Tick += (s, ev) => TriggerLiveDriveRefresh();
+            _driveWatcherTimer.Start();
+        }
+
     }
 
 
@@ -573,6 +583,7 @@ public partial class MainWindow : Window
 
     private void TriggerLiveDriveRefresh()
     {
+        if (_scanCts != null && !_scanCts.IsCancellationRequested) return;
         if (_isRefreshingDrives) return;
         _isRefreshingDrives = true;
 
