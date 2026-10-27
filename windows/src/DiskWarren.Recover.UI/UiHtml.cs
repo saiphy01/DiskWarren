@@ -905,17 +905,21 @@ public static class UiHtml
 
 
 
-    <div id=""exportProgressSection"" style=""display:none;margin-top:14px;"">
+    <div id=""exportProgressSection"" style=""display:none;margin-top:16px;"">
 
-      <div style=""display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"">
-        <div style=""font-size:12px;color:var(--text-muted);"" id=""exportCurrentFile"">Exporting files &amp; verifying SHA-256...</div>
-        <button type=""button"" class=""btn-secondary"" style=""padding:3px 10px;font-size:11px;"" onclick=""cancelExport()"">Cancel</button>
+      <div style=""display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"">
+        <div style=""font-size:13px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:380px;"" id=""exportCurrentFile"">Starting file extraction...</div>
+        <button type=""button"" class=""btn-secondary"" style=""padding:4px 10px;font-size:11px;"" onclick=""cancelExport()"">Cancel</button>
       </div>
 
-      <div class=""capacity-bar-bg"">
+      <div class=""capacity-bar-bg"" style=""height:10px;border-radius:5px;background:rgba(255,255,255,0.06);overflow:hidden;"">
+        <div class=""capacity-bar-fill"" id=""exportProgressBar"" style=""width:0%;height:100%;transition:width 0.2s ease;background:linear-gradient(90deg, #3b82f6, #10b981);""></div>
+      </div>
 
-        <div class=""capacity-bar-fill"" id=""exportProgressBar"" style=""width:0%;""></div>
-
+      <div style=""display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-subtle);margin-top:8px;font-weight:600;"">
+        <span id=""exportPercentText"" style=""color:var(--text-main);"">0% Complete</span>
+        <span id=""exportSpeedText"">-- MB/s</span>
+        <span id=""exportEtaText"" style=""color:#10b981;"">ETA: Calculating...</span>
       </div>
 
     </div>
@@ -1076,15 +1080,50 @@ public static class UiHtml
 
       document.getElementById('exportProgressSection').style.display = 'block';
 
-      document.getElementById('exportProgressBar').style.width = Math.min(100, Math.max(0, msg.percent)) + '%';
+      const pct = Math.min(100, Math.max(0, msg.percent || 0));
 
-      document.getElementById('exportCurrentFile').innerText = msg.file;
+      document.getElementById('exportProgressBar').style.width = pct + '%';
+
+      document.getElementById('exportCurrentFile').innerText = msg.status || msg.file || 'Exporting files...';
+
+      const pctEl = document.getElementById('exportPercentText');
+      if (pctEl) {
+        const fileCountText = msg.totalFiles > 0 ? ` (${msg.currentIndex || 0}/${msg.totalFiles} files)` : '';
+        const bytesText = msg.totalBytes > 0 ? ` • ${formatBytes(msg.bytesWritten || 0)} / ${formatBytes(msg.totalBytes)}` : '';
+        pctEl.innerText = `${pct}% Complete${fileCountText}${bytesText}`;
+      }
+
+      const speedEl = document.getElementById('exportSpeedText');
+      if (speedEl) {
+        speedEl.innerText = msg.speedMBs > 0 ? `${msg.speedMBs.toFixed(1)} MB/s` : '-- MB/s';
+      }
+
+      const etaEl = document.getElementById('exportEtaText');
+      if (etaEl) {
+        if (msg.etaSeconds > 0) {
+          if (msg.etaSeconds < 60) {
+            etaEl.innerText = `ETA: ~${msg.etaSeconds}s`;
+          } else {
+            const mins = Math.floor(msg.etaSeconds / 60);
+            const secs = msg.etaSeconds % 60;
+            etaEl.innerText = `ETA: ~${mins}m ${secs}s`;
+          }
+        } else {
+          etaEl.innerText = pct >= 100 ? 'Finishing up...' : 'ETA: Calculating...';
+        }
+      }
 
     } else if (msg.type === 'exportComplete') {
 
       document.getElementById('exportProgressBar').style.width = '100%';
 
       document.getElementById('exportCurrentFile').innerText = 'Recovery Complete: ' + msg.report.successfulCount + ' files exported.';
+
+      const compPctEl = document.getElementById('exportPercentText');
+      if (compPctEl) compPctEl.innerText = `100% Complete (${msg.report.successfulCount} files)`;
+
+      const compEtaEl = document.getElementById('exportEtaText');
+      if (compEtaEl) compEtaEl.innerText = 'Complete!';
 
       const btn = document.getElementById('btnConfirmExport');
 
@@ -1870,9 +1909,18 @@ public static class UiHtml
 
     document.getElementById('exportProgressSection').style.display = 'block';
 
-    document.getElementById('exportProgressBar').style.width = '2%';
+    document.getElementById('exportProgressBar').style.width = '1%';
 
     document.getElementById('exportCurrentFile').innerText = 'Starting high-speed recovery transfer...';
+
+    const initPct = document.getElementById('exportPercentText');
+    if (initPct) initPct.innerText = `0% Complete (0/${selectedIds.length} files)`;
+
+    const initSpeed = document.getElementById('exportSpeedText');
+    if (initSpeed) initSpeed.innerText = '-- MB/s';
+
+    const initEta = document.getElementById('exportEtaText');
+    if (initEta) initEta.innerText = 'ETA: Calculating...';
 
 
 

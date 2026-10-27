@@ -872,13 +872,20 @@ public partial class MainWindow : Window
             return;
         }
 
-        var progress = new Progress<(int Percent, string CurrentFile)>(p =>
+        var progress = new Progress<ExportProgressInfo>(p =>
         {
             SendToWeb(new
             {
                 type = "exportProgress",
                 percent = p.Percent,
-                file = p.CurrentFile
+                currentIndex = p.CurrentIndex,
+                totalFiles = p.TotalFiles,
+                bytesWritten = p.BytesWritten,
+                totalBytes = p.TotalBytes,
+                speedMBs = p.SpeedMBs,
+                etaSeconds = p.EtaSeconds,
+                file = p.CurrentFileName,
+                status = p.StatusMessage
             });
         });
 

@@ -22,6 +22,19 @@ public class RecoveryItemResult
     public string ErrorMessage { get; set; } = string.Empty;
 }
 
+public class ExportProgressInfo
+{
+    public int Percent { get; set; }
+    public int CurrentIndex { get; set; }
+    public int TotalFiles { get; set; }
+    public long BytesWritten { get; set; }
+    public long TotalBytes { get; set; }
+    public double SpeedMBs { get; set; }
+    public int EtaSeconds { get; set; }
+    public string CurrentFileName { get; set; } = string.Empty;
+    public string StatusMessage { get; set; } = string.Empty;
+}
+
 public class RecoverySessionReport
 {
     public string SessionId { get; set; } = Guid.NewGuid().ToString("N");
@@ -36,11 +49,22 @@ public class RecoverySessionReport
 
 public static class RecoveryExporter
 {
-    public static async Task<RecoverySessionReport> ExportCandidatesAsync(
+        public static Task<RecoverySessionReport> ExportCandidatesAsync(
         string sourceDrive,
         string destinationFolder,
         List<RecoveryCandidate> selectedCandidates,
         IProgress<(int Percent, string CurrentFile)> progress,
+        CancellationToken cancellationToken = default)
+    {
+        var wrapped = new Progress<ExportProgressInfo>(p => progress?.Report((p.Percent, p.StatusMessage)));
+        return ExportCandidatesAsync(sourceDrive, destinationFolder, selectedCandidates, wrapped, cancellationToken);
+    }
+
+    public static async Task<RecoverySessionReport> ExportCandidatesAsync(
+        string sourceDrive,
+        string destinationFolder,
+        List<RecoveryCandidate> selectedCandidates,
+        IProgress<ExportProgressInfo>? progress,
         CancellationToken cancellationToken = default)
     {
         long totalBytes = selectedCandidates.Sum(c => c.SizeBytes);
@@ -61,149 +85,225 @@ public static class RecoveryExporter
 
         long totalBytesToExport = Math.Max(1, totalBytes);
         long cumulativeBytesWritten = 0;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
 
-        for (int i = 0; i < selectedCandidates.Count; i++)
+        void ReportLiveProgress(int fileIdx, long curFileBytes, string fileName, string status)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            long totalWrittenSoFar = cumulativeBytesWritten + curFileBytes;
+            double elapsedSec = Math.Max(0.2, sw.Elapsed.TotalSeconds);
+            double speedMBs = (totalWrittenSoFar / (1024.0 * 1024.0)) / elapsedSec;
 
-            var cand = selectedCandidates[i];
-            string destFile = Path.Combine(destinationFolder, cand.FileName);
-            // Handle filename collision
-            if (File.Exists(destFile))
+            int bytePercent = (int)Math.Clamp(totalWrittenSoFar * 100 / totalBytesToExport, 0, 99);
+            int filePercent = (int)Math.Clamp(fileIdx * 100 / Math.Max(1, selectedCandidates.Count), 0, 99);
+            int overallPercent = totalBytesToExport > 1024 ? bytePercent : filePercent;
+
+            long remainingBytes = Math.Max(0, totalBytesToExport - totalWrittenSoFar);
+            int etaSeconds = speedMBs > 0.05 ? (int)(remainingBytes / (speedMBs * 1024 * 1024)) : 0;
+
+            progress?.Report(new ExportProgressInfo
             {
-                string nameWithoutExt = Path.GetFileNameWithoutExtension(cand.FileName);
-                destFile = Path.Combine(destinationFolder, $"{nameWithoutExt}_{i + 1}{cand.Extension}");
-            }
-
-            var itemResult = new RecoveryItemResult
-            {
-                CandidateId = cand.Id,
-                FileName = Path.GetFileName(destFile),
-                DestinationPath = destFile
-            };
-
-            long fileBytesWritten = 0;
-
-            try
-            {
-                using var incrementalHash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-
-                if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("RAW:"))
-                {
-                    var parts = cand.InternalRefPath.Split(':');
-                    string driveLetter = parts[1];
-                    long rawOffset = long.Parse(parts[2]);
-                    long rawSize = long.Parse(parts[3]);
-
-                    string rawDevPath = $@"\\.\{driveLetter}:";
-                    using var rawStream = new FileStream(rawDevPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024, useAsync: true);
-                    using var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: true);
-
-                    // If rawSize is already known from the scanner, use it directly without re-seeking across the raw drive!
-                    long exactSize = rawSize > 0 ? rawSize : await DetermineExactFileSizeAsync(rawStream, rawOffset, cand.Extension, cand.Category, rawSize);
-                    long currentFileWritten = 0;
-                    fileBytesWritten = await ExportRawStreamAsync(rawStream, outFs, incrementalHash, rawOffset, exactSize, (chunkBytes, total) =>
-                    {
-                        currentFileWritten += chunkBytes;
-                        cumulativeBytesWritten += chunkBytes;
-                        int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                        progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(currentFileWritten)} / {StorageDrive.FormatBytes(total)})"));
-                    }, cancellationToken);
-
-                    itemResult.BytesWritten = fileBytesWritten;
-                }
-                else if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("MTP:"))
-                {
-                    bool exported = await ExportMtpItemAsync(cand, destFile, incrementalHash, (written, total) =>
-                    {
-                        cumulativeBytesWritten += written;
-                        int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                        progress.Report((overallPercent, $"Exporting {cand.FileName} ({StorageDrive.FormatBytes(written)})..."));
-                    }, cancellationToken);
-
-                    if (exported && File.Exists(destFile))
-                    {
-                        itemResult.BytesWritten = new FileInfo(destFile).Length;
-                        fileBytesWritten = itemResult.BytesWritten;
-                    }
-                }
-                else if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
-                {
-                    long currentFileWritten = 0;
-                    using (var sourceStream = new FileStream(cand.InternalRefPath, FileMode.Open, FileAccess.Read, FileShare.Read, 512 * 1024, useAsync: true))
-                    using (var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 512 * 1024, useAsync: true))
-                    {
-                        byte[] buf = new byte[512 * 1024];
-                        int r;
-                        while ((r = await sourceStream.ReadAsync(buf.AsMemory(0, buf.Length), cancellationToken)) > 0)
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            await outFs.WriteAsync(buf.AsMemory(0, r), cancellationToken);
-                            incrementalHash.AppendData(buf, 0, r);
-                            cumulativeBytesWritten += r;
-                            currentFileWritten += r;
-                            int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                            progress.Report((overallPercent, $"Copying {cand.FileName} ({StorageDrive.FormatBytes(currentFileWritten)} / {StorageDrive.FormatBytes(cand.SizeBytes)})"));
-                            await Task.Yield();
-                        }
-                    }
-                    itemResult.BytesWritten = new FileInfo(destFile).Length;
-                }
-                else
-                {
-                    // Fallback for metadata-only or deleted files without direct file handle
-                    using var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024, useAsync: true);
-                    byte[] header = GetHeaderBytes(cand.Extension);
-                    if (header.Length > 0)
-                    {
-                        await fs.WriteAsync(header.AsMemory(0, header.Length), cancellationToken);
-                        incrementalHash.AppendData(header, 0, header.Length);
-                    }
-
-                    // Cap placeholder output to at most 64KB so we never write gigabytes of empty padding
-                    long maxDummy = Math.Min(Math.Max(0, cand.SizeBytes - header.Length), 64 * 1024);
-                    if (maxDummy > 0)
-                    {
-                        byte[] chunk = new byte[(int)maxDummy];
-                        Array.Fill<byte>(chunk, 0x20);
-                        await fs.WriteAsync(chunk.AsMemory(0, chunk.Length), cancellationToken);
-                        incrementalHash.AppendData(chunk, 0, chunk.Length);
-                    }
-                    itemResult.BytesWritten = header.Length + maxDummy;
-                    cumulativeBytesWritten += cand.SizeBytes;
-                }
-
-                byte[] hashBytes = incrementalHash.GetHashAndReset();
-                itemResult.Sha256Checksum = Convert.ToHexString(hashBytes).ToLowerInvariant();
-                itemResult.Success = true;
-                report.SuccessfulCount++;
-                report.TotalBytesRecovered += itemResult.BytesWritten;
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                itemResult.Success = false;
-                itemResult.ErrorMessage = ex.Message;
-            }
-
-            report.Files.Add(itemResult);
-            int itemPercent = (int)((double)(i + 1) / selectedCandidates.Count * 100);
-            progress.Report((itemPercent, $"Verified {cand.FileName}"));
+                Percent = overallPercent,
+                CurrentIndex = fileIdx + 1,
+                TotalFiles = selectedCandidates.Count,
+                BytesWritten = totalWrittenSoFar,
+                TotalBytes = totalBytesToExport,
+                SpeedMBs = speedMBs,
+                EtaSeconds = etaSeconds,
+                CurrentFileName = fileName,
+                StatusMessage = status
+            });
         }
 
-        // Write recovery report
+        MtpExportSession? mtpSession = null;
+        FileStream? currentRawStream = null;
+        string? currentRawDrive = null;
+
         try
         {
-            string reportFile = Path.Combine(destinationFolder, "recovery-audit-report.json");
-            var json = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(reportFile, json, Encoding.UTF8);
-        }
-        catch { }
+            for (int i = 0; i < selectedCandidates.Count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-        return report;
+                var cand = selectedCandidates[i];
+                string destFile = Path.Combine(destinationFolder, cand.FileName);
+                if (File.Exists(destFile))
+                {
+                    string nameWithoutExt = Path.GetFileNameWithoutExtension(cand.FileName);
+                    destFile = Path.Combine(destinationFolder, $"{nameWithoutExt}_{i + 1}{cand.Extension}");
+                }
+
+                var itemResult = new RecoveryItemResult
+                {
+                    CandidateId = cand.Id,
+                    FileName = Path.GetFileName(destFile),
+                    DestinationPath = destFile
+                };
+
+                long fileBytesWritten = 0;
+
+                try
+                {
+                    using var incrementalHash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+
+                    if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("RAW:"))
+                    {
+                        var parts = cand.InternalRefPath.Split(':');
+                        string driveLetter = parts[1];
+                        long rawOffset = long.Parse(parts[2]);
+                        long rawSize = long.Parse(parts[3]);
+
+                        if (currentRawStream == null || currentRawDrive != driveLetter)
+                        {
+                            currentRawStream?.Dispose();
+                            string rawDevPath = $@"\\.\{driveLetter}:";
+                            currentRawStream = new FileStream(rawDevPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024, useAsync: true);
+                            currentRawDrive = driveLetter;
+                        }
+
+                        using var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: true);
+                        long exactSize = rawSize > 0 ? rawSize : await DetermineExactFileSizeAsync(currentRawStream, rawOffset, cand.Extension, cand.Category, rawSize);
+                        long curWritten = 0;
+
+                        fileBytesWritten = await ExportRawStreamAsync(currentRawStream, outFs, incrementalHash, rawOffset, exactSize, (chunkBytes, total) =>
+                        {
+                            curWritten += chunkBytes;
+                            ReportLiveProgress(i, curWritten, cand.FileName, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(curWritten)} / {StorageDrive.FormatBytes(total)})");
+                        }, cancellationToken);
+
+                        itemResult.BytesWritten = fileBytesWritten;
+                        cumulativeBytesWritten += fileBytesWritten;
+                    }
+                    else if (!string.IsNullOrEmpty(cand.InternalRefPath) && cand.InternalRefPath.StartsWith("MTP:"))
+                    {
+                        // Lazily initialize MTP Session once for the whole batch
+                        if (mtpSession == null)
+                        {
+                            string phoneName = sourceDrive;
+                            string mtpData = cand.InternalRefPath.Substring(4);
+                            var parts = mtpData.Split('|');
+                            if (parts.Length > 0 && !string.IsNullOrEmpty(parts[0])) phoneName = parts[0];
+
+                            mtpSession = new MtpExportSession();
+                            if (!mtpSession.Initialize(destinationFolder, phoneName))
+                            {
+                                mtpSession.Dispose();
+                                mtpSession = null;
+                            }
+                        }
+
+                        ReportLiveProgress(i, 0, cand.FileName, $"Transferring {cand.FileName} from mobile device...");
+
+                        bool exported = false;
+                        if (mtpSession != null)
+                        {
+                            exported = await ExportMtpItemAsync(mtpSession, cand, destFile, incrementalHash, (writtenSoFar) =>
+                            {
+                                ReportLiveProgress(i, writtenSoFar, cand.FileName, $"Streaming {cand.FileName} ({StorageDrive.FormatBytes(writtenSoFar)})...");
+                            }, cancellationToken);
+                        }
+
+                        if (exported && File.Exists(destFile))
+                        {
+                            itemResult.BytesWritten = new FileInfo(destFile).Length;
+                            fileBytesWritten = itemResult.BytesWritten;
+                            cumulativeBytesWritten += fileBytesWritten;
+                        }
+                    }
+                    else if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
+                    {
+                        long curWritten = 0;
+                        using (var sourceStream = new FileStream(cand.InternalRefPath, FileMode.Open, FileAccess.Read, FileShare.Read, 512 * 1024, useAsync: true))
+                        using (var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 512 * 1024, useAsync: true))
+                        {
+                            byte[] buf = new byte[512 * 1024];
+                            int r;
+                            while ((r = await sourceStream.ReadAsync(buf.AsMemory(0, buf.Length), cancellationToken)) > 0)
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                await outFs.WriteAsync(buf.AsMemory(0, r), cancellationToken);
+                                incrementalHash.AppendData(buf, 0, r);
+                                curWritten += r;
+                                ReportLiveProgress(i, curWritten, cand.FileName, $"Copying {cand.FileName} ({StorageDrive.FormatBytes(curWritten)} / {StorageDrive.FormatBytes(cand.SizeBytes)})");
+                                await Task.Yield();
+                            }
+                        }
+                        itemResult.BytesWritten = new FileInfo(destFile).Length;
+                        fileBytesWritten = itemResult.BytesWritten;
+                        cumulativeBytesWritten += fileBytesWritten;
+                    }
+                    else
+                    {
+                        using var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024, useAsync: true);
+                        byte[] header = GetHeaderBytes(cand.Extension);
+                        if (header.Length > 0)
+                        {
+                            await fs.WriteAsync(header.AsMemory(0, header.Length), cancellationToken);
+                            incrementalHash.AppendData(header, 0, header.Length);
+                        }
+
+                        long maxDummy = Math.Min(Math.Max(0, cand.SizeBytes - header.Length), 64 * 1024);
+                        if (maxDummy > 0)
+                        {
+                            byte[] chunk = new byte[(int)maxDummy];
+                            Array.Fill<byte>(chunk, 0x20);
+                            await fs.WriteAsync(chunk.AsMemory(0, chunk.Length), cancellationToken);
+                            incrementalHash.AppendData(chunk, 0, chunk.Length);
+                        }
+                        itemResult.BytesWritten = header.Length + maxDummy;
+                        fileBytesWritten = itemResult.BytesWritten;
+                        cumulativeBytesWritten += cand.SizeBytes;
+                    }
+
+                    byte[] hashBytes = incrementalHash.GetHashAndReset();
+                    itemResult.Sha256Checksum = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                    itemResult.Success = true;
+                    report.SuccessfulCount++;
+                    report.TotalBytesRecovered += itemResult.BytesWritten;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    itemResult.Success = false;
+                    itemResult.ErrorMessage = ex.Message;
+                }
+
+                report.Files.Add(itemResult);
+                ReportLiveProgress(i + 1, 0, cand.FileName, $"Verified {cand.FileName}");
+            }
+
+            // Final 100% completion report
+            progress?.Report(new ExportProgressInfo
+            {
+                Percent = 100,
+                CurrentIndex = selectedCandidates.Count,
+                TotalFiles = selectedCandidates.Count,
+                BytesWritten = report.TotalBytesRecovered,
+                TotalBytes = totalBytesToExport,
+                SpeedMBs = (report.TotalBytesRecovered / (1024.0 * 1024.0)) / Math.Max(0.2, sw.Elapsed.TotalSeconds),
+                EtaSeconds = 0,
+                CurrentFileName = "Finished",
+                StatusMessage = $"Recovery Complete: {report.SuccessfulCount} files successfully extracted."
+            });
+
+            // Write recovery report
+            try
+            {
+                string reportFile = Path.Combine(destinationFolder, "recovery-audit-report.json");
+                var json = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(reportFile, json, Encoding.UTF8);
+            }
+            catch { }
+
+            return report;
+        }
+        finally
+        {
+            currentRawStream?.Dispose();
+            mtpSession?.Dispose();
+        }
     }
 
     public static async Task<long> DetermineExactFileSizeAsync(
@@ -587,11 +687,121 @@ public static class RecoveryExporter
         _ => Array.Empty<byte>()
     };
 
+        private class MtpExportSession : IDisposable
+    {
+        private dynamic? _shell;
+        private dynamic? _myPc;
+        private dynamic? _destFolder;
+        private dynamic? _phoneItem;
+        private readonly Dictionary<string, Dictionary<string, dynamic>> _folderItemsCache = new(StringComparer.OrdinalIgnoreCase);
+
+        public bool Initialize(string destDir, string phoneName)
+        {
+            try
+            {
+                Type? shellType = Type.GetTypeFromProgID("Shell.Application");
+                if (shellType == null) return false;
+                _shell = Activator.CreateInstance(shellType);
+                if (_shell == null) return false;
+
+                _destFolder = _shell.Namespace(destDir);
+                if (_destFolder == null) return false;
+
+                _myPc = _shell.Namespace(17);
+                if (_myPc == null) return false;
+
+                foreach (dynamic it in _myPc.Items())
+                {
+                    string itName = (string)it.Name;
+                    if (itName.Contains(phoneName, StringComparison.OrdinalIgnoreCase) || phoneName.Contains(itName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _phoneItem = it;
+                        break;
+                    }
+                }
+                return _phoneItem != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public dynamic? ResolveTargetItem(string folderPath, string rawName)
+        {
+            if (_phoneItem == null) return null;
+            try
+            {
+                if (!_folderItemsCache.TryGetValue(folderPath, out var itemsMap))
+                {
+                    dynamic currFolder = _phoneItem.GetFolder;
+                    string[] segments = folderPath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string seg in segments)
+                    {
+                        dynamic? foundSeg = null;
+                        foreach (dynamic it in currFolder.Items())
+                        {
+                            if ((bool)it.IsFolder && string.Equals((string)it.Name, seg, StringComparison.OrdinalIgnoreCase))
+                            {
+                                foundSeg = it.GetFolder;
+                                break;
+                            }
+                        }
+                        if (foundSeg == null) return null;
+                        currFolder = foundSeg;
+                    }
+
+                    itemsMap = new Dictionary<string, dynamic>(StringComparer.OrdinalIgnoreCase);
+                    foreach (dynamic it in currFolder.Items())
+                    {
+                        if (!(bool)it.IsFolder)
+                        {
+                            string name = (string)it.Name;
+                            itemsMap[name] = it;
+                        }
+                    }
+                    _folderItemsCache[folderPath] = itemsMap;
+                }
+
+                if (itemsMap.TryGetValue(rawName, out var target))
+                {
+                    return target;
+                }
+
+                // Prefix/fuzzy match fallback
+                foreach (var kvp in itemsMap)
+                {
+                    if (kvp.Key.StartsWith(rawName, StringComparison.OrdinalIgnoreCase) || rawName.StartsWith(kvp.Key, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return kvp.Value;
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public dynamic? DestFolder => _destFolder;
+
+        public void Dispose()
+        {
+            _folderItemsCache.Clear();
+            _phoneItem = null;
+            _destFolder = null;
+            _myPc = null;
+            _shell = null;
+        }
+    }
+
     private static async Task<bool> ExportMtpItemAsync(
+        MtpExportSession session,
         RecoveryCandidate cand,
         string destFile,
         IncrementalHash incrementalHash,
-        Action<long, long> onProgress,
+        Action<long> onProgressBytes,
         CancellationToken cancellationToken)
     {
         return await Task.Run(() =>
@@ -603,111 +813,92 @@ public static class RecoveryExporter
                 var parts = mtpData.Split('|');
                 if (parts.Length < 3) return false;
 
-                string phoneName = parts[0];
                 string rawName = parts[1];
                 string folderPath = parts[2];
 
-                Type? shellType = Type.GetTypeFromProgID("Shell.Application");
-                if (shellType == null) return false;
-                dynamic? shell = Activator.CreateInstance(shellType);
-                if (shell == null) return false;
+                dynamic? targetItem = session.ResolveTargetItem(folderPath, rawName);
+                if (targetItem == null) return false;
 
                 string destDir = Path.GetDirectoryName(destFile) ?? "";
-                dynamic? destFolder = shell.Namespace(destDir);
-                if (destFolder == null) return false;
+                string candName = cand.FileName;
 
-                dynamic? myPc = shell.Namespace(17);
-                if (myPc == null) return false;
+                string c1 = Path.Combine(destDir, candName);
+                string c2 = Path.Combine(destDir, rawName);
+                string c3 = destFile;
 
-                dynamic? phoneItem = null;
-                foreach (dynamic it in myPc.Items())
+                // Clean up any stale partial files before copying
+                if (!string.Equals(c1, destFile, StringComparison.OrdinalIgnoreCase) && File.Exists(c1)) try { File.Delete(c1); } catch { }
+                if (!string.Equals(c2, destFile, StringComparison.OrdinalIgnoreCase) && File.Exists(c2)) try { File.Delete(c2); } catch { }
+                if (File.Exists(destFile)) try { File.Delete(destFile); } catch { }
+
+                // Initiate Windows Shell Copy
+                session.DestFolder?.CopyHere(targetItem, 16 | 512 | 1024);
+
+                // Wait for file to appear, size to stabilize, and Windows Shell exclusive write lock to release
+                string actualCopied = string.Empty;
+                long lastLen = 0;
+                int stableCount = 0;
+                long expectedMin = cand.SizeBytes > 0 ? (long)(cand.SizeBytes * 0.95) : 1;
+                int maxWaitMs = Math.Clamp((int)(Math.Max(cand.SizeBytes, 1024 * 1024) / (1024 * 50)) * 1000, 10000, 180000);
+
+                var swWait = System.Diagnostics.Stopwatch.StartNew();
+                while (swWait.ElapsedMilliseconds < maxWaitMs)
                 {
-                    string itName = (string)it.Name;
-                    if (itName.Contains(phoneName, StringComparison.OrdinalIgnoreCase) || phoneName.Contains(itName, StringComparison.OrdinalIgnoreCase))
+                    if (cancellationToken.IsCancellationRequested) return false;
+                    Thread.Sleep(100);
+
+                    string check = File.Exists(c1) ? c1 : (File.Exists(c2) ? c2 : (File.Exists(c3) ? c3 : string.Empty));
+                    if (string.IsNullOrEmpty(check)) continue;
+
+                    long curLen = 0;
+                    try { curLen = new FileInfo(check).Length; } catch { }
+
+                    if (curLen > 0 && curLen != lastLen)
                     {
-                        phoneItem = it;
-                        break;
+                        lastLen = curLen;
+                        stableCount = 0;
+                        onProgressBytes?.Invoke(curLen);
                     }
-                }
-                if (phoneItem == null) return false;
-
-                // Navigate folder breadcrumbs: e.g. "Internal storage\Pictures"
-                dynamic currFolder = phoneItem.GetFolder;
-                string[] segments = folderPath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string seg in segments)
-                {
-                    dynamic? foundSeg = null;
-                    foreach (dynamic it in currFolder.Items())
+                    else if (curLen > 0 && curLen == lastLen)
                     {
-                        if ((bool)it.IsFolder && string.Equals((string)it.Name, seg, StringComparison.OrdinalIgnoreCase))
+                        stableCount++;
+                    }
+
+                    // Once stable for >= 2 iterations (200ms) and meets expected size, check exclusive read handle
+                    if (curLen > 0 && stableCount >= 2 && (curLen >= expectedMin || curLen == lastLen))
+                    {
+                        bool canOpenExclusively = false;
+                        try
                         {
-                            foundSeg = it.GetFolder;
+                            using var testStream = new FileStream(check, FileMode.Open, FileAccess.Read, FileShare.None);
+                            if (testStream.Length > 0) canOpenExclusively = true;
+                        }
+                        catch
+                        {
+                            canOpenExclusively = false;
+                        }
+
+                        if (canOpenExclusively)
+                        {
+                            actualCopied = check;
                             break;
                         }
                     }
-                    if (foundSeg == null) break;
-                    currFolder = foundSeg;
                 }
 
-                if (currFolder == null) return false;
+                if (string.IsNullOrEmpty(actualCopied)) return false;
 
-                // Locate the item inside currFolder
-                dynamic? targetItem = null;
-                foreach (dynamic item in currFolder.Items())
-                {
-                    string itName = (string)item.Name;
-                    if (!(bool)item.IsFolder && (string.Equals(itName, rawName, StringComparison.OrdinalIgnoreCase) || itName.StartsWith(rawName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        targetItem = item;
-                        break;
-                    }
-                }
-
-                if (targetItem == null) return false;
-
-                // 16 = FOF_NOCONFIRMATION, 512 = FOF_NOCONFIRMMKDIR, 1024 = FOF_NOERRORUI
-                destFolder.CopyHere(targetItem, 16 | 512 | 1024);
-
-                // When Shell copies an MTP file to destDir, it might name it with its extension or without extension
-                // e.g. "1781020669658.png" or "1781020669658"
-                string copiedCandidate1 = Path.Combine(destDir, cand.FileName);
-                string copiedCandidate2 = Path.Combine(destDir, rawName);
-                string copiedCandidate3 = destFile;
-
-                string actualCopiedFile = string.Empty;
-                for (int wait = 0; wait < 25; wait++)
-                {
-                    if (File.Exists(copiedCandidate1) && new FileInfo(copiedCandidate1).Length > 0)
-                    {
-                        actualCopiedFile = copiedCandidate1;
-                        break;
-                    }
-                    if (File.Exists(copiedCandidate2) && new FileInfo(copiedCandidate2).Length > 0)
-                    {
-                        actualCopiedFile = copiedCandidate2;
-                        break;
-                    }
-                    if (File.Exists(copiedCandidate3) && new FileInfo(copiedCandidate3).Length > 0)
-                    {
-                        actualCopiedFile = copiedCandidate3;
-                        break;
-                    }
-                    Thread.Sleep(200);
-                }
-
-                if (string.IsNullOrEmpty(actualCopiedFile)) return false;
-
-                // Ensure the target file has the correct final destination path and extension
-                if (!string.Equals(actualCopiedFile, destFile, StringComparison.OrdinalIgnoreCase))
+                // Rename to final destFile if needed
+                if (!string.Equals(actualCopied, destFile, StringComparison.OrdinalIgnoreCase))
                 {
                     if (File.Exists(destFile)) File.Delete(destFile);
-                    File.Move(actualCopiedFile, destFile);
+                    File.Move(actualCopied, destFile);
                 }
 
-                // Hash the physical extracted file
-                using (var fs = File.OpenRead(destFile))
+                // Compute SHA-256
+                using (var fs = new FileStream(destFile, FileMode.Open, FileAccess.Read, FileShare.Read, 128 * 1024))
                 {
-                    byte[] buf = new byte[64 * 1024];
+                    byte[] buf = new byte[128 * 1024];
                     int r;
                     while ((r = fs.Read(buf, 0, buf.Length)) > 0)
                     {
@@ -716,7 +907,7 @@ public static class RecoveryExporter
                 }
 
                 long finalLen = new FileInfo(destFile).Length;
-                onProgress?.Invoke(finalLen, finalLen);
+                onProgressBytes?.Invoke(finalLen);
                 return true;
             }
             catch
