@@ -1156,6 +1156,12 @@ public static class UiHtml
 
         document.getElementById('editionBadge').innerText = msg.tier + ' Edition';
 
+        const help = document.getElementById('destDriveHelp');
+        if (help && help.innerText.indexOf('quota') !== -1) {
+          help.innerText = 'License active (' + msg.tier + '). Unlimited recovery unlocked.';
+          help.style.color = '#10b981';
+        }
+
       }
 
     } else if (msg.type === 'folderSelected') {
@@ -1230,19 +1236,20 @@ public static class UiHtml
 
 
 
+      const isAndroid = d.mediaType === 5 || d.fileSystem === 'MTP';
       const isSsd = d.mediaType === 0;
 
       card.innerHTML = `
 
         <div class=""drive-card-header"">
 
-          <div class=""drive-letter-box"">${d.deviceId}</div>
+          <div class=""drive-letter-box"" style=""${isAndroid ? 'font-size:20px;background:rgba(16,185,129,0.15);border-color:#10b981;color:#10b981;' : ''}"">${isAndroid ? '📱' : d.deviceId}</div>
 
           <div class=""drive-badges"">
 
             <span class=""drive-badge"">${d.fileSystem}</span>
 
-            <span class=""drive-badge"">${isSsd ? 'NVMe SSD' : 'HDD / Storage'}</span>
+            <span class=""drive-badge"">${isAndroid ? 'Android Smartphone' : (isSsd ? 'NVMe SSD' : 'HDD / Storage')}</span>
 
             ${d.isTrimEnabled ? '<span class=""drive-badge trim"">TRIM Active</span>' : ''}
 
@@ -1252,7 +1259,7 @@ public static class UiHtml
 
         <div class=""drive-info"">
 
-          <h3>${d.volumeLabel} (${d.deviceId})</h3>
+          <h3>${d.volumeLabel}${isAndroid ? '' : ' (' + d.deviceId + ')'}</h3>
 
           <p>${d.modelName}</p>
 
@@ -1825,6 +1832,13 @@ public static class UiHtml
     }
 
 
+
+    // Clear any previous error/quota warning
+    const helpEl = document.getElementById('destDriveHelp');
+    if (helpEl) {
+      helpEl.innerText = 'Safe recovery active. Source volume write-lock engaged.';
+      helpEl.style.color = '#10b981';
+    }
 
     // Immediately show responsive extraction progress
 

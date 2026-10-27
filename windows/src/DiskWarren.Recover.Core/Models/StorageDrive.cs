@@ -7,6 +7,7 @@ public enum DriveMediaType
     HDD,
     USBFlash,
     SDCard,
+    AndroidPhone,
     Unknown
 }
 

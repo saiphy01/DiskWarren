@@ -101,17 +101,20 @@ public static class RecoveryExporter
 
                     // If rawSize is already known from the scanner, use it directly without re-seeking across the raw drive!
                     long exactSize = rawSize > 0 ? rawSize : await DetermineExactFileSizeAsync(rawStream, rawOffset, cand.Extension, cand.Category, rawSize);
+                    long currentFileWritten = 0;
                     fileBytesWritten = await ExportRawStreamAsync(rawStream, outFs, incrementalHash, rawOffset, exactSize, (chunkBytes, total) =>
                     {
+                        currentFileWritten += chunkBytes;
                         cumulativeBytesWritten += chunkBytes;
                         int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                        progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(fileBytesWritten)} / {StorageDrive.FormatBytes(total)})"));
+                        progress.Report((overallPercent, $"Recovering {cand.FileName} ({StorageDrive.FormatBytes(currentFileWritten)} / {StorageDrive.FormatBytes(total)})"));
                     }, cancellationToken);
 
                     itemResult.BytesWritten = fileBytesWritten;
                 }
                 else if (!string.IsNullOrEmpty(cand.InternalRefPath) && File.Exists(cand.InternalRefPath))
                 {
+                    long currentFileWritten = 0;
                     using (var sourceStream = new FileStream(cand.InternalRefPath, FileMode.Open, FileAccess.Read, FileShare.Read, 512 * 1024, useAsync: true))
                     using (var outFs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, 512 * 1024, useAsync: true))
                     {
@@ -123,8 +126,9 @@ public static class RecoveryExporter
                             await outFs.WriteAsync(buf.AsMemory(0, r), cancellationToken);
                             incrementalHash.AppendData(buf, 0, r);
                             cumulativeBytesWritten += r;
+                            currentFileWritten += r;
                             int overallPercent = (int)Math.Min(99, cumulativeBytesWritten * 100 / totalBytesToExport);
-                            progress.Report((overallPercent, $"Copying {cand.FileName} ({overallPercent}%)"));
+                            progress.Report((overallPercent, $"Copying {cand.FileName} ({StorageDrive.FormatBytes(currentFileWritten)} / {StorageDrive.FormatBytes(cand.SizeBytes)})"));
                             await Task.Yield();
                         }
                     }

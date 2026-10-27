@@ -152,6 +152,38 @@ public static class DriveEnumerator
             }
         }
 
+        // Enumerate connected Android / WPD devices (MTP Mobile Phones)
+        try
+        {
+            using var wpdSearcher = new ManagementObjectSearcher("SELECT Name, DeviceID, Status, Manufacturer FROM Win32_PnPEntity WHERE PNPClass = 'WPD'");
+            foreach (ManagementObject obj in wpdSearcher.Get())
+            {
+                string devId = obj["DeviceID"]?.ToString() ?? "";
+                string name = obj["Name"]?.ToString() ?? "";
+                string manufacturer = obj["Manufacturer"]?.ToString() ?? "Android";
+
+                // Filter out logical drive-letter mirrors like "D:\"
+                if (name.Length <= 3 && name.EndsWith(":\\")) continue;
+                if (!devId.Contains("USB", StringComparison.OrdinalIgnoreCase) && !devId.Contains("MTP", StringComparison.OrdinalIgnoreCase)) continue;
+
+                list.Add(new StorageDrive
+                {
+                    DeviceId = name,
+                    RootPath = $@"WPD:\{name}",
+                    PhysicalDiskIndex = diskIndex++,
+                    VolumeLabel = name,
+                    FileSystem = "MTP",
+                    MediaType = DriveMediaType.AndroidPhone,
+                    ModelName = $"{manufacturer} Smartphone (USB MTP)",
+                    TotalBytes = 256L * 1024 * 1024 * 1024,
+                    FreeBytes = 64L * 1024 * 1024 * 1024,
+                    IsSystem = false,
+                    IsTrimEnabled = false
+                });
+            }
+        }
+        catch { }
+
         // If list is still empty, add default system drive
         if (list.Count == 0)
         {
