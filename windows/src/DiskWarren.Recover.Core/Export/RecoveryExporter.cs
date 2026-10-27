@@ -93,17 +93,15 @@ public static class RecoveryExporter
             double elapsedSec = Math.Max(0.2, sw.Elapsed.TotalSeconds);
             double speedMBs = (totalWrittenSoFar / (1024.0 * 1024.0)) / elapsedSec;
 
-            int bytePercent = (int)Math.Clamp(totalWrittenSoFar * 100 / totalBytesToExport, 0, 99);
-            int filePercent = (int)Math.Clamp(fileIdx * 100 / Math.Max(1, selectedCandidates.Count), 0, 99);
-            int overallPercent = totalBytesToExport > 1024 ? bytePercent : filePercent;
-
-            long remainingBytes = Math.Max(0, totalBytesToExport - totalWrittenSoFar);
-            int etaSeconds = speedMBs > 0.05 ? (int)(remainingBytes / (speedMBs * 1024 * 1024)) : 0;
+            int filePercent = (int)Math.Clamp((fileIdx * 100) / Math.Max(1, selectedCandidates.Count), 0, 99);
+            double secPerFile = elapsedSec / Math.Max(1, fileIdx);
+            int remainingFiles = Math.Max(0, selectedCandidates.Count - fileIdx);
+            int etaSeconds = (int)(remainingFiles * secPerFile);
 
             progress?.Report(new ExportProgressInfo
             {
-                Percent = overallPercent,
-                CurrentIndex = fileIdx + 1,
+                Percent = filePercent,
+                CurrentIndex = fileIdx,
                 TotalFiles = selectedCandidates.Count,
                 BytesWritten = totalWrittenSoFar,
                 TotalBytes = totalBytesToExport,
@@ -796,7 +794,7 @@ public static class RecoveryExporter
         }
     }
 
-    private static async Task<bool> ExportMtpItemAsync(
+        private static async Task<bool> ExportMtpItemAsync(
         MtpExportSession session,
         RecoveryCandidate cand,
         string destFile,
@@ -821,15 +819,13 @@ public static class RecoveryExporter
 
                 string destDir = Path.GetDirectoryName(destFile) ?? "";
                 string candName = cand.FileName;
+                string rawBase = Path.GetFileNameWithoutExtension(rawName);
+                string candBase = Path.GetFileNameWithoutExtension(candName);
 
-                string c1 = Path.Combine(destDir, candName);
-                string c2 = Path.Combine(destDir, rawName);
-                string c3 = destFile;
-
-                // Clean up any stale partial files before copying
-                if (!string.Equals(c1, destFile, StringComparison.OrdinalIgnoreCase) && File.Exists(c1)) try { File.Delete(c1); } catch { }
-                if (!string.Equals(c2, destFile, StringComparison.OrdinalIgnoreCase) && File.Exists(c2)) try { File.Delete(c2); } catch { }
+                // Clean up any stale file at exact destination
                 if (File.Exists(destFile)) try { File.Delete(destFile); } catch { }
+
+                DateTime copyStartTime = DateTime.UtcNow.AddMilliseconds(-500);
 
                 // Initiate Windows Shell Copy
                 session.DestFolder?.CopyHere(targetItem, 16 | 512 | 1024);
@@ -838,16 +834,66 @@ public static class RecoveryExporter
                 string actualCopied = string.Empty;
                 long lastLen = 0;
                 int stableCount = 0;
-                long expectedMin = cand.SizeBytes > 0 ? (long)(cand.SizeBytes * 0.95) : 1;
-                int maxWaitMs = Math.Clamp((int)(Math.Max(cand.SizeBytes, 1024 * 1024) / (1024 * 50)) * 1000, 10000, 180000);
+                int maxWaitMs = Math.Clamp((int)(Math.Max(cand.SizeBytes, 1024 * 1024) / (1024 * 50)) * 1000, 3000, 25000);
 
                 var swWait = System.Diagnostics.Stopwatch.StartNew();
                 while (swWait.ElapsedMilliseconds < maxWaitMs)
                 {
                     if (cancellationToken.IsCancellationRequested) return false;
-                    Thread.Sleep(100);
+                    Thread.Sleep(80);
 
-                    string check = File.Exists(c1) ? c1 : (File.Exists(c2) ? c2 : (File.Exists(c3) ? c3 : string.Empty));
+                    string? check = null;
+
+                    // 1. Direct path matches
+                    string c1 = Path.Combine(destDir, candName);
+                    string c2 = Path.Combine(destDir, rawName);
+                    if (File.Exists(c1) && new FileInfo(c1).Length > 0) check = c1;
+                    else if (File.Exists(c2) && new FileInfo(c2).Length > 0) check = c2;
+                    else if (File.Exists(destFile) && new FileInfo(destFile).Length > 0) check = destFile;
+
+                    // 2. Wildcard match (e.g. .jpeg vs .jpg)
+                    if (string.IsNullOrEmpty(check))
+                    {
+                        try
+                        {
+                            var matches = Directory.GetFiles(destDir, $"{rawBase}.*");
+                            if (matches.Length > 0)
+                            {
+                                var m = matches.FirstOrDefault(f => new FileInfo(f).Length > 0);
+                                if (m != null) check = m;
+                            }
+
+                            if (string.IsNullOrEmpty(check))
+                            {
+                                var candMatches = Directory.GetFiles(destDir, $"{candBase}.*");
+                                if (candMatches.Length > 0)
+                                {
+                                    var m = candMatches.FirstOrDefault(f => new FileInfo(f).Length > 0);
+                                    if (m != null) check = m;
+                                }
+                            }
+                        }
+                        catch { }
+                    }
+
+                    // 3. Fallback: newly written files in destDir
+                    if (string.IsNullOrEmpty(check))
+                    {
+                        try
+                        {
+                            var recentFiles = Directory.GetFiles(destDir)
+                                .Select(f => new FileInfo(f))
+                                .Where(fi => fi.LastWriteTimeUtc >= copyStartTime && fi.Length > 0)
+                                .OrderByDescending(fi => fi.LastWriteTimeUtc)
+                                .ToList();
+                            if (recentFiles.Count > 0)
+                            {
+                                check = recentFiles[0].FullName;
+                            }
+                        }
+                        catch { }
+                    }
+
                     if (string.IsNullOrEmpty(check)) continue;
 
                     long curLen = 0;
@@ -864,21 +910,21 @@ public static class RecoveryExporter
                         stableCount++;
                     }
 
-                    // Once stable for >= 2 iterations (200ms) and meets expected size, check exclusive read handle
-                    if (curLen > 0 && stableCount >= 2 && (curLen >= expectedMin || curLen == lastLen))
+                    // Once stable for >= 2 checks (160ms) and can be opened for read
+                    if (curLen > 0 && stableCount >= 2)
                     {
-                        bool canOpenExclusively = false;
+                        bool canRead = false;
                         try
                         {
-                            using var testStream = new FileStream(check, FileMode.Open, FileAccess.Read, FileShare.None);
-                            if (testStream.Length > 0) canOpenExclusively = true;
+                            using var testStream = new FileStream(check, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            if (testStream.Length > 0) canRead = true;
                         }
                         catch
                         {
-                            canOpenExclusively = false;
+                            canRead = false;
                         }
 
-                        if (canOpenExclusively)
+                        if (canRead)
                         {
                             actualCopied = check;
                             break;
@@ -896,7 +942,7 @@ public static class RecoveryExporter
                 }
 
                 // Compute SHA-256
-                using (var fs = new FileStream(destFile, FileMode.Open, FileAccess.Read, FileShare.Read, 128 * 1024))
+                using (var fs = new FileStream(destFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 128 * 1024))
                 {
                     byte[] buf = new byte[128 * 1024];
                     int r;
