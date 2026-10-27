@@ -64,6 +64,10 @@ public partial class MainWindow : Window
 
     private CancellationTokenSource? _scanCts;
     private CancellationTokenSource? _exportCts;
+    private System.Windows.Threading.DispatcherTimer? _driveWatcherTimer;
+    private string _lastDrivesFingerprint = string.Empty;
+    private bool _isRefreshingDrives = false;
+
 
 
 
@@ -103,6 +107,13 @@ public partial class MainWindow : Window
     {
 
         base.OnSourceInitialized(e);
+        try
+        {
+            var source = System.Windows.Interop.HwndSource.FromHwnd(new System.Windows.Interop.WindowInteropHelper(this).Handle);
+            source?.AddHook(HwndHook);
+        }
+        catch { }
+
 
         MaxHeight = SystemParameters.WorkArea.Height;
 
@@ -301,6 +312,13 @@ public partial class MainWindow : Window
         LoadingStatusText.Text = "Retrying engine initialization...";
 
         await InitializeWebViewSafeAsync();
+        _driveWatcherTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1.5)
+        };
+        _driveWatcherTimer.Tick += (s, ev) => TriggerLiveDriveRefresh();
+        _driveWatcherTimer.Start();
+
 
     }
 
@@ -542,11 +560,55 @@ public partial class MainWindow : Window
 
 
 
-    private void HandleGetDrives()
-
+    
+    private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
+        const int WM_DEVICECHANGE = 0x0219;
+        if (msg == WM_DEVICECHANGE)
+        {
+            TriggerLiveDriveRefresh();
+        }
+        return IntPtr.Zero;
+    }
 
+    private void TriggerLiveDriveRefresh()
+    {
+        if (_isRefreshingDrives) return;
+        _isRefreshingDrives = true;
+
+        Task.Run(() =>
+        {
+            try
+            {
+                var drives = DriveEnumerator.EnumerateDrives();
+                string fingerprint = string.Join("|", drives.Select(d => $"{d.DeviceId}:{d.VolumeLabel}:{d.TotalBytes}:{d.FreeBytes}"));
+
+                Dispatcher.Invoke(() =>
+                {
+                    if (fingerprint != _lastDrivesFingerprint)
+                    {
+                        _lastDrivesFingerprint = fingerprint;
+                        _drives = drives;
+                        SendToWeb(new
+                        {
+                            type = "drivesLoaded",
+                            drives = _drives
+                        });
+                    }
+                });
+            }
+            catch { }
+            finally
+            {
+                _isRefreshingDrives = false;
+            }
+        });
+    }
+
+    private void HandleGetDrives()
+    {
         _drives = DriveEnumerator.EnumerateDrives();
+        _lastDrivesFingerprint = string.Join("|", _drives.Select(d => $"{d.DeviceId}:{d.VolumeLabel}:{d.TotalBytes}:{d.FreeBytes}"));
 
         SendToWeb(new
 

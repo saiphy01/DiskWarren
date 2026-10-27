@@ -8,6 +8,7 @@ public enum DriveMediaType
     USBFlash,
     SDCard,
     AndroidPhone,
+    IosDevice,
     Unknown
 }
 

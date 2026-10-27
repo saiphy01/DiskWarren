@@ -1226,6 +1226,16 @@ public static class UiHtml
 
     grid.innerHTML = '';
 
+    // Verify if selectedDrive is still connected in the updated drives list
+    if (selectedDrive) {
+      const stillPresent = drives.find(d => d.deviceId === selectedDrive.deviceId);
+      if (!stillPresent) {
+        selectedDrive = null;
+      } else {
+        selectedDrive = stillPresent;
+      }
+    }
+
     drives.forEach((d, idx) => {
 
       const card = document.createElement('div');
@@ -1237,19 +1247,34 @@ public static class UiHtml
 
 
       const isAndroid = d.mediaType === 5 || d.fileSystem === 'MTP';
+      const isIos = d.mediaType === 6 || (d.fileSystem && d.fileSystem.indexOf('iOS') !== -1) || (d.modelName && d.modelName.indexOf('iOS') !== -1);
       const isSsd = d.mediaType === 0;
+
+      let icon = d.deviceId;
+      let badge = isSsd ? 'NVMe SSD' : 'HDD / Storage';
+      let letterBoxStyle = '';
+
+      if (isAndroid) {
+        icon = '📱';
+        badge = 'Android Smartphone';
+        letterBoxStyle = 'font-size:20px;background:rgba(16,185,129,0.15);border-color:#10b981;color:#10b981;';
+      } else if (isIos) {
+        icon = '🍏';
+        badge = 'Apple iOS Device';
+        letterBoxStyle = 'font-size:20px;background:rgba(56,189,248,0.15);border-color:#38bdf8;color:#38bdf8;';
+      }
 
       card.innerHTML = `
 
         <div class=""drive-card-header"">
 
-          <div class=""drive-letter-box"" style=""${isAndroid ? 'font-size:20px;background:rgba(16,185,129,0.15);border-color:#10b981;color:#10b981;' : ''}"">${isAndroid ? '📱' : d.deviceId}</div>
+          <div class=""drive-letter-box"" style=""${letterBoxStyle}"">${icon}</div>
 
           <div class=""drive-badges"">
 
             <span class=""drive-badge"">${d.fileSystem}</span>
 
-            <span class=""drive-badge"">${isAndroid ? 'Android Smartphone' : (isSsd ? 'NVMe SSD' : 'HDD / Storage')}</span>
+            <span class=""drive-badge"">${badge}</span>
 
             ${d.isTrimEnabled ? '<span class=""drive-badge trim"">TRIM Active</span>' : ''}
 
@@ -1259,9 +1284,10 @@ public static class UiHtml
 
         <div class=""drive-info"">
 
-          <h3>${d.volumeLabel}${isAndroid ? '' : ' (' + d.deviceId + ')'}</h3>
+          <h3>${d.volumeLabel}${(isAndroid || isIos) ? '' : ' (' + d.deviceId + ')'}</h3>
 
           <p>${d.modelName}</p>
+          ${isIos ? '<div style=""font-size:11px;color:#38bdf8;margin-top:4px;"">💡 Tap \'Trust This Computer\' on iPhone if prompted</div>' : ''}
 
         </div>
 

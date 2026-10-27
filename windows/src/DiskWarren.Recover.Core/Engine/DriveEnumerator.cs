@@ -152,19 +152,103 @@ public static class DriveEnumerator
             }
         }
 
-        // Enumerate connected Android / WPD devices (MTP Mobile Phones)
+        // Enumerate connected Mobile Devices: Android (MTP) & Apple iOS (iPhone/iPad)
         try
         {
-            using var wpdSearcher = new ManagementObjectSearcher("SELECT Name, DeviceID, Status, Manufacturer FROM Win32_PnPEntity WHERE PNPClass = 'WPD'");
+            var liveShellNames = GetLiveShellDeviceNames();
+
+            using var wpdSearcher = new ManagementObjectSearcher("SELECT Name, DeviceID, Status, Manufacturer, Present FROM Win32_PnPEntity WHERE PNPClass = 'WPD' AND Status = 'OK'");
             foreach (ManagementObject obj in wpdSearcher.Get())
             {
+                if (obj["Present"] != null && false.Equals(obj["Present"])) continue;
+
                 string devId = obj["DeviceID"]?.ToString() ?? "";
                 string name = obj["Name"]?.ToString() ?? "";
-                string manufacturer = obj["Manufacturer"]?.ToString() ?? "Android";
+                string manufacturer = obj["Manufacturer"]?.ToString() ?? "";
 
                 // Filter out logical drive-letter mirrors like "D:\"
                 if (name.Length <= 3 && name.EndsWith(":\\")) continue;
-                if (!devId.Contains("USB", StringComparison.OrdinalIgnoreCase) && !devId.Contains("MTP", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!devId.Contains("USB", StringComparison.OrdinalIgnoreCase) && 
+                    !devId.Contains("MTP", StringComparison.OrdinalIgnoreCase) &&
+                    !devId.Contains("VID_05AC", StringComparison.OrdinalIgnoreCase) &&
+                    !devId.Contains("Apple", StringComparison.OrdinalIgnoreCase)) continue;
+
+                // If Windows Shell is active, ensure device is genuinely connected and reachable right now
+                if (liveShellNames != null && liveShellNames.Count > 0)
+                {
+                    bool matchedInShell = liveShellNames.Contains(name) ||
+                                          liveShellNames.Any(n => n.Contains(name, StringComparison.OrdinalIgnoreCase) || name.Contains(n, StringComparison.OrdinalIgnoreCase));
+                    if (!matchedInShell) continue;
+                }
+
+                if (list.Any(d => string.Equals(d.DeviceId, name, StringComparison.OrdinalIgnoreCase) || string.Equals(d.VolumeLabel, name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
+                bool isApple = manufacturer.Contains("Apple", StringComparison.OrdinalIgnoreCase) ||
+                               devId.Contains("VID_05AC", StringComparison.OrdinalIgnoreCase) ||
+                               name.Contains("iPhone", StringComparison.OrdinalIgnoreCase) ||
+                               name.Contains("iPad", StringComparison.OrdinalIgnoreCase);
+
+                if (isApple)
+                {
+                    list.Add(new StorageDrive
+                    {
+                        DeviceId = name,
+                        RootPath = $@"WPD:\{name}",
+                        PhysicalDiskIndex = diskIndex++,
+                        VolumeLabel = name,
+                        FileSystem = "iOS PTP",
+                        MediaType = DriveMediaType.IosDevice,
+                        ModelName = string.IsNullOrWhiteSpace(manufacturer) ? "Apple iOS Device (Lightning/USB-C)" : $"{manufacturer} iOS Device",
+                        TotalBytes = 256L * 1024 * 1024 * 1024,
+                        FreeBytes = 64L * 1024 * 1024 * 1024,
+                        IsSystem = false,
+                        IsTrimEnabled = false
+                    });
+                }
+                else
+                {
+                    string mfg = string.IsNullOrWhiteSpace(manufacturer) ? "Android" : manufacturer;
+                    list.Add(new StorageDrive
+                    {
+                        DeviceId = name,
+                        RootPath = $@"WPD:\{name}",
+                        PhysicalDiskIndex = diskIndex++,
+                        VolumeLabel = name,
+                        FileSystem = "MTP",
+                        MediaType = DriveMediaType.AndroidPhone,
+                        ModelName = $"{mfg} Smartphone (USB MTP)",
+                        TotalBytes = 256L * 1024 * 1024 * 1024,
+                        FreeBytes = 64L * 1024 * 1024 * 1024,
+                        IsSystem = false,
+                        IsTrimEnabled = false
+                    });
+                }
+            }
+        }
+        catch { }
+
+        // Also check if any Apple iOS device is registered under 'Image' or Apple Mobile Device USB Driver
+        try
+        {
+            var liveShellNames = GetLiveShellDeviceNames();
+            using var appleSearcher = new ManagementObjectSearcher("SELECT Name, DeviceID, Status, Manufacturer, Present FROM Win32_PnPEntity WHERE (Name LIKE '%iPhone%' OR Name LIKE '%iPad%' OR DeviceID LIKE '%VID_05AC%') AND Status = 'OK'");
+            foreach (ManagementObject obj in appleSearcher.Get())
+            {
+                if (obj["Present"] != null && false.Equals(obj["Present"])) continue;
+                string name = obj["Name"]?.ToString() ?? "";
+                if (string.IsNullOrWhiteSpace(name)) continue;
+                if (name.Contains("Composite", StringComparison.OrdinalIgnoreCase) || name.Contains("Driver", StringComparison.OrdinalIgnoreCase)) continue;
+                if (list.Any(d => string.Equals(d.DeviceId, name, StringComparison.OrdinalIgnoreCase) || string.Equals(d.VolumeLabel, name, StringComparison.OrdinalIgnoreCase))) continue;
+
+                if (liveShellNames != null && liveShellNames.Count > 0)
+                {
+                    bool matchedInShell = liveShellNames.Contains(name) ||
+                                          liveShellNames.Any(n => n.Contains(name, StringComparison.OrdinalIgnoreCase) || name.Contains(n, StringComparison.OrdinalIgnoreCase));
+                    if (!matchedInShell) continue;
+                }
 
                 list.Add(new StorageDrive
                 {
@@ -172,9 +256,9 @@ public static class DriveEnumerator
                     RootPath = $@"WPD:\{name}",
                     PhysicalDiskIndex = diskIndex++,
                     VolumeLabel = name,
-                    FileSystem = "MTP",
-                    MediaType = DriveMediaType.AndroidPhone,
-                    ModelName = $"{manufacturer} Smartphone (USB MTP)",
+                    FileSystem = "iOS PTP",
+                    MediaType = DriveMediaType.IosDevice,
+                    ModelName = "Apple iOS Device (USB)",
                     TotalBytes = 256L * 1024 * 1024 * 1024,
                     FreeBytes = 64L * 1024 * 1024 * 1024,
                     IsSystem = false,
@@ -203,5 +287,37 @@ public static class DriveEnumerator
         }
 
         return list;
+    }
+
+    private static HashSet<string>? GetLiveShellDeviceNames()
+    {
+        try
+        {
+            Type? shellType = Type.GetTypeFromProgID("Shell.Application");
+            if (shellType == null) return null;
+            dynamic? shell = Activator.CreateInstance(shellType);
+            if (shell == null) return null;
+            dynamic? myPc = shell.NameSpace(17); // ssfDRIVES
+            if (myPc == null) return null;
+
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (dynamic item in myPc.Items())
+            {
+                try
+                {
+                    string itemName = (string)item.Name;
+                    if (!string.IsNullOrWhiteSpace(itemName))
+                    {
+                        set.Add(itemName);
+                    }
+                }
+                catch { }
+            }
+            return set;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

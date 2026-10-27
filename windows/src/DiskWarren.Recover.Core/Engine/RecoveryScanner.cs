@@ -19,9 +19,9 @@ public class RecoveryScanner
         var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var seenOffsets = new HashSet<long>();
 
-        if (drive.MediaType == DriveMediaType.AndroidPhone)
+        if (drive.MediaType == DriveMediaType.AndroidPhone || drive.MediaType == DriveMediaType.IosDevice)
         {
-            await Task.Run(() => ScanAndroidPhone(drive, options, progress, cancellationToken, results, seenNames));
+            await Task.Run(() => ScanMobileDevice(drive, options, progress, cancellationToken, results, seenNames));
             progress.Report(new ScanProgressInfo
             {
                 Stage = $"Scan Complete. Discovered {results.Count} recovery candidates on {drive.VolumeLabel}.",
@@ -723,7 +723,7 @@ public class RecoveryScanner
         }
         return sb.ToString().TrimEnd();
     }
-    private static void ScanAndroidPhone(
+    private static void ScanMobileDevice(
         StorageDrive drive,
         ScanOptions options,
         IProgress<ScanProgressInfo> progress,
@@ -752,7 +752,12 @@ public class RecoveryScanner
                 string itName = (string)it.Name;
                 if (itName.Contains(drive.VolumeLabel, StringComparison.OrdinalIgnoreCase) ||
                     drive.VolumeLabel.Contains(itName, StringComparison.OrdinalIgnoreCase) ||
-                    itName.Contains("S23", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("Phone", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("iPhone", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("iPad", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("Apple", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("Samsung", StringComparison.OrdinalIgnoreCase) ||
+                    itName.Contains("Android", StringComparison.OrdinalIgnoreCase) ||
                     itName.Contains("Phone", StringComparison.OrdinalIgnoreCase))
                 {
                     phoneItem = it;
