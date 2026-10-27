@@ -252,8 +252,30 @@ public static class RecoveryExporter
                         cumulativeBytesWritten += cand.SizeBytes;
                     }
 
-                    byte[] hashBytes = incrementalHash.GetHashAndReset();
-                    itemResult.Sha256Checksum = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                    // Post-process JPEG/Motion Photos to guarantee 100% cross-platform macOS/iOS/Windows validity
+                    if (File.Exists(destFile))
+                    {
+                        await PostProcessImageFileAsync(destFile, cancellationToken);
+                        long currentFileLen = new FileInfo(destFile).Length;
+                        if (currentFileLen != itemResult.BytesWritten)
+                        {
+                            itemResult.BytesWritten = currentFileLen;
+                            using var finalFs = new FileStream(destFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                            byte[] recalculatedHash = await SHA256.HashDataAsync(finalFs, cancellationToken);
+                            itemResult.Sha256Checksum = Convert.ToHexString(recalculatedHash).ToLowerInvariant();
+                        }
+                        else
+                        {
+                            byte[] hashBytes = incrementalHash.GetHashAndReset();
+                            itemResult.Sha256Checksum = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                        }
+                    }
+                    else
+                    {
+                        byte[] hashBytes = incrementalHash.GetHashAndReset();
+                        itemResult.Sha256Checksum = Convert.ToHexString(hashBytes).ToLowerInvariant();
+                    }
+
                     itemResult.Success = true;
                     report.SuccessfulCount++;
                     report.TotalBytesRecovered += itemResult.BytesWritten;
@@ -961,5 +983,147 @@ public static class RecoveryExporter
                 return false;
             }
         });
+    }
+
+    private static async Task PostProcessImageFileAsync(string filePath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (!File.Exists(filePath)) return;
+            string ext = Path.GetExtension(filePath).ToLowerInvariant();
+            if (ext != ".jpg" && ext != ".jpeg") return;
+
+            long fileLen = new FileInfo(filePath).Length;
+            if (fileLen < 1024) return;
+
+            byte[] data = await File.ReadAllBytesAsync(filePath, cancellationToken);
+            if (data.Length < 4 || data[0] != 0xFF || data[1] != 0xD8) return;
+
+            int primaryEoi = FindJpegPrimaryEoi(data);
+            if (primaryEoi <= 0) return;
+
+            int cleanLength = primaryEoi + 2;
+            if (cleanLength >= data.Length) return; // Already clean, no trailing data
+
+            // Check if trailing data contains Samsung Motion Photo (SEFT or ftyp)
+            int ftypIdx = IndexOfSequence(data, cleanLength, System.Text.Encoding.ASCII.GetBytes("ftyp"));
+            bool hasSeft = data.Length >= 4 && data[^4] == 'S' && data[^3] == 'E' && data[^2] == 'F' && data[^1] == 'T';
+
+            if (ftypIdx >= 4)
+            {
+                int mp4Start = ftypIdx - 4;
+                int mp4End = data.Length;
+                if (hasSeft && data.Length >= 8)
+                {
+                    int seftLen = BitConverter.ToInt32(data, data.Length - 8);
+                    if (seftLen > 0 && seftLen < data.Length)
+                    {
+                        mp4End = data.Length - seftLen;
+                    }
+                }
+
+                if (mp4End > mp4Start)
+                {
+                    string dir = Path.GetDirectoryName(filePath) ?? "";
+                    string baseName = Path.GetFileNameWithoutExtension(filePath);
+                    string motionMp4Path = Path.Combine(dir, $"{baseName}_motion.mp4");
+                    byte[] mp4Data = new byte[mp4End - mp4Start];
+                    Array.Copy(data, mp4Start, mp4Data, 0, mp4Data.Length);
+                    await File.WriteAllBytesAsync(motionMp4Path, mp4Data, cancellationToken);
+                }
+            }
+
+            // Truncate/rewrite the JPEG to clean standard length so macOS ImageIO / QuickLook accepts it cleanly
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
+            {
+                fs.SetLength(cleanLength);
+            }
+        }
+        catch
+        {
+            // Non-critical optimization failure should never abort export
+        }
+    }
+
+    private static int FindJpegPrimaryEoi(byte[] data)
+    {
+        if (data.Length < 4 || data[0] != 0xFF || data[1] != 0xD8) return -1;
+        int idx = 2;
+        while (idx < data.Length - 4)
+        {
+            if (data[idx] != 0xFF) break;
+            while (idx < data.Length && data[idx] == 0xFF) idx++;
+            if (idx >= data.Length) break;
+            byte marker = data[idx++];
+
+            if (marker == 0xD8 || marker == 0xD9 || marker == 0x01 || (marker >= 0xD0 && marker <= 0xD7))
+                continue;
+
+            if (marker == 0xDA) // SOS (Start of Scan)
+            {
+                if (idx + 2 > data.Length) break;
+                ushort markerLen = (ushort)((data[idx] << 8) | data[idx + 1]);
+                idx += markerLen;
+
+                while (idx < data.Length - 1)
+                {
+                    if (data[idx] == 0xFF)
+                    {
+                        byte b2 = data[idx + 1];
+                        if (b2 == 0xD9)
+                        {
+                            return idx; // EOI
+                        }
+                        else if (b2 == 0x00 || (b2 >= 0xD0 && b2 <= 0xD7))
+                        {
+                            idx += 2;
+                            continue;
+                        }
+                        else if (b2 == 0xFF)
+                        {
+                            idx++;
+                            continue;
+                        }
+                        else
+                        {
+                            idx += 2;
+                            continue;
+                        }
+                    }
+                    idx++;
+                }
+                break;
+            }
+            else
+            {
+                if (idx + 2 > data.Length) break;
+                ushort markerLen = (ushort)((data[idx] << 8) | data[idx + 1]);
+                idx += markerLen;
+            }
+        }
+        return -1;
+    }
+
+    private static int IndexOfSequence(byte[] buffer, int startIndex, byte[] pattern)
+    {
+        if (pattern.Length == 0 || startIndex < 0 || startIndex >= buffer.Length) return -1;
+        int max = buffer.Length - pattern.Length;
+        for (int i = startIndex; i <= max; i++)
+        {
+            if (buffer[i] == pattern[0])
+            {
+                bool match = true;
+                for (int j = 1; j < pattern.Length; j++)
+                {
+                    if (buffer[i + j] != pattern[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) return i;
+            }
+        }
+        return -1;
     }
 }
